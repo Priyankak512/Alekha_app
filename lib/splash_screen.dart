@@ -1,7 +1,8 @@
 import 'dart:async';
 
-import 'package:flutter/material.dart';
+import 'package:alekha/constant/images_route.dart';
 import 'package:alekha/create_pdf/create_pdf_from_data.dart';
+import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});
@@ -40,25 +41,12 @@ class _SplashScreenState extends State<SplashScreen> {
             child: SizedBox(
               height: double.infinity,
               width: double.infinity,
-              child: Image.asset("assets/images/large-home.jpg"),
-              // child: BackgroundAnimation(
-              //   imagePaths: [
-              //     PickImages.backGroundImageVariant1,
-              //     PickImages.backGroundImageVariant2,
-              //     PickImages.backGroundImageVariant3,
-              //     PickImages.backGroundImageVariant4,
-              //   ],
-              //   currentIndex: 3,
-              // ),
+              child: Padding(
+                padding: const EdgeInsets.all(40.0),
+                child: Image.asset(PickImages.alekhaLogo),
+              ),
             ),
           ),
-          // Center(
-          //   child: Image.asset(
-          //     PickImages.applicationLogo,
-          //     height: 230,
-          //     width: 230,
-          //   ),
-          // ),
         ]),
       ),
     );

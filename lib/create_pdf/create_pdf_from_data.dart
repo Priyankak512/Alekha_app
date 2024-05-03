@@ -718,10 +718,13 @@ import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 
-import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:alekha/constant/colors.dart';
+import 'package:alekha/constant/images_route.dart';
+import 'package:alekha/widget/common_material_button.dart';
 import 'package:alekha/widget/common_text_field.dart';
 import 'package:alekha/widget/get_date_function.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter/services.dart' show rootBundle;
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
@@ -755,7 +758,7 @@ class _CreatePdfFromDataState extends State<CreatePdfFromData> {
     final pdf = pw.Document();
 
     Uint8List imageData =
-        (await rootBundle.load('assets/images/house.jpg')).buffer.asUint8List();
+        (await rootBundle.load(PickImages.alekhaLogo)).buffer.asUint8List();
 
     // Add pages to the PDF document
     pdf.addPage(
@@ -768,36 +771,36 @@ class _CreatePdfFromDataState extends State<CreatePdfFromData> {
                   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                   children: [
                     pw.Container(
-                      width: 150, // Adjust the width as needed
-                      height: 50, // Adjust the height as needed
+                      width: 200, // Adjust the width as needed
+                      height: 80, // Adjust the height as needed
                       decoration: pw.BoxDecoration(
                         image: pw.DecorationImage(
-                          image: pw.MemoryImage(
-                              imageData), // Load image from memory
-                        ),
+                            image: pw.MemoryImage(imageData),
+                            // Load image from memory
+                            fit: pw.BoxFit.fill),
                       ),
                     ),
                     pw.Column(
                       crossAxisAlignment: pw.CrossAxisAlignment.start,
                       children: [
                         pw.Text(
-                          "John Patel Doctor",
+                          "Ar. Ronak Surendra Jain",
                           style: pw.TextStyle(
                               fontSize: 15, fontWeight: pw.FontWeight.normal),
                         ),
                         pw.Text(
-                          "2020 542515",
+                          "C A / 2020 / 126810",
                           style: pw.TextStyle(
                               fontSize: 15, fontWeight: pw.FontWeight.normal),
                         ),
                         pw.SizedBox(height: 15),
                         pw.Text(
-                          "Chandu Patel Doctor",
+                          "Ar. Tushar N. Kachhadiya",
                           style: pw.TextStyle(
                               fontSize: 15, fontWeight: pw.FontWeight.normal),
                         ),
                         pw.Text(
-                          "2020 50005",
+                          "C A / 2020 / 126990",
                           style: pw.TextStyle(
                               fontSize: 15, fontWeight: pw.FontWeight.normal),
                         ),
@@ -853,21 +856,13 @@ class _CreatePdfFromDataState extends State<CreatePdfFromData> {
               _buildTextFieldRow(
                   'Next On Site:', nextOnSiteController.text, pdf),
 
-              // Add images
-              // for (var imageFile in _images)
-              //   pw.Container(
-              //     width: double.infinity,
-              //     height: 400, // Set a fixed height for each image container
-              //     margin: const pw.EdgeInsets.all(8.00),
-              //     child: pw.Image(pw.MemoryImage(imageFile.readAsBytesSync())),
-              //   ),
-              pw.Spacer(),
-              pw.Divider(),
-              pw.Text(
-                "g kg g gvfgvr fgvkrtfgv fgvmrf gvrtfmgvr tfgvmrtf gvbrtfmbv tfmbrf",
-                style: pw.TextStyle(
-                    fontSize: 15, fontWeight: pw.FontWeight.normal),
-              ),
+              // pw.Spacer(),
+              // pw.Divider(),
+              // pw.Text(
+              //   "g kg g gvfgvr fgvkrtfgv fgvmrf gvrtfmgvr tfgvmrtf gvbrtfmbv tfmbrf",
+              //   style: pw.TextStyle(
+              //       fontSize: 15, fontWeight: pw.FontWeight.normal),
+              // ),
             ],
           );
         },
@@ -939,7 +934,9 @@ class _CreatePdfFromDataState extends State<CreatePdfFromData> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('PDF Generator'),
+        centerTitle: true,
+        automaticallyImplyLeading: false,
+        title: const Text('Site Visit Report'),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -981,8 +978,8 @@ class _CreatePdfFromDataState extends State<CreatePdfFromData> {
                   padding: EdgeInsets.symmetric(
                     horizontal: 8.0,
                   ),
-                  child:
-                      Icon(Icons.calendar_month_outlined, color: Colors.teal),
+                  child: Icon(Icons.calendar_month_outlined,
+                      color: PickColors.primaryColor),
                 ),
                 isRequired: true,
                 readOnly: true,
@@ -1003,7 +1000,7 @@ class _CreatePdfFromDataState extends State<CreatePdfFromData> {
                     dateController.text = formattedDate; // Set the picked date
                   }
                 },
-                borderRadius: BorderRadius.circular(05),
+                borderRadius: BorderRadius.circular(10),
               ),
               const SizedBox(
                 height: 20,
@@ -1071,14 +1068,19 @@ class _CreatePdfFromDataState extends State<CreatePdfFromData> {
                     )
                   : Container(),
               const SizedBox(height: 20),
-              ElevatedButton(
+              CommonMaterialButton(
+                title: 'Add Image',
                 onPressed: _getImage,
-                child: const Text('Add Image'),
+                prefixIcon: PickImages.cameraIcon,
+                prefixIconColor: Colors.white,
+                color: Colors.black,
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
+              CommonMaterialButton(
+                title: 'Create PDF',
                 onPressed: _generatePDF,
-                child: const Text('Create PDF'),
+                color: Colors.black,
+                verticalPadding: 20,
               ),
             ],
           ),
@@ -1118,11 +1120,38 @@ class CommonTextFieldWithFocus extends StatelessWidget {
         maxLines: maxLines,
         controller: controller,
         keyboardType: keyboardType,
+        cursorColor: PickColors.primaryColor,
         decoration: InputDecoration(
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
           hintText: hintText,
+          hintStyle: const TextStyle(color: PickColors.primaryColor),
           labelText: labelText,
+          labelStyle: const TextStyle(color: Colors.black),
           border:
               const OutlineInputBorder(), // Add a border around the TextField
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: Colors.red),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: Colors.red),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: Colors.black),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(
+              color: Colors.grey,
+            ),
+          ),
+          disabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: PickColors.primaryColor),
+          ),
         ),
         onSubmitted: onSubmitted,
         textInputAction: textInputAction,

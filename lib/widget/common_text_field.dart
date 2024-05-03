@@ -1,6 +1,7 @@
+import 'package:alekha/constant/colors.dart';
+import 'package:alekha/widget/textfield_label.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:alekha/widget/textfield_label.dart';
 
 // CommonTextFieldWithBorder
 class CommonTextFieldWithBorder extends StatefulWidget {
@@ -180,9 +181,7 @@ class _CommonTextFieldWithBorderState extends State<CommonTextFieldWithBorder> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: widget.borderRadius ?? BorderRadius.circular(10),
-                borderSide: const BorderSide(
-                  color: Colors.teal,
-                ),
+                borderSide: const BorderSide(color: Colors.black),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: widget.borderRadius ?? BorderRadius.circular(10),
@@ -192,7 +191,7 @@ class _CommonTextFieldWithBorderState extends State<CommonTextFieldWithBorder> {
               ),
               disabledBorder: OutlineInputBorder(
                 borderRadius: widget.borderRadius ?? BorderRadius.circular(10),
-                borderSide: const BorderSide(color: Colors.grey),
+                borderSide: const BorderSide(color: PickColors.primaryColor),
               ),
             ),
           ),
