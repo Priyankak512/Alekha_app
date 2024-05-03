@@ -3,8 +3,8 @@
 // import 'dart:typed_data';
 
 // import 'package:flutter/material.dart';
-// import 'package:gradient_color_practice/widget/common_text_field.dart';
-// import 'package:gradient_color_practice/widget/get_date_function.dart';
+// import 'package:alekha/widget/common_text_field.dart';
+// import 'package:alekha/widget/get_date_function.dart';
 // import 'package:image_picker/image_picker.dart';
 // import 'package:intl/intl.dart';
 // import 'package:pdf/pdf.dart';
@@ -720,8 +720,8 @@ import 'dart:typed_data';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
-import 'package:gradient_color_practice/widget/common_text_field.dart';
-import 'package:gradient_color_practice/widget/get_date_function.dart';
+import 'package:alekha/widget/common_text_field.dart';
+import 'package:alekha/widget/get_date_function.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
@@ -1121,7 +1121,8 @@ class CommonTextFieldWithFocus extends StatelessWidget {
         decoration: InputDecoration(
           hintText: hintText,
           labelText: labelText,
-          border:const OutlineInputBorder(), // Add a border around the TextField
+          border:
+              const OutlineInputBorder(), // Add a border around the TextField
         ),
         onSubmitted: onSubmitted,
         textInputAction: textInputAction,

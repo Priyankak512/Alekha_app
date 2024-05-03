@@ -1,8 +1,8 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:gradient_color_practice/create_pdf/create_pdf_from_data.dart';
-import 'package:gradient_color_practice/create_pdf/pdf_screen.dart';
-import 'package:gradient_color_practice/gradient_color_screen.dart';
+import 'package:alekha/create_pdf/create_pdf_from_data.dart';
+import 'package:alekha/create_pdf/pdf_screen.dart';
+import 'package:alekha/gradient_color_screen.dart';
 
 class CurverdBottomSheet extends StatelessWidget {
   CurverdBottomSheet({super.key});

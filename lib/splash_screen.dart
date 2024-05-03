@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:flutter/material.dart';
-import 'package:gradient_color_practice/create_pdf/create_pdf_from_data.dart';
+import 'package:alekha/create_pdf/create_pdf_from_data.dart';
 
 class SplashScreen extends StatefulWidget {
   const SplashScreen({super.key});

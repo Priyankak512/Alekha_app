@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:gradient_color_practice/create_pdf/create_pdf_from_data.dart';
-import 'package:gradient_color_practice/splash_screen.dart';
+import 'package:alekha/create_pdf/create_pdf_from_data.dart';
+import 'package:alekha/splash_screen.dart';
 
 void main() {
   runApp(const MyApp());

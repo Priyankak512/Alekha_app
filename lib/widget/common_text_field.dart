@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:gradient_color_practice/widget/textfield_label.dart';
+import 'package:alekha/widget/textfield_label.dart';
 
 // CommonTextFieldWithBorder
 class CommonTextFieldWithBorder extends StatefulWidget {
