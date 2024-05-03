@@ -90,12 +90,12 @@ BEGIN
         BLOCK "040904e4"
         BEGIN
             VALUE "CompanyName", "com.example" "\0"
-            VALUE "FileDescription", "gradient_color_practice" "\0"
+            VALUE "FileDescription", "alekha" "\0"
             VALUE "FileVersion", VERSION_AS_STRING "\0"
-            VALUE "InternalName", "gradient_color_practice" "\0"
+            VALUE "InternalName", "alekha" "\0"
             VALUE "LegalCopyright", "Copyright (C) 2024 com.example. All rights reserved." "\0"
-            VALUE "OriginalFilename", "gradient_color_practice.exe" "\0"
-            VALUE "ProductName", "gradient_color_practice" "\0"
+            VALUE "OriginalFilename", "alekha.exe" "\0"
+            VALUE "ProductName", "alekha" "\0"
             VALUE "ProductVersion", VERSION_AS_STRING "\0"
         END
     END

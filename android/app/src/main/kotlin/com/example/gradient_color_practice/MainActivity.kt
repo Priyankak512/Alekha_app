@@ -1,4 +1,4 @@
-package com.example.gradient_color_practice
+package com.example.alekha
 
 import io.flutter.embedding.android.FlutterActivity
 
