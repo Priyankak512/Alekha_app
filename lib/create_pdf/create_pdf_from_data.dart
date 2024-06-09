@@ -44,7 +44,9 @@ class _CreatePdfFromDataState extends State<CreatePdfFromData> {
     final pdf = pw.Document();
 
     Uint8List imageData =
-        (await rootBundle.load(PickImages.alekhaLogo)).buffer.asUint8List();
+        (await rootBundle.load(PickImages.alekhaArchitectsIcon))
+            .buffer
+            .asUint8List();
 
     // Retrieve selected project category and project number
     String selectedCategory = _selectedProjectCategory ?? '';
@@ -64,8 +66,8 @@ class _CreatePdfFromDataState extends State<CreatePdfFromData> {
                   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                   children: [
                     pw.Container(
-                      width: 200, // Adjust the width as needed
-                      height: 80, // Adjust the height as needed
+                      width: 170, // Adjust the width as needed
+                      height: 60, // Adjust the height as needed
                       decoration: pw.BoxDecoration(
                         image: pw.DecorationImage(
                             image: pw.MemoryImage(imageData),
@@ -79,47 +81,57 @@ class _CreatePdfFromDataState extends State<CreatePdfFromData> {
                         pw.Text(
                           "Ar. Ronak Surendra Jain",
                           style: pw.TextStyle(
-                              fontSize: 12, fontWeight: pw.FontWeight.normal),
+                              fontSize: 10,
+                              fontWeight: pw.FontWeight.normal,
+                              color: PdfColor.fromHex("#424242")),
                         ),
                         pw.Text(
-                          "C A / 2020 / 126810",
+                          "93760 73577",
                           style: pw.TextStyle(
-                              fontSize: 12, fontWeight: pw.FontWeight.normal),
+                              fontSize: 10,
+                              fontWeight: pw.FontWeight.normal,
+                              color: PdfColor.fromHex("#424242")),
                         ),
                         pw.SizedBox(height: 15),
                         pw.Text(
                           "Ar. Tushar N. Kachhadiya",
                           style: pw.TextStyle(
-                              fontSize: 12, fontWeight: pw.FontWeight.normal),
+                              fontSize: 10,
+                              fontWeight: pw.FontWeight.normal,
+                              color: PdfColor.fromHex("#424242")),
                         ),
                         pw.Text(
-                          "C A / 2020 / 126990",
+                          "87588 23271",
                           style: pw.TextStyle(
-                              fontSize: 12, fontWeight: pw.FontWeight.normal),
+                              fontSize: 10,
+                              fontWeight: pw.FontWeight.normal,
+                              color: PdfColor.fromHex("#424242")),
                         ),
                       ],
                     ),
                   ]),
-
-              pw.SizedBox(height: 5), // Add some spacing
-              pw.Divider(),
+              pw.SizedBox(height: 6),
+              // pw.Divider(color: PdfColor.fromHex("#616161"), height: 5),
+              pw.Divider(height: 3, color: PdfColor.fromHex("#616161")),
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
                   pw.Text(
                     "Site Inspection",
                     style: pw.TextStyle(
-                        fontSize: 15, fontWeight: pw.FontWeight.normal),
+                        fontSize: 13, fontWeight: pw.FontWeight.normal),
                   ),
                   pw.Text(
                     DateFormat('dd/MM/yyyy').format(DateTime.now()),
                     style: pw.TextStyle(
-                        fontSize: 15, fontWeight: pw.FontWeight.normal),
+                        fontSize: 13,
+                        fontWeight: pw.FontWeight.normal,
+                        color: PdfColor.fromHex("#616161")),
                   ),
                 ],
               ),
-              pw.Divider(),
-
+              pw.Divider(height: 3, color: PdfColor.fromHex("#BDBDBD")),
+              pw.SizedBox(height: 5),
               // Client Name
               _buildTextFieldRow(
                   'Client Name : ', clientNameController.text, pdf),
@@ -172,7 +184,20 @@ class _CreatePdfFromDataState extends State<CreatePdfFromData> {
 
     // Save and share the generated PDF
     final Uint8List bytes = await pdf.save();
-    await Printing.sharePdf(bytes: bytes, filename: 'project_report.pdf');
+    await Printing.sharePdf(bytes: bytes, filename: 'âlekha architects - Site Inspection');
+
+    // // Save the PDF to bytes
+    // final Uint8List bytes = await pdf.save();
+
+    // // Get the current date
+    // final currentDate = DateTime.now();
+
+    // // Create the filename with the current date
+    // final filename =
+    //     'âlekha architects - Site Inspection - ${currentDate.day}/${currentDate.month}/${currentDate.year}';
+
+    // // Share the PDF
+    // await Printing.sharePdf(bytes: bytes, filename: filename);
   }
 
   // Helper function to build a row of text fields
@@ -200,34 +225,33 @@ class _CreatePdfFromDataState extends State<CreatePdfFromData> {
   //   }
   // }
   // Helper function to build a row of text fields
- pw.Widget _buildTextFieldRow(String label, String value, pw.Document pdf) {
-  if (value.isNotEmpty) {
-    return pw.Container(
-      margin: const pw.EdgeInsets.only(bottom: 5),
-      child: pw.Row(
-        crossAxisAlignment: pw.CrossAxisAlignment.start,
-        children: [
-          pw.Text(
-            label,
-            style: pw.TextStyle(
-              fontWeight: pw.FontWeight.bold,
-              fontSize: 16, // Adjust font size for label
+  pw.Widget _buildTextFieldRow(String label, String value, pw.Document pdf) {
+    if (value.isNotEmpty) {
+      return pw.Container(
+        margin: const pw.EdgeInsets.only(bottom: 5),
+        child: pw.Row(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          children: [
+            pw.Text(
+              label,
+              style: pw.TextStyle(
+                fontWeight: pw.FontWeight.bold,
+                fontSize: 13, // Adjust font size for label
+              ),
             ),
-          ),
-          pw.Text(
-            value,
-            style: pw.TextStyle(
-              fontSize: 14, // Adjust font size for value
+            pw.Text(
+              value,
+              style: const pw.TextStyle(
+                fontSize: 13, // Adjust font size for value
+              ),
             ),
-          ),
-        ],
-      ),
-    );
-  } else {
-    return pw.SizedBox(); // Return an empty SizedBox if value is empty
+          ],
+        ),
+      );
+    } else {
+      return pw.SizedBox(); // Return an empty SizedBox if value is empty
+    }
   }
-}
-
 
   Future<void> _getImage() async {
     final pickedFile =
@@ -290,6 +314,34 @@ class _CreatePdfFromDataState extends State<CreatePdfFromData> {
               const SizedBox(
                 height: 20,
               ),
+              CommonDropDownWithoutSearch(
+                borderColor: PickColors.primaryColor,
+                hintText: "Select project category",
+                name: 'Project Category',
+                items: projectCategory
+                    .map((category) => DropdownMenuItem<String>(
+                          value: category,
+                          child: Text(
+                            category,
+                            style: const TextStyle(
+                                fontSize: 15, fontWeight: FontWeight.w400),
+                          ),
+                        ))
+                    .toList(),
+                isExpanded: false,
+                initialValue: _selectedProjectCategory,
+                onChanged: (newValue) {
+                  setState(
+                    () {
+                      _selectedProjectCategory = newValue.toString();
+                    },
+                  );
+                  debugPrint("----------$_selectedProjectCategory");
+                },
+              ),
+              const SizedBox(
+                height: 20,
+              ),
               CommonTextFieldWithBorder(
                 fillColor: Colors.transparent,
                 filled: true,
@@ -320,30 +372,6 @@ class _CreatePdfFromDataState extends State<CreatePdfFromData> {
                   }
                 },
                 borderRadius: BorderRadius.circular(10),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              CommonDropDownWithoutSearch(
-                borderColor: PickColors.primaryColor,
-                hintText: "Select project category",
-                name: 'Project Category',
-                items: projectCategory
-                    .map((category) => DropdownMenuItem<String>(
-                          value: category,
-                          child: Text(category),
-                        ))
-                    .toList(),
-                isExpanded: false,
-                initialValue: _selectedProjectCategory,
-                onChanged: (newValue) {
-                  setState(
-                    () {
-                      _selectedProjectCategory = newValue.toString();
-                    },
-                  );
-                  print("----------$_selectedProjectCategory");
-                },
               ),
               const SizedBox(
                 height: 20,
@@ -466,11 +494,14 @@ class CommonTextFieldWithFocus extends StatelessWidget {
         cursorColor: PickColors.primaryColor,
         decoration: InputDecoration(
           contentPadding:
-              const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+              const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
           hintText: hintText,
-          hintStyle: const TextStyle(color: PickColors.primaryColor),
-          labelText: labelText,
-          labelStyle: const TextStyle(color: Colors.black),
+          hintStyle: const TextStyle(
+              color: PickColors.primaryColor,
+              fontSize: 15,
+              fontWeight: FontWeight.w400),
+          // labelText: labelText,
+          // labelStyle: const TextStyle(color: Colors.black),
           border:
               const OutlineInputBorder(), // Add a border around the TextField
           errorBorder: OutlineInputBorder(

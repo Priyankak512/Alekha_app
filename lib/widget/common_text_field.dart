@@ -145,13 +145,17 @@ class _CommonTextFieldWithBorderState extends State<CommonTextFieldWithBorder> {
                 overflow: TextOverflow.visible,
                 fontSize: 10,
               ),
+              // hintStyle: const TextStyle(
+              //   color: Colors.grey,
+              //   fontWeight: FontWeight.w400,
+              //   fontSize: 13,
+              // ),
               hintStyle: const TextStyle(
-                color: Colors.grey,
-                fontWeight: FontWeight.w400,
-                fontSize: 13,
-              ),
+              color: PickColors.primaryColor,
+              fontSize: 15,
+              fontWeight: FontWeight.w400),
               contentPadding:
-                  const EdgeInsets.symmetric(horizontal: 10, vertical: 10),
+                  const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
               suffixIcon: widget.obscure != null
                   ? Padding(
                       padding: const EdgeInsets.all(8.0),

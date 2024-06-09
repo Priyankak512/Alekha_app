@@ -56,8 +56,8 @@ class _CommonDropDownWithoutSearchState
         isExpanded: widget.isExpanded,
         value: widget.initialValue,
         style: widget.isDisabled
-            ? TextStyle(
-                color:Colors.black,
+            ?const TextStyle(
+                color: Colors.black,
                 fontWeight: FontWeight.w100,
                 fontSize: 15,
               )
@@ -70,15 +70,15 @@ class _CommonDropDownWithoutSearchState
           filled: widget.filled,
           errorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: Colors.red),
+            borderSide: const BorderSide(color: Colors.red),
           ),
           focusedErrorBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: Colors.red),
+            borderSide: const BorderSide(color: Colors.red),
           ),
           focusedBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: PickColors.primaryColor),
+            borderSide: const BorderSide(color: Colors.black),
           ),
           enabledBorder: OutlineInputBorder(
             borderRadius: BorderRadius.circular(10),
@@ -89,14 +89,15 @@ class _CommonDropDownWithoutSearchState
             borderSide: BorderSide(color: widget.borderColor),
           ),
           hintText: widget.hintText,
-          contentPadding: EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
           // contentPadding: widget.contentPadding ??
           //     EdgeInsets.symmetric(horizontal: 10, vertical: 8),
           // isDense: true,
-          hintStyle: TextStyle(
-            color: Colors.black,
-            fontSize: 12,
-          ),
+          hintStyle: const TextStyle(
+              color: PickColors.primaryColor,
+              fontSize: 15,
+              fontWeight: FontWeight.w400),
         ),
         items: widget.items,
         onChanged: widget.onChanged,

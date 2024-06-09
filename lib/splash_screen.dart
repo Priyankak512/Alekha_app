@@ -38,12 +38,12 @@ class _SplashScreenState extends State<SplashScreen> {
       body: SafeArea(
         child: Stack(children: [
           Center(
-            child: SizedBox(
+            child: Container(
               height: double.infinity,
               width: double.infinity,
               child: Padding(
                 padding: const EdgeInsets.all(40.0),
-                child: Image.asset(PickImages.alekhaLogo),
+                child: Image.asset(PickImages.alekhaArchitectsIcon),
               ),
             ),
           ),
