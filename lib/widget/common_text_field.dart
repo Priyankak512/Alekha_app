@@ -1,4 +1,5 @@
 import 'package:alekha/constant/colors.dart';
+import 'package:alekha/constant/text_style.dart';
 import 'package:alekha/widget/textfield_label.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -100,13 +101,15 @@ class _CommonTextFieldWithBorderState extends State<CommonTextFieldWithBorder> {
             autocorrect: true,
             enabled: widget.isEnable,
             onSaved: widget.onSaved,
-            style: !(widget.isEnable ?? true)
-                ? const TextStyle(
-                    color: Colors.grey,
-                    fontWeight: FontWeight.w100,
-                    fontSize: 15,
-                  )
-                : null,
+            style: CommonTextStyle().textFieldTitleTextStyle,
+            //  !(widget.isEnable ?? true)
+            //     ?
+            // const TextStyle(
+            //     color: Colors.white,
+            //     fontWeight: FontWeight.w100,
+            //     fontSize: 15,
+            //   ),
+            // : null,
             keyboardType: widget.keyboardType,
             // maxLines: widget.maxLines,
             maxLength: widget.maxLength,
@@ -151,9 +154,9 @@ class _CommonTextFieldWithBorderState extends State<CommonTextFieldWithBorder> {
               //   fontSize: 13,
               // ),
               hintStyle: const TextStyle(
-              color: PickColors.primaryColor,
-              fontSize: 15,
-              fontWeight: FontWeight.w400),
+                  color: PickColors.primaryColor,
+                  fontSize: 15,
+                  fontWeight: FontWeight.w400),
               contentPadding:
                   const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
               suffixIcon: widget.obscure != null
@@ -185,17 +188,17 @@ class _CommonTextFieldWithBorderState extends State<CommonTextFieldWithBorder> {
               ),
               focusedBorder: OutlineInputBorder(
                 borderRadius: widget.borderRadius ?? BorderRadius.circular(10),
-                borderSide: const BorderSide(color: Colors.black),
+                borderSide: const BorderSide(
+                    color: PickColors.primaryColor, width: 0.1),
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: widget.borderRadius ?? BorderRadius.circular(10),
-                borderSide: const BorderSide(
-                  color: Colors.grey,
-                ),
+                borderSide:  BorderSide(color: PickColors.lightBlackColor, width: 0.1),
               ),
               disabledBorder: OutlineInputBorder(
                 borderRadius: widget.borderRadius ?? BorderRadius.circular(10),
-                borderSide: const BorderSide(color: PickColors.primaryColor),
+                borderSide: const BorderSide(
+                    color: PickColors.primaryColor, width: 0.1),
               ),
             ),
           ),
@@ -234,129 +237,77 @@ String? validateTextFieldByKey({
       RegExp(r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$');
 
   RegExp ifscCodeExpression = RegExp("^[A-Z]{4}[0][A-Z0-9]{6}");
+}
 
-  // if (textFieldValue == null || textFieldValue.trim() == "") {
-  //   // if (isRequired) {
-  //   //   validationError = "$textKey";
-  //   // } else {
-  //   //   validationError = null;
-  //   // }
-  // } else if (textKey == ValidationKey.emailKey) {
-  //   if (emailExpression.hasMatch(textFieldValue)) {
-  //     validationError = null;
-  //   } else {
-  //     validationError = "Please Enter Valid Email";
-  //   }
-  // } else if (textKey == ValidationKey.yearKey) {
-  //   final year = int.tryParse(textFieldValue);
-  //   if (year! < 1900 || year > 3000) {
-  //     return 'Please Enter A Year Between 1900 And 3000 Year';
-  //   }
-  // } else if (textKey == ValidationKey.mobileNumberKey) {
-  //   if (textFieldValue.length == 10) {
-  //     validationError = null;
-  //   } else {
-  //     validationError = "Please Enter Valid Mobile Number";
-  //   }
-  // } else if (textKey == ValidationKey.whatsappNumberKey) {
-  //   if (textFieldValue.length == 10) {
-  //     validationError = null;
-  //   } else {
-  //     validationError = "Please Enter Valid Whatsapp Number";
-  //   }
-  // } else if (textKey == ValidationKey.urlLinkKey) {
-  //   // if (validLinkExpression.hasMatch(textFieldValue)) {
-  //   //   validationError = null;
-  //   // } else {
-  //   //   validationError = "Please Enter Valid URL";
-  //   // }
-  //   if (checkUrlLink(url: textFieldValue)) {
-  //     validationError = null;
-  //   } else {
-  //     validationError = "Please Enter Valid URL";
-  //   }
-  // } else if (textKey == ValidationKey.percentageGradeKey) {
-  //   if (isValidScore(score: textFieldValue)) {
-  //     validationError = null;
-  //   } else {
-  //     validationError = "Please Enter Valid Percentage";
-  //   }
-  // } else if (textKey == ValidationKey.dateKey) {
-  //   if (getValidDateFromString(dateText: textFieldValue) != null) {
-  //     validationError = null;
-  //   } else {
-  //     validationError = "Please Enter Valid Date";
-  //   }
-  // } else if (textKey == ValidationKey.dateKey) {
-  //   if (getValidMonthFromString(dateText: textFieldValue) != null) {
-  //     validationError = null;
-  //   } else {
-  //     validationError = "Please Enter Valid Date";
-  //   }
-  // } else if (textKey == ValidationKey.gstKey) {
-  //   if (gstNumberPattern.hasMatch(textFieldValue)) {
-  //     validationError = null;
-  //   } else {
-  //     validationError = "Please Enter Valid GST Number";
-  //   }
-  // } else if (textKey == ValidationKey.aadharCardKey) {
-  //   if (textFieldValue.length == 12) {
-  //     validationError = null;
-  //   } else {
-  //     validationError = "Please Enter Valid Aadhar Card Number";
-  //   }
-  // } else if (textKey == ValidationKey.panCardKey) {
-  //   if (panCardExpression.hasMatch(textFieldValue)) {
-  //     validationError = null;
-  //   } else {
-  //     validationError = "Please Enter Valid Pan Card Number";
-  //   }
-  // } else if (textKey == ValidationKey.drivingLicenseKey) {
-  //   if (drivingLicense.hasMatch(textFieldValue)) {
-  //     validationError = null;
-  //   } else {
-  //     validationError = "Please Enter Valid Driving License Number";
-  //   }
-  // } else if (textKey == ValidationKey.pinCodeKey) {
-  //   if (textFieldValue.length <= 10 && textFieldValue.length >= 6) {
-  //     validationError = null;
-  //   } else {
-  //     validationError = "Please Enter Valid Pin Code";
-  //   }
-  // } else if (textKey == ValidationKey.passwordKey) {
-  //   if (passwordExpression.hasMatch(textFieldValue)) {
-  //     validationError = null;
-  //   } else {
-  //     validationError =
-  //         "Password Must Contain At Least 8 Characters, One Upper Case..., \nOne Lower Case, One Digit And One Special Character";
-  //   }
-  // } else if (textKey == ValidationKey.reEnteredPassword) {
-  //   if (textFieldValue == matchValue) {
-  //     validationError = null;
-  //   } else {
-  //     validationError = "Password And Confirm Password Does Not Match";
-  //   }
-  // } else if (textKey == ValidationKey.fileName) {
-  //   if (fileName.hasMatch(textFieldValue)) {
-  //     validationError = null;
-  //   } else {
-  //     validationError = "Please Add Valid Name";
-  //   }
-  // } else if (textKey == ValidationKey.ifscCodeValueKey) {
-  //   if (ifscCodeExpression.hasMatch(textFieldValue)) {
-  //     validationError = null;
-  //   } else {
-  //     validationError = "Enter Valid IFSC Code";
-  //   }
-  // } else if (textKey == ValidationKey.fullName) {
-  //   if (fullName.hasMatch(textFieldValue)) {
-  //     validationError = null;
-  //   } else {
-  //     validationError = "Enter Valid Full Name";
-  //   }
-  // } else {
-  //   validationError = null;
-  // }
 
-  // return validationError;
+class CommonTextFieldWithFocus extends StatelessWidget {
+  final TextEditingController controller;
+  final String hintText;
+  final String labelText;
+  final int maxLines;
+  final TextInputAction? textInputAction;
+  final dynamic keyboardType;
+  final void Function(String)? onSubmitted;
+  final void Function(bool)? onFocusChange;
+  final List<TextInputFormatter>? inputFormatters; // New parameter
+
+  const CommonTextFieldWithFocus({
+    Key? key,
+    required this.controller,
+    required this.hintText,
+    required this.labelText,
+    this.maxLines = 1,
+    this.onSubmitted,
+    this.textInputAction,
+    this.onFocusChange,
+    this.keyboardType,
+    this.inputFormatters, // Initialize optional parameter
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Focus(
+      onFocusChange: onFocusChange,
+      child: TextField(
+        maxLines: maxLines,
+        controller: controller,
+        keyboardType: keyboardType,
+        cursorColor: PickColors.questionTextColor,
+        style: CommonTextStyle().textFieldTitleTextStyle,
+        decoration: InputDecoration(
+          contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+          hintText: hintText,
+          hintStyle: CommonTextStyle().textFieldTitleTextStyle,
+          label: Text(
+            labelText,
+            style: CommonTextStyle().textFieldTitleTextStyle,
+          ),
+          border: const OutlineInputBorder(),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: Colors.red),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: Colors.red),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: Colors.white),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: PickColors.textfieldBorderColor),
+          ),
+          disabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: PickColors.textfieldBorderColor),
+          ),
+        ),
+        onSubmitted: onSubmitted,
+        textInputAction: textInputAction,
+        inputFormatters: inputFormatters, // Pass inputFormatters to TextField
+      ),
+    );
+  }
 }

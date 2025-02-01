@@ -3,7 +3,11 @@ import 'dart:io';
 import 'dart:typed_data';
 
 import 'package:alekha/constant/colors.dart';
+import 'package:alekha/constant/date_formates.dart';
+import 'package:alekha/constant/global_list.dart';
 import 'package:alekha/constant/images_route.dart';
+import 'package:alekha/constant/navigation_route.dart';
+import 'package:alekha/constant/text_style.dart';
 import 'package:alekha/widget/common_dropdown.dart';
 import 'package:alekha/widget/common_material_button.dart';
 import 'package:alekha/widget/common_text_field.dart';
@@ -16,15 +20,14 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 
-class CreatePdfFromData extends StatefulWidget {
-  const CreatePdfFromData({Key? key}) : super(key: key);
+class SiteVisitReportScreen extends StatefulWidget {
+  const SiteVisitReportScreen({Key? key}) : super(key: key);
 
   @override
-  State<CreatePdfFromData> createState() => _CreatePdfFromDataState();
+  State<SiteVisitReportScreen> createState() => _CreatePdfFromDataState();
 }
 
-class _CreatePdfFromDataState extends State<CreatePdfFromData> {
-  DateFormat normalDateFormate = DateFormat('dd/MM/yyyy');
+class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
   String? _selectedProjectCategory;
 
   TextEditingController clientNameController = TextEditingController();
@@ -39,6 +42,8 @@ class _CreatePdfFromDataState extends State<CreatePdfFromData> {
 
   File? _image;
   List<File> _images = [];
+
+  int _currentStep = 0;
 
   Future<void> _generatePDF() async {
     final pdf = pw.Document();
@@ -184,46 +189,10 @@ class _CreatePdfFromDataState extends State<CreatePdfFromData> {
 
     // Save and share the generated PDF
     final Uint8List bytes = await pdf.save();
-    await Printing.sharePdf(bytes: bytes, filename: 'âlekha architects - Site Inspection');
-
-    // // Save the PDF to bytes
-    // final Uint8List bytes = await pdf.save();
-
-    // // Get the current date
-    // final currentDate = DateTime.now();
-
-    // // Create the filename with the current date
-    // final filename =
-    //     'âlekha architects - Site Inspection - ${currentDate.day}/${currentDate.month}/${currentDate.year}';
-
-    // // Share the PDF
-    // await Printing.sharePdf(bytes: bytes, filename: filename);
+    await Printing.sharePdf(
+        bytes: bytes, filename: 'âlekha architects - Site Inspection');
   }
 
-  // Helper function to build a row of text fields
-  // pw.Widget _buildTextFieldRow(String label, String value, pw.Document pdf) {
-  //   if (value.isNotEmpty) {
-  //     return pw.Container(
-  //       margin: const pw.EdgeInsets.only(bottom: 5),
-  //       child: pw.Row(
-  //         crossAxisAlignment: pw.CrossAxisAlignment.start,
-  //         children: [
-  //           pw.Text(
-  //             label + value,
-  //             style: pw.TextStyle(fontWeight: pw.FontWeight.bold),
-  //           ),
-  //           // pw.Text(
-  //           //   value,
-  //           //   style: const pw.TextStyle(),
-  //           // ),
-  //           // pw.SizedBox(height: 5),
-  //         ],
-  //       ),
-  //     );
-  //   } else {
-  //     return pw.SizedBox(); // Return an empty SizedBox if value is empty
-  //   }
-  // }
   // Helper function to build a row of text fields
   pw.Widget _buildTextFieldRow(String label, String value, pw.Document pdf) {
     if (value.isNotEmpty) {
@@ -274,12 +243,25 @@ class _CreatePdfFromDataState extends State<CreatePdfFromData> {
 
   @override
   Widget build(BuildContext context) {
-    List<String> projectCategory = ["A", "I", "AI"];
     return Scaffold(
+      backgroundColor: PickColors.whiteColor,
       appBar: AppBar(
+        backgroundColor: PickColors.whiteColor,
         centerTitle: true,
+        leading: GestureDetector(
+          onTap: () {
+            backToScreen(context: context);
+          },
+          child: Icon(
+            Icons.arrow_left_outlined,
+            color: PickColors.hintColor,
+          ),
+        ),
         automaticallyImplyLeading: false,
-        title: const Text('Site Visit Report'),
+        title: Text(
+          'Site Visit Report',
+          style: CommonTextStyle().appBarTextStyle,
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -318,13 +300,12 @@ class _CreatePdfFromDataState extends State<CreatePdfFromData> {
                 borderColor: PickColors.primaryColor,
                 hintText: "Select project category",
                 name: 'Project Category',
-                items: projectCategory
+                items: GlobalList.projectCategory
                     .map((category) => DropdownMenuItem<String>(
                           value: category,
                           child: Text(
                             category,
-                            style: const TextStyle(
-                                fontSize: 15, fontWeight: FontWeight.w400),
+                            style: CommonTextStyle().textFieldTitleTextStyle,
                           ),
                         ))
                     .toList(),
@@ -345,7 +326,7 @@ class _CreatePdfFromDataState extends State<CreatePdfFromData> {
               CommonTextFieldWithBorder(
                 fillColor: Colors.transparent,
                 filled: true,
-                prefix: const Padding(
+                prefix: Padding(
                   padding: EdgeInsets.symmetric(
                     horizontal: 8.0,
                   ),
@@ -367,7 +348,8 @@ class _CreatePdfFromDataState extends State<CreatePdfFromData> {
                     context: context,
                   );
                   if (pickedDate != null) {
-                    String formattedDate = normalDateFormate.format(pickedDate);
+                    String formattedDate =
+                        DateFormate.normalDateFormate.format(pickedDate);
                     dateController.text = formattedDate; // Set the picked date
                   }
                 },
@@ -440,95 +422,23 @@ class _CreatePdfFromDataState extends State<CreatePdfFromData> {
                   : Container(),
               const SizedBox(height: 20),
               CommonMaterialButton(
-                title: 'Add Image',
-                onPressed: _getImage,
-                prefixIcon: PickImages.cameraIcon,
-                prefixIconColor: Colors.white,
-                color: Colors.black,
-              ),
+                  title: 'Add Image',
+                  onPressed: _getImage,
+                  style: CommonTextStyle().buttonTextStyle,
+                  prefixIcon: PickImages.cameraIcon,
+                  prefixIconColor: Colors.black,
+                  color: PickColors.primaryColor),
               const SizedBox(height: 20),
               CommonMaterialButton(
                 title: 'Create PDF',
+                style: CommonTextStyle().buttonTextStyle,
                 onPressed: _generatePDF,
-                color: Colors.black,
+                color: PickColors.primaryColor,
                 verticalPadding: 20,
               ),
             ],
           ),
         ),
-      ),
-    );
-  }
-}
-
-class CommonTextFieldWithFocus extends StatelessWidget {
-  final TextEditingController controller;
-  final String hintText;
-  final String labelText;
-  final int maxLines;
-  final TextInputAction? textInputAction;
-  final dynamic keyboardType;
-  final void Function(String)? onSubmitted;
-  final void Function(bool)? onFocusChange;
-
-  const CommonTextFieldWithFocus({
-    Key? key,
-    required this.controller,
-    required this.hintText,
-    required this.labelText,
-    this.maxLines = 1,
-    this.onSubmitted,
-    this.textInputAction,
-    this.onFocusChange,
-    this.keyboardType,
-  }) : super(key: key);
-
-  @override
-  Widget build(BuildContext context) {
-    return Focus(
-      onFocusChange: onFocusChange,
-      child: TextField(
-        maxLines: maxLines,
-        controller: controller,
-        keyboardType: keyboardType,
-        cursorColor: PickColors.primaryColor,
-        decoration: InputDecoration(
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-          hintText: hintText,
-          hintStyle: const TextStyle(
-              color: PickColors.primaryColor,
-              fontSize: 15,
-              fontWeight: FontWeight.w400),
-          // labelText: labelText,
-          // labelStyle: const TextStyle(color: Colors.black),
-          border:
-              const OutlineInputBorder(), // Add a border around the TextField
-          errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: Colors.red),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: Colors.red),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: Colors.black),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(
-              color: Colors.grey,
-            ),
-          ),
-          disabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: PickColors.primaryColor),
-          ),
-        ),
-        onSubmitted: onSubmitted,
-        textInputAction: textInputAction,
       ),
     );
   }

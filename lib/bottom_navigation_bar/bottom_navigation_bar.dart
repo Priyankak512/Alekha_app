@@ -1,7 +1,7 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:alekha/create_pdf/create_pdf_from_data.dart';
-import 'package:alekha/create_pdf/pdf_screen.dart';
+import 'package:alekha/screens/create_pdf/site_visit_report_screen.dart';
+import 'package:alekha/screens/create_pdf/pdf_screen.dart';
 import 'package:alekha/gradient_color_screen.dart';
 
 class CurverdBottomSheet extends StatelessWidget {
@@ -26,7 +26,7 @@ class CurverdBottomSheet extends StatelessWidget {
         body: PageView(
           controller: _pageController,
           children: const <Widget>[
-            CreatePdfFromData(),
+            SiteVisitReportScreen(),
             PdfScreen(),
             GradientColorScreen(),
           ],

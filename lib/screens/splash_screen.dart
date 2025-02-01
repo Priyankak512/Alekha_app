@@ -1,7 +1,8 @@
 import 'dart:async';
-
+import 'package:alekha/constant/colors.dart';
 import 'package:alekha/constant/images_route.dart';
-import 'package:alekha/create_pdf/create_pdf_from_data.dart';
+import 'package:alekha/constant/navigation_route.dart';
+import 'package:alekha/screens/home/home_view/home_screen.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -21,11 +22,12 @@ class _SplashScreenState extends State<SplashScreen> {
   Future<void> initializeData() async {
     Timer(
       const Duration(seconds: 3),
-      () => Navigator.of(context).push(
-        MaterialPageRoute(
-          builder: (context) => const CreatePdfFromData(),
-        ),
-      ),
+      () => changeScreenWithClearStack(context: context, widget: HomeScreen()) 
+      // Navigator.of(context).push(
+      //   MaterialPageRoute(
+      //     builder: (context) => const HomeScreen(),
+      //   ),
+      // ),
     );
     // changeScreen(
     //     context: context, widget: const CreatePdfFromData()));
@@ -34,7 +36,7 @@ class _SplashScreenState extends State<SplashScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white,
+      backgroundColor: PickColors.blackColor,
       body: SafeArea(
         child: Stack(children: [
           Center(

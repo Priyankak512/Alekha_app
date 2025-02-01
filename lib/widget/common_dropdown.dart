@@ -1,8 +1,8 @@
-import 'package:alekha/constant/colors.dart';
+import 'package:alekha/constant/text_style.dart';
 import 'package:flutter/material.dart';
 
 class CommonDropDownWithoutSearch extends StatefulWidget {
-  CommonDropDownWithoutSearch({
+  const CommonDropDownWithoutSearch({
     Key? key,
     this.labelText,
     this.hintStyle,
@@ -55,50 +55,51 @@ class _CommonDropDownWithoutSearchState
         validator: widget.validator,
         isExpanded: widget.isExpanded,
         value: widget.initialValue,
-        style: widget.isDisabled
-            ?const TextStyle(
-                color: Colors.black,
-                fontWeight: FontWeight.w100,
-                fontSize: 15,
-              )
-            : null,
+        // style: widget.isDisabled
+        //     ? const TextStyle(
+        //         color: Colors.black,
+        //         fontWeight: FontWeight.w100,
+        //         fontSize: 15,
+        //       )
+        style: CommonTextStyle().textFieldTitleTextStyle,
+        // : null,
         decoration: InputDecoration(
-          constraints: widget.constraints,
-          helperText: widget.isInRow ? "" : null,
-          fillColor: widget.fillColor,
-          labelText: widget.labelText,
-          filled: widget.filled,
-          errorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: Colors.red),
-          ),
-          focusedErrorBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: Colors.red),
-          ),
-          focusedBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: const BorderSide(color: Colors.black),
-          ),
-          enabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: widget.borderColor),
-          ),
-          disabledBorder: OutlineInputBorder(
-            borderRadius: BorderRadius.circular(10),
-            borderSide: BorderSide(color: widget.borderColor),
-          ),
-          hintText: widget.hintText,
-          contentPadding:
-              const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-          // contentPadding: widget.contentPadding ??
-          //     EdgeInsets.symmetric(horizontal: 10, vertical: 8),
-          // isDense: true,
-          hintStyle: const TextStyle(
-              color: PickColors.primaryColor,
-              fontSize: 15,
-              fontWeight: FontWeight.w400),
-        ),
+            constraints: widget.constraints,
+            helperText: widget.isInRow ? "" : null,
+            fillColor: widget.fillColor,
+            labelText: widget.labelText,  
+            filled: widget.filled,
+            errorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(color: Colors.red),
+            ),
+            focusedErrorBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(color: Colors.red),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(color: Colors.white),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide(color: widget.borderColor, width: 0.1),
+            ),
+            disabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide(color: widget.borderColor, width: 0.1),
+            ),
+            hintText: widget.hintText,
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 10, vertical: 12),
+            // contentPadding: widget.contentPadding ??
+            //     EdgeInsets.symmetric(horizontal: 10, vertical: 8),
+            // isDense: true,
+            // hintStyle: const TextStyle(
+            //     color: PickColors.primaryColor,
+            //     fontSize: 15,
+            //     fontWeight: FontWeight.w400),
+            hintStyle: CommonTextStyle().textFieldTitleTextStyle),
         items: widget.items,
         onChanged: widget.onChanged,
       ),

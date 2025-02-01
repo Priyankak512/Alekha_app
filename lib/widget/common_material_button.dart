@@ -1,21 +1,39 @@
 import 'package:alekha/constant/colors.dart';
+import 'package:alekha/constant/hight_width_picker.dart';
+import 'package:alekha/constant/text_style.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class CommonMaterialButton extends StatefulWidget {
-  const CommonMaterialButton({
+  // const CommonMaterialButton({
+  //   super.key,
+  //   required this.title,
+  //   this.style =  CommonTextStyle().buttonTextStyle,
+  //   required this.onPressed,
+  //   this.color = PickColors.primaryColor,
+  //   this.borderColor = Colors.transparent,
+  //   this.prefixIconColor,
+  //   this.isButtonDisable = false,
+  //   this.borderRadius = 10,
+  //   this.verticalPadding = 10,
+  //   this.prefixIcon,
+  // });
+
+  CommonMaterialButton({
     super.key,
     required this.title,
-    this.style = const TextStyle(color: Colors.white, fontSize: 15),
+    TextStyle? style,
     required this.onPressed,
     this.color = PickColors.primaryColor,
     this.borderColor = Colors.transparent,
     this.prefixIconColor,
+    this.suffixIconColor,
     this.isButtonDisable = false,
     this.borderRadius = 10,
     this.verticalPadding = 10,
     this.prefixIcon,
-  });
+    this.suffixIcon,
+  }) : style = style ?? CommonTextStyle().buttonTextStyle;
 
   final String title;
   final Color? color;
@@ -23,10 +41,12 @@ class CommonMaterialButton extends StatefulWidget {
   final bool isButtonDisable;
   final Color? borderColor;
   final Color? prefixIconColor;
+  final Color? suffixIconColor;
   final double? verticalPadding;
   final TextStyle? style;
   final double? borderRadius;
   final String? prefixIcon;
+  final String? suffixIcon;
 
   @override
   State<CommonMaterialButton> createState() => _CommonMaterialButtonState();
@@ -69,9 +89,7 @@ class _CommonMaterialButtonState extends State<CommonMaterialButton> {
                 const SizedBox(
                   height: 10,
                 ),
-              SizedBox(
-                width: 10,
-              ),
+              PickHeightAndWidth.width10,
               Flexible(
                 child: Text(
                   textAlign: TextAlign.center,
@@ -82,6 +100,13 @@ class _CommonMaterialButtonState extends State<CommonMaterialButton> {
                       : widget.style),
                 ),
               ),
+              if (widget.suffixIcon != null)
+                SvgPicture.asset(
+                  alignment: Alignment.centerRight,
+                  widget.suffixIcon!,
+                  height: 17,
+                  color: widget.suffixIconColor,
+                ),
             ],
           ),
         ),
