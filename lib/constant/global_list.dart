@@ -23,6 +23,8 @@ class GlobalList {
   ];
 
   static List<String> regardsName = ["Ar.Tushar Kachhadiya", "Ar.Ronak Jain"];
+  static List<String> paymentModeList = ["Cash", "UPI", "Bank Transfer"];
+
   static List<String> timeStatus = ["AM", "PM"];
 
   //Home List ===========
@@ -101,7 +103,6 @@ class GlobalList {
     }
   ];
 
-
   //Forms List =======================
   static List formsList = [
     {
@@ -110,7 +111,7 @@ class GlobalList {
       "icon": PickImages.architectureIcon,
       "screen": const ArchitectureScreen(),
     },
-    { 
+    {
       "id": "2",
       "title": "Interior",
       "icon": PickImages.meetingIcon,
