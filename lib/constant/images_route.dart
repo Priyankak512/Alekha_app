@@ -1,20 +1,29 @@
 class PickImages {
   static const alekhaLogo = "assets/images/alekha_logo.png";
-  static const cameraIcon = "assets/images/camera_icon.svg";
+  // static const cameraIcon = "assets/images/camera_icon.svg";
   static const alekhaArchitectsIcon = "assets/images/alekha_architects.png";
 
   //Home screen
-  static const persionMailIcon="assets/icons/persion_mail_icon.svg";
-  static const whatsAppIcon="assets/icons/whatsapp_icon.svg";
-
-  
-
-
+  static const persionMailIcon = "assets/icons/persion_mail_icon.svg";
+  static const whatsAppIcon = "assets/icons/whatsapp_icon.svg";
+  static const architectureIcon = "assets/icons/architecture_icon.svg";
+  static const calculatorIcon = "assets/icons/calculator_icon.svg";
+  static const cameraIcon = "assets/icons/camera_icon.svg";
+  static const clockIcon = "assets/icons/clock_icon.svg";
+  static const compassIcon = "assets/icons/compass_icon.svg";
+  static const drawIcon = "assets/icons/draw_icon.svg";
+  static const drawerIcon = "assets/icons/drawer_icon.svg";
+  static const folderOpenIcon = "assets/icons/folder_open_icon.svg";
+  static const invoiceGeneratorIcon = "assets/icons/invoice_generator_icon.svg";
+  static const noteAddIcon = "assets/icons/noteAddIcon.svg";
+  static const pdfIcon = "assets/icons/pdf_icon.svg";
+  static const tableIcon = "assets/icons/table_icon.svg";
+  static const taskListIcon = "assets/icons/task_list_icon.svg";
 
   //OLD ICONS
   static const siteVisitIcon = "assets/icons/site_visit_icon.svg";
   static const meetingIcon = "assets/icons/meeting_icon";
-  static const invoiceGeneratorIcon = "assets/icons/invoice_generator_icon.svg";
+  // static const invoiceGeneratorIcon = "assets/icons/invoice_generator_icon.svg";
   static const projectFilesIcon = "assets/icons/project_files.svg";
   static const selectionIcon = "assets/icons/selection_icon.svg";
   static const formsIcon = "assets/icons/forms_icon.svg";
@@ -22,7 +31,4 @@ class PickImages {
   static const presentationIcon = "assets/icons/presentation_icon.svg";
   static const shareIcon = "assets/icons/share_icon.svg";
   static const feesIcon = "assets/icons/fees_icon.svg";
-  static const calculatorIcon = "assets/icons/calculator_icon.svg";
-  static const compassIcon = "assets/icons/compass_icon.svg";
-  static const drawIcon = "assets/icons/draw_icon.svg";
 }

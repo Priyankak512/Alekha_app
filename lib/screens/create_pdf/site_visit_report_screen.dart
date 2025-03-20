@@ -187,10 +187,13 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
       );
     }
 
-    // Save and share the generated PDF
+    // // Save and share the generated PDF
     final Uint8List bytes = await pdf.save();
     await Printing.sharePdf(
         bytes: bytes, filename: 'âlekha architects - Site Inspection');
+    // //Print the PDF or show preview
+    // await Printing.layoutPdf(
+    //     onLayout: (PdfPageFormat format) async => pdf.save());
   }
 
   // Helper function to build a row of text fields
