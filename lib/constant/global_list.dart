@@ -5,7 +5,7 @@ import 'package:alekha/screens/fees_module/fees_view/fees_reminder_screen.dart';
 import 'package:alekha/screens/fees_module/fees_view/fees_screen.dart';
 import 'package:alekha/screens/forms_module/form_view/architecture_screen.dart';
 import 'package:alekha/screens/forms_module/form_view/form_screen.dart';
-import 'package:alekha/screens/forms_module/form_view/location_screen.dart';
+import 'package:alekha/screens/forms_module/form_view/interior_screen.dart';
 import 'package:alekha/screens/forms_module/form_view/other_forn_screen.dart';
 import 'package:alekha/screens/invoice_generator/invoice_generator_view/invoice_generator_screen.dart';
 import 'package:alekha/screens/meeting_module/meeting_view/meeting_screen.dart';
@@ -113,7 +113,7 @@ class GlobalList {
     },
     {
       "id": "2",
-      "title": "Interior",
+      "title": "Interior",  
       "icon": PickImages.meetingIcon,
       "screen": const InteriorScreen(),
     },
