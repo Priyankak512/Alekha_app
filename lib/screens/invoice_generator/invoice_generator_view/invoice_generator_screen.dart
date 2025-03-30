@@ -378,7 +378,21 @@
 //   }
 // }
 
+import 'dart:typed_data';
+import 'package:alekha/constant/colors.dart';
+import 'package:alekha/constant/date_formates.dart';
+import 'package:alekha/constant/global_list.dart';
+import 'package:alekha/constant/hight_width_picker.dart';
+import 'package:alekha/constant/text_style.dart';
+import 'package:alekha/widget/common_dropdown.dart';
+import 'package:alekha/widget/common_text_field.dart';
+import 'package:alekha/widget/get_date_function.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/widgets.dart';
+import 'package:intl/intl.dart';
+import 'package:alekha/constant/images_route.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
@@ -391,6 +405,15 @@ class InvoiceGeneratorScreen extends StatefulWidget {
 }
 
 class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
+  String? _selectedRegardsType;
+
+  TextEditingController clientNameController = TextEditingController();
+  TextEditingController contactNoController = TextEditingController();
+  TextEditingController dateController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+  TextEditingController invoiceNoController = TextEditingController();
+  TextEditingController bankDetailController = TextEditingController();
+
   // Controllers for text fields
   TextEditingController descriptionController2 = TextEditingController();
   TextEditingController priceController2 = TextEditingController();
@@ -401,6 +424,11 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
 
   // Create a PDF document
   Future<void> _createPdf() async {
+    Uint8List imageData =
+        (await rootBundle.load(PickImages.alekhaArchitectsIcon))
+            .buffer
+            .asUint8List();
+
     // Parse prices to double for calculations
     double price1 = double.tryParse(priceController.text) ?? 0.0;
     double price2 = double.tryParse(priceController2.text) ?? 0.0;
@@ -418,10 +446,97 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
         build: (pw.Context context) {
           return pw.Column(
             children: [
-              pw.Text('PDF Table Example'),
+              // pw.Text('PDF Table Example'),
+
+              pw.Row(
+                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                  children: [
+                    pw.Container(
+                      width: 170, // Adjust the width as needed
+                      height: 60, // Adjust the height as needed
+                      decoration: pw.BoxDecoration(
+                        image: pw.DecorationImage(
+                            image: pw.MemoryImage(imageData),
+                            // Load image from memory
+                            fit: pw.BoxFit.fill),
+                      ),
+                    ),
+                    pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        // pw.Text(
+                        //   "Ar. Ronak Surendra Jain",
+                        //   style: pw.TextStyle(
+                        //       fontSize: 10,
+                        //       fontWeight: pw.FontWeight.normal,
+                        //       color: PdfColor.fromHex("#424242")),
+                        // ),
+                        pw.Text(
+                          "+91 93760 73577",
+                          style: pw.TextStyle(
+                              fontSize: 10,
+                              fontWeight: pw.FontWeight.normal,
+                              color: PdfColor.fromHex("#424242")),
+                        ),
+                        pw.SizedBox(height: 5),
+                        // pw.Text(
+                        //   "Ar. Tushar N. Kachhadiya",
+                        //   style: pw.TextStyle(
+                        //       fontSize: 10,
+                        //       fontWeight: pw.FontWeight.normal,
+                        //       color: PdfColor.fromHex("#424242")),
+                        // ),
+                        pw.Text(
+                          "+91 87588 23271",
+                          style: pw.TextStyle(
+                              fontSize: 10,
+                              fontWeight: pw.FontWeight.normal,
+                              color: PdfColor.fromHex("#424242")),
+                        ),
+                        pw.SizedBox(height: 5),
+                        pw.Text(
+                          "alekhaarchitects.com",
+                          style: pw.TextStyle(
+                              fontSize: 10,
+                              fontWeight: pw.FontWeight.normal,
+                              color: PdfColor.fromHex("#424242")),
+                        ),
+                        pw.SizedBox(height: 5),
+                        pw.Text(
+                          "alekhaarchitects@gmail.com",
+                          style: pw.TextStyle(
+                              fontSize: 10,
+                              fontWeight: pw.FontWeight.normal,
+                              color: PdfColor.fromHex("#424242")),
+                        ),
+                      ],
+                    ),
+                  ]),
+              pw.SizedBox(height: 6),
+              // pw.Divider(color: PdfColor.fromHex("#616161"), height: 5),
+              pw.Divider(height: 3, color: PdfColor.fromHex("#616161")),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Text(
+                    "Invoice",
+                    style: pw.TextStyle(
+                        fontSize: 13, fontWeight: pw.FontWeight.normal),
+                  ),
+                  pw.Text(
+                    DateFormat('dd/MM/yyyy').format(DateTime.now()),
+                    style: pw.TextStyle(
+                        fontSize: 13,
+                        fontWeight: pw.FontWeight.normal,
+                        color: PdfColor.fromHex("#616161")),
+                  ),
+                ],
+              ),
+              pw.Divider(height: 3, color: PdfColor.fromHex("#BDBDBD")),
+              pw.SizedBox(height: 5),
               pw.SizedBox(height: 20),
               pw.Table.fromTextArray(
-                headers: ['No.', 'Description', 'Price'],
+                headers: ['No.', 'Description', 'Amount'],
                 data: [
                   [
                     '1',
@@ -472,46 +587,201 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
         centerTitle: true,
         title: const Text("Invoice"),
       ),
-      body: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          children: [
-            TextField(
-              controller: descriptionController,
-              decoration: const InputDecoration(hintText: "Enter Description"),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: priceController,
-              decoration: const InputDecoration(hintText: "Enter Price"),
-              keyboardType: TextInputType.number,
-            ),
-            TextField(
-              controller: descriptionController2,
-              decoration: const InputDecoration(hintText: "Enter Description"),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: priceController2,
-              decoration: const InputDecoration(hintText: "Enter Price"),
-              keyboardType: TextInputType.number,
-            ),
-            TextField(
-              controller: descriptionController3,
-              decoration: const InputDecoration(hintText: "Enter Description"),
-            ),
-            const SizedBox(height: 10),
-            TextField(
-              controller: priceController3,
-              decoration: const InputDecoration(hintText: "Enter Price"),
-              keyboardType: TextInputType.number,
-            ),
-            const SizedBox(height: 20),
-            ElevatedButton(
-              onPressed: _createPdf,
-              child: const Text("Generate PDF"),
-            ),
-          ],
+      body: SingleChildScrollView(
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            children: [
+              CommonTextFieldWithFocus(
+                controller: clientNameController,
+                labelText: "Client Name",
+                hintText: "Client Name",
+                keyboardType: TextInputType.name,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              CommonTextFieldWithFocus(
+                controller: contactNoController,
+                labelText: "Contact No.",
+                hintText: "Contact No.",
+                keyboardType: TextInputType.number,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              CommonTextFieldWithBorder(
+                fillColor: Colors.transparent,
+                filled: true,
+                prefix: const Padding(
+                  padding: EdgeInsets.symmetric(
+                    horizontal: 8.0,
+                  ),
+                  child: Icon(Icons.calendar_month_outlined,
+                      color: PickColors.primaryColor),
+                ),
+                isRequired: true,
+                readOnly: true,
+                hint: "Date",
+                controller: dateController,
+                textInputAction: TextInputAction.none,
+                keyboardType: TextInputType.none,
+                validator: (value) {
+                  return null;
+                },
+                onTap: () async {
+                  DateTime? pickedDate = await getDateFunction(
+                    isOldDate: true,
+                    context: context,
+                  );
+                  if (pickedDate != null) {
+                    String formattedDate =
+                        DateFormate.normalDateFormate.format(pickedDate);
+                    dateController.text = formattedDate; // Set the picked date
+                  }
+                },
+                borderRadius: BorderRadius.circular(10),
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              CommonTextFieldWithFocus(
+                controller: addressController,
+                labelText: "Address",
+                hintText: "Address",
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              CommonTextFieldWithFocus(
+                controller: invoiceNoController,
+                labelText: "Invoice No.",
+                hintText: "Invoice No.",
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              CommonTextFieldWithFocus(
+                controller: invoiceNoController,
+                labelText: " Invoice Reference No.",
+                hintText: "Invoice Reference No.",
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: CommonTextFieldWithFocus(
+                      controller: descriptionController,
+                      labelText: " Description",
+                      hintText: "Description",
+                    ),
+                  ),
+                  PickHeightAndWidth.width5,
+                  Expanded(
+                    child: CommonTextFieldWithFocus(
+                      controller: priceController,
+                      labelText: "Amount",
+                      hintText: "Amount",
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: CommonTextFieldWithFocus(
+                      controller: descriptionController2,
+                      labelText: " Description",
+                      hintText: "Description",
+                    ),
+                  ),
+                  PickHeightAndWidth.width5,
+                  Expanded(
+                    child: CommonTextFieldWithFocus(
+                      controller: priceController2,
+                      labelText: "Amount",
+                      hintText: "Amount",
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              Row(
+                children: [
+                  Expanded(
+                    flex: 2,
+                    child: CommonTextFieldWithFocus(
+                      controller: descriptionController3,
+                      labelText: " Description",
+                      hintText: "Description",
+                    ),
+                  ),
+                  PickHeightAndWidth.width5,
+                  Expanded(
+                    child: CommonTextFieldWithFocus(
+                      controller: priceController3,
+                      labelText: "Amount",
+                      hintText: "Amount",
+                    ),
+                  ),
+                ],
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              CommonDropDownWithoutSearch(
+                borderColor: PickColors.primaryColor,
+                hintText: "Regards",
+                name: 'Regards',
+                items: GlobalList.regardsName
+                    .map((category) => DropdownMenuItem<String>(
+                          value: category,
+                          child: Text(
+                            category,
+                            style: CommonTextStyle().textFieldTitleTextStyle,
+                          ),
+                        ))
+                    .toList(),
+                isExpanded: false,
+                initialValue: _selectedRegardsType,
+                onChanged: (newValue) {
+                  setState(
+                    () {
+                      _selectedRegardsType = newValue.toString();
+                    },
+                  );
+                  debugPrint("----------$_selectedRegardsType");
+                },
+              ),
+              const SizedBox(height: 20),
+              // Comm
+              Container(margin: EdgeInsets.all(0),
+                padding: const EdgeInsets.all(10),
+                decoration: BoxDecoration(
+                  border: Border.all(color: PickColors.textfieldBorderColor),
+                  borderRadius: BorderRadius.circular(20),
+                ),
+                child: Text(
+                  "A/c Name : Alekha Architects\n Bank Name : Surat National Co.Op. Bank\n A/c No. : 008 1201 0000 4535\n IFS Code : SUNB0000008",
+                  style: CommonTextStyle().hintTextStyle,
+                ),
+              ),
+              const SizedBox(height: 20),
+              ElevatedButton(
+                onPressed: _createPdf,
+                child: const Text("Generate PDF"),
+              ),
+            ],
+          ),
         ),
       ),
     );
