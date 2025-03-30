@@ -470,7 +470,7 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
     return Scaffold(
       appBar: AppBar(
         centerTitle: true,
-        title: const Text("PDF View"),
+        title: const Text("Invoice"),
       ),
       body: Padding(
         padding: const EdgeInsets.all(8.0),
