@@ -412,6 +412,8 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
   TextEditingController dateController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController invoiceNoController = TextEditingController();
+
+  TextEditingController invoiceReferenceNoController = TextEditingController();
   TextEditingController bankDetailController = TextEditingController();
 
   // Controllers for text fields
@@ -445,6 +447,7 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
       pw.Page(
         build: (pw.Context context) {
           return pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
               // pw.Text('PDF Table Example'),
 
@@ -519,12 +522,12 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
                   pw.Text(
-                    "Invoice",
+                    "INVOICE",
                     style: pw.TextStyle(
                         fontSize: 13, fontWeight: pw.FontWeight.normal),
                   ),
                   pw.Text(
-                    DateFormat('dd/MM/yyyy').format(DateTime.now()),
+                    "Date : ${DateFormat('dd/MM/yyyy').format(DateTime.now())}",
                     style: pw.TextStyle(
                         fontSize: 13,
                         fontWeight: pw.FontWeight.normal,
@@ -534,6 +537,23 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
               ),
               pw.Divider(height: 3, color: PdfColor.fromHex("#BDBDBD")),
               pw.SizedBox(height: 5),
+              pw.Text("Invoice No. ${invoiceNoController.text}"),
+              pw.Text("FOR : "),
+              pw.Text(
+                "${clientNameController.text}",
+                style: pw.TextStyle(
+                  fontSize: 12,
+                  fontWeight: pw.FontWeight.bold,
+                ),
+              ),
+              pw.Text(
+                "${addressController.text}",
+                style: pw.TextStyle(
+                  fontSize: 12,
+                  fontWeight: pw.FontWeight.bold,
+                ),
+              ),
+
               pw.SizedBox(height: 20),
               pw.Table.fromTextArray(
                 headers: ['No.', 'Description', 'Amount'],
@@ -568,6 +588,39 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
                       3), // Second column width (Description)
                   2: const pw.FlexColumnWidth(2), // Third column width (Price)
                 },
+              ),
+
+              pw.Spacer(),
+              pw.Container(
+                padding: const pw.EdgeInsets.all(5),
+                child: pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    pw.Align(
+                      alignment: pw.Alignment.topRight,
+                      child: pw.Text(
+                        "ALEKHA ARCHITECTS",
+                        style: pw.TextStyle(
+                            fontSize: 12, fontWeight: pw.FontWeight.bold),
+                      ),
+                    ),
+                    pw.SizedBox(height: 10),
+                    // pw.Row(children: [
+                    //   pw.Divider(color: PdfColor.fromHex("#616161")),
+                    //   pw.Text("This is computer generated Invoice"),
+                    //   pw.Divider(color: PdfColor.fromHex("#616161")),
+                    // ]),
+                    pw.Divider(color: PdfColor.fromHex("#616161")),
+                    pw.Text("BANK DETAILS :"),
+                    pw.Text("A/C NAME - ALEKHA ARCHITECTS"),
+                    pw.Text("BANK NAME - SURAT nATIONAL CO. OP. BANK"),
+                    pw.Text("A/C NO. - 008120100004535"),
+                    pw.Text("IFS CODE - SUNB0000008"),
+                    pw.Divider(color: PdfColor.fromHex("#616161")),
+                    pw.Text(
+                        "G.F. Plot No.29, Hira Nagar, Bamroll Road, Nr.Saraswati Hindi Vidyalaya, Surat, Gujrat.")
+                  ],
+                ),
               ),
             ],
           );
@@ -662,8 +715,8 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
                 height: 20,
               ),
               CommonTextFieldWithFocus(
-                controller: invoiceNoController,
-                labelText: " Invoice Reference No.",
+                controller: invoiceReferenceNoController,
+                labelText: "Invoice Reference No.",
                 hintText: "Invoice Reference No.",
               ),
               const SizedBox(
@@ -764,7 +817,8 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
               ),
               const SizedBox(height: 20),
               // Comm
-              Container(margin: EdgeInsets.all(0),
+              Container(
+                margin: EdgeInsets.all(0),
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   border: Border.all(color: PickColors.textfieldBorderColor),

@@ -149,8 +149,7 @@ class _FeesReceivedScreenState extends State<FeesReceivedScreen> {
                   ),
                   PickHeightAndWidth.width10,
                   Expanded(
-                    child:
-                        CommonDropDownWithoutSearch(
+                    child: CommonDropDownWithoutSearch(
                       borderColor: PickColors.primaryColor,
                       hintText: "Payment Mode",
                       name: 'Payment Mode',
@@ -235,7 +234,7 @@ class _FeesReceivedScreenState extends State<FeesReceivedScreen> {
                     TextSpan(text: "Hi,\n${clientNameController.text}\n\n"),
                     TextSpan(
                         text:
-                            "alekha architects had received your fees payment of Rs. {Amount} as fees stage ${feesController.text}  for Project No. ${projectNoController.text} on ${dateMeetingController.text} through ${_paymentMode.toString()}.\n\nFees Summary\n${feesSummeryController.text}\n\n"),
+                            "alekha architects had received your fees payment of Rs. ${amountReceivedController.text} as fees stage ${feesController.text}  for Project No. ${projectNoController.text} on ${dateMeetingController.text} through ${_paymentMode.toString()}.\n\nFees Summary\n${feesSummeryController.text}\n\n"),
                     TextSpan(
                         text: "Regards\n${_selectedRegardsType.toString()}\n"),
                     TextSpan(
