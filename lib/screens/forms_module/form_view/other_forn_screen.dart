@@ -143,7 +143,7 @@ class _CreatePdfFromDataState extends State<OtherFormsScreen> {
 
               // Contact Number
               _buildTextFieldRow(
-                  'Contact Number : ', contactNoController.text, pdf),
+                  'Contact No. : ', contactNoController.text, pdf),
 
               // Date
               _buildTextFieldRow('Date :', dateController.text, pdf),
@@ -184,9 +184,14 @@ class _CreatePdfFromDataState extends State<OtherFormsScreen> {
     }
 
     // // Save and share the generated PDF
-    final Uint8List bytes = await pdf.save();
-    await Printing.sharePdf(
-        bytes: bytes, filename: 'âlekha architects - Site Inspection');
+    await Printing.layoutPdf(
+      name:
+          'OTHER ${dateController.text.replaceAll('_', '/')} ${clientNameController.text.toUpperCase()}',
+      onLayout: (PdfPageFormat format) async => pdf.save(),
+    );
+    // final Uint8List bytes = await pdf.save();
+    // await Printing.sharePdf(
+    //     bytes: bytes, filename: 'âlekha architects - Site Inspection');
     // //Print the PDF or show preview
     // await Printing.layoutPdf(
     //     onLayout: (PdfPageFormat format) async => pdf.save());
@@ -258,7 +263,7 @@ class _CreatePdfFromDataState extends State<OtherFormsScreen> {
         ),
         automaticallyImplyLeading: false,
         title: Text(
-          'Interior Form',
+          'Other Form',
           style: CommonTextStyle().appBarTextStyle,
         ),
       ),

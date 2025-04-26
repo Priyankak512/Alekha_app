@@ -235,6 +235,10 @@ class _FeesReceivedScreenState extends State<FeesReceivedScreen> {
                     TextSpan(
                         text:
                             "alekha architects had received your fees payment of Rs. ${amountReceivedController.text} as fees stage ${feesController.text}  for Project No. ${projectNoController.text} on ${dateMeetingController.text} through ${_paymentMode.toString()}.\n\nFees Summary\n${feesSummeryController.text}\n\n"),
+                    if (feesSummeryController.text.trim().isNotEmpty) ...[
+                      TextSpan(text: "Note\n"),
+                      TextSpan(text: "${feesSummeryController.text}\n\n"),
+                    ],
                     TextSpan(
                         text: "Regards\n${_selectedRegardsType.toString()}\n"),
                     TextSpan(
@@ -266,24 +270,42 @@ class _FeesReceivedScreenState extends State<FeesReceivedScreen> {
                   child: CommonMaterialButton(
                     borderColor: PickColors.authSubTitleTextColor,
                     title: "COPY TO CLIPBOARD",
-                    suffixIcon: PickImages.persionMailIcon,
+                    suffixIcon: PickImages.copyToClipboardIcon,
                     style: CommonTextStyle().buttonTextStyle,
                     color: PickColors.transparentColor,
+                    // onPressed: () {
+                    //   String message = "";
+
+                    //   // "Hi,\n${clientNameController.text}\n\nalekha architects,\n\nShop no. 28-29, Hiranagar, nr. old vijay cinema, Bamroli road, Pandesara, Surat\n\nFor exact location please click on the link below:\n\n\nRegards\n${_selectedRegardsType.toString()}\nalekha architects";
+                    //   Clipboard.setData(
+                    //       ClipboardData(text: message)); // Copy to clipboard
+
+                    //   // Show a snackbar to confirm the text has been copied
+                    //   ScaffoldMessenger.of(context).showSnackBar(
+                    //     const SnackBar(
+                    //       content: Text("Message copied to clipboard!"),
+                    //     ),
+                    //   );
+                    // },
                     onPressed: () {
-                      String message =
-                          "${clientNameController.text}\n\nalekha architects had received your fees payment of Rs. {Amount} as fees stage ${feesController.text}  for Project No. ${projectNoController.text} on ${dateMeetingController.text} through ${_paymentMode.toString()}.\n\nFees Summary\n${feesSummeryController.text}\n\n";
+                      String message = "Hi,\n${clientNameController.text}\n\n"
+                          "alekha architects had received your fees payment of Rs. ${amountReceivedController.text} "
+                          "as fees stage ${feesController.text} for Project No. ${projectNoController.text} "
+                          "on ${dateMeetingController.text} through ${_paymentMode.toString()}.\n\n"
+                          "Fees Summary\n${feesSummeryController.text}\n\n"
+                          "Regards\n${_selectedRegardsType.toString()}\n"
+                          "alekha architects";
 
-                      // "Hi,\n${clientNameController.text}\n\nalekha architects,\n\nShop no. 28-29, Hiranagar, nr. old vijay cinema, Bamroli road, Pandesara, Surat\n\nFor exact location please click on the link below:\n\n\nRegards\n${_selectedRegardsType.toString()}\nalekha architects";
-                      Clipboard.setData(
-                          ClipboardData(text: message)); // Copy to clipboard
+                      Clipboard.setData(ClipboardData(text: message));
 
-                      // Show a snackbar to confirm the text has been copied
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text("Message copied to clipboard!"),
                         ),
                       );
                     },
+
+
                   ),
                 )
               ],

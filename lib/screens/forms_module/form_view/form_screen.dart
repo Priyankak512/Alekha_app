@@ -57,7 +57,8 @@ class _FormsScreenState extends State<FormsScreen> {
                 },
                 child: IconTitleContainer(
                   mainIcon: GlobalList.formsList[index]["icon"],
-                  mainText: GlobalList.formsList[index]["title"].toString(),
+                  mainText: GlobalList.formsList[index]["title"].toString()
+                      .toUpperCase(),
                   subText: "",
                   mainTextTextStyle: CommonTextStyle().sectionTextStyle,
                 ),

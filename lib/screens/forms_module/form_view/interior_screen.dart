@@ -141,7 +141,7 @@ class _CreatePdfFromDataState extends State<InteriorScreen> {
 
               // Contact Number
               _buildTextFieldRow(
-                  'Contact Number : ', contactNoController.text, pdf),
+                  'Contact No. : ', contactNoController.text, pdf),
 
               // Date
               _buildTextFieldRow('Date :', dateController.text, pdf),
@@ -198,9 +198,14 @@ class _CreatePdfFromDataState extends State<InteriorScreen> {
     }
 
     // // Save and share the generated PDF
-    final Uint8List bytes = await pdf.save();
-    await Printing.sharePdf(
-        bytes: bytes, filename: 'âlekha architects - Site Inspection');
+    await Printing.layoutPdf(
+      name:
+          'INT FORM ${dateController.text.replaceAll('_', '/')} ${clientNameController.text.toUpperCase()}',
+      onLayout: (PdfPageFormat format) async => pdf.save(),
+    );
+    // final Uint8List bytes = await pdf.save();
+    // await Printing.sharePdf(
+    //     bytes: bytes, filename: 'âlekha architects - Site Inspection');
     // //Print the PDF or show preview
     // await Printing.layoutPdf(
     //     onLayout: (PdfPageFormat format) async => pdf.save());
@@ -347,7 +352,7 @@ class _CreatePdfFromDataState extends State<InteriorScreen> {
                 borderColor: PickColors.primaryColor,
                 hintText: "Project Type",
                 name: 'Project Type',
-                items: GlobalList.projectCategory
+                items: GlobalList.interiorProjectTypeList
                     .map((category) => DropdownMenuItem<String>(
                           value: category,
                           child: Text(
@@ -374,7 +379,7 @@ class _CreatePdfFromDataState extends State<InteriorScreen> {
                 borderColor: PickColors.primaryColor,
                 hintText: "Category Type",
                 name: 'Category Type',
-                items: GlobalList.projectCategory
+                items: GlobalList.interiorCategoryList
                     .map((category) => DropdownMenuItem<String>(
                           value: category,
                           child: Text(
@@ -407,8 +412,8 @@ class _CreatePdfFromDataState extends State<InteriorScreen> {
               ),
               CommonTextFieldWithFocus(
                 controller: builtUpAreaController,
-                labelText: " BUILT-UP AREA",
-                hintText: "BUILT-UP AREA",
+                labelText: "Built-Up-Area",
+                hintText: "Built-Up-Area",
               ),
               const SizedBox(
                 height: 20,
@@ -433,7 +438,7 @@ class _CreatePdfFromDataState extends State<InteriorScreen> {
                 borderColor: PickColors.primaryColor,
                 hintText: "Hiring Interior Designer/S For",
                 name: 'Hiring Interior Designer/S For',
-                items: GlobalList.projectCategory
+                items: GlobalList.hiringInteriorDesignerList
                     .map((category) => DropdownMenuItem<String>(
                           value: category,
                           child: Text(

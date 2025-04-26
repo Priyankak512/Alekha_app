@@ -1,105 +1,9 @@
-// import 'package:alekha/constant/colors.dart';
-// import 'package:alekha/constant/hight_width_picker.dart';
-// import 'package:alekha/constant/images_route.dart';
-// import 'package:alekha/constant/navigation_route.dart';
-// import 'package:alekha/constant/text_style.dart';
-// import 'package:alekha/create_pdf/site_visit_report_screen.dart';
-// import 'package:alekha/home/home_common_widgets/icon_title_container.dart';
-// import 'package:alekha/invoice_generator/invoice_generator_view/invoice_generator_screen.dart';
-// import 'package:flutter/material.dart';
-
-// class HomeScreen extends StatefulWidget {
-//   const HomeScreen({super.key});
-
-//   @override
-//   State<HomeScreen> createState() => _HomeScreenState();
-// }
-
-// class _HomeScreenState extends State<HomeScreen> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return SafeArea(
-//       child: Scaffold(
-//         backgroundColor: PickColors.blackColor,
-//         appBar: AppBar(
-//           centerTitle: true,
-//           backgroundColor: PickColors.blackColor,
-//           title:const Text(
-//             "âlekha architects",
-//             style: CommonTextStyle.mainHeadingTextStyle,
-//           ),
-//         ),
-//         body: Padding(
-//           padding: const EdgeInsets.all(12.0),
-//           child: Column(
-//             children: [
-//               Row(
-//                 // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-//                 children: [
-//                   Expanded(
-//                     child: InkWell(
-//                       onTap: () {
-//                         changeScreen(
-//                             context: context,
-//                             widget: const SiteVisitReportScreen());
-//                       },
-//                       child: IconTitleContainer(
-//                         mainIcon: PickImages.siteVisitIcon,
-//                         // mainText: authProvider.currentUserData!.benefitsDays
-//                         //         .toString() +
-//                         //     " " +
-//                         //     ReferralTitles.fifteenDay,
-//                         mainText: "Site Visit",
-//                         subText: "",
-//                         mainTextTextStyle: CommonTextStyle.mainHeadingTextStyle
-//                             .copyWith(
-//                                 color: PickColors.primaryColor,
-//                                 fontSize: 18,
-//                                 fontWeight: FontWeight.w800),
-//                       ),
-//                     ),
-//                   ),
-//                   PickHeightAndWidth.width10,
-//                   Expanded(
-//                     child: InkWell(
-//                       onTap: () {
-//                         changeScreen(
-//                             context: context,
-//                             widget: const InvoiceGeneratorScreen());
-//                       },
-//                       child: IconTitleContainer(
-//                         mainIcon: PickImages.invoiceGeneratorIcon,
-//                         // mainText: authProvider.currentUserData!.benefitsDays
-//                         //         .toString() +
-//                         //     " " +
-//                         //     ReferralTitles.fifteenDay,
-//                         mainText: "Invoice Generator",
-//                         subText: "",
-//                         mainTextTextStyle: CommonTextStyle.mainHeadingTextStyle
-//                             .copyWith(
-//                                 color: PickColors.primaryColor,
-//                                 fontSize: 18,
-//                                 fontWeight: FontWeight.w800),
-//                       ),
-//                     ),
-//                   )
-//                 ],
-//               ),
-//             ],
-//           ),
-//         ),
-//       ),
-//     );
-//   }
-// }
-
 import 'package:alekha/constant/global_list.dart';
 import 'package:alekha/constant/size_config.dart';
 import 'package:alekha/services/general_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:alekha/constant/colors.dart';
 import 'package:alekha/constant/text_style.dart';
-import 'package:alekha/screens/create_pdf/site_visit_report_screen.dart';
 import 'package:alekha/screens/home/home_common_widgets/icon_title_container.dart';
 import 'package:alekha/constant/navigation_route.dart';
 import 'package:url_launcher/url_launcher.dart';
@@ -135,10 +39,8 @@ class _HomeScreenState extends State<HomeScreen> {
             appBar: AppBar(
               centerTitle: true,
               backgroundColor: PickColors.whiteColor,
-              title: Text(
-                "âlekha architects",
-                style: CommonTextStyle().authTitleTextStyle,
-              ),
+              title: Text("âlekha architects",
+                  style: CommonTextStyle().authTitleTextStyle),
               actions: [
                 GestureDetector(
                   onTap: () {
@@ -146,7 +48,6 @@ class _HomeScreenState extends State<HomeScreen> {
                   },
                   child: Icon(
                     Icons.dark_mode,
-
                     color: PickColors.hintColor,
                   ),
                 ),
@@ -163,15 +64,46 @@ class _HomeScreenState extends State<HomeScreen> {
                 itemCount: GlobalList.homeList.length,
                 itemBuilder: (context, index) {
                   return InkWell(
-                    onTap: () {
-                      changeScreen(
-                        context: context,
-                        widget: GlobalList.homeList[index]["screen"],
-                      );
+                    // onTap: () async {
+                    //   if (GlobalList.homeList[index]["id"] == "10") {
+                    //     const url =
+                    //         'https://www.civil-engineering-calculators.com/Quantity-estimator/Cement-Concrete-Calculator#google_vignette';
+                    //     await openUrl(url, context);
+                    //   } else if (GlobalList.homeList[index]["id"] == "11") {
+                    //     const url = 'https://byte-tools.com/en/compass/';
+                    //     await openUrl(url, context);
+                    //   } else {
+                    //     changeScreen(
+                    //       context: context,
+                    //       widget: GlobalList.homeList[index]["screen"],
+                    //     );
+                    //   }
+                    // },
+                    onTap: () async {
+                      if (GlobalList.homeList[index]["id"] == "10") {
+                        const url =
+                            'https://www.civil-engineering-calculators.com/Quantity-estimator/Cement-Concrete-Calculator#google_vignette';
+                        await openUrl(url, context);
+                      } else if (GlobalList.homeList[index]["id"] == "11") {
+                        const url = 'https://byte-tools.com/en/compass/';
+                        await openUrl(url, context);
+                      } else if (GlobalList.homeList[index]["id"] == "7") {
+                        const url =
+                            'https://drive.google.com/drive/folders/1Sywqq9wY78jdgLX_k4A0-FofBdBWvLjY?usp=sharing';
+                        await openUrl(url, context);
+                      } else {
+                        changeScreen(
+                          context: context,
+                          widget: GlobalList.homeList[index]["screen"],
+                        );
+                      }
                     },
+
                     child: IconTitleContainer(
                       mainIcon: GlobalList.homeList[index]["icon"],
-                      mainText: GlobalList.homeList[index]["title"].toString(),
+                      mainText: GlobalList.homeList[index]["title"]
+                          .toString()
+                          .toUpperCase(),
                       subText: "",
                       mainTextTextStyle: CommonTextStyle().sectionTextStyle,
                     ),
@@ -189,6 +121,25 @@ class _HomeScreenState extends State<HomeScreen> {
       ),
     );
   }
+
+  Future<void> openUrl(String url, BuildContext context) async {
+    final Uri uri = Uri.parse(url);
+
+    try {
+      if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+        if (!await launchUrl(uri, mode: LaunchMode.inAppBrowserView)) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Could not open the link')),
+          );
+        }
+      }
+    } catch (e) {
+      debugPrint('Error launching URL: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Something went wrong!')),
+      );
+    }
+  }
 }
 
 
@@ -197,46 +148,3 @@ class _HomeScreenState extends State<HomeScreen> {
 // //https://drive.google.com/drive/folders/16hM9LxWsnXaBny_cVWowClZs0iw3W227
 
 
-
-// import 'package:flutter/material.dart';
-// import 'package:url_launcher/url_launcher.dart';
-
-// class HomeScreen extends StatefulWidget {
-//   const HomeScreen({super.key});
-
-//   @override
-//   State<HomeScreen> createState() => _HomeScreenState();
-// }
-
-// class _HomeScreenState extends State<HomeScreen> {
-//   // Function to launch WhatsApp
-//   void _launchWhatsApp() async {
-//     const phoneNumber =
-//         '+919512738943'; // Ensure the phone number is in international format
-//     final Uri whatsappUri = Uri.parse('https://wa.me/$phoneNumber');
-
-//     if (await canLaunchUrl(whatsappUri)) {
-//       await launchUrl(whatsappUri, mode: LaunchMode.externalApplication);
-//     } else {
-//       // Show error message
-//       ScaffoldMessenger.of(context).showSnackBar(
-//         const SnackBar(content: Text("Could not launch WhatsApp")),
-//       );
-//     }
-//   }
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Scaffold(
-//       appBar: AppBar(
-//         title: const Text("WhatsApp Launcher"),
-//       ),
-//       floatingActionButton: FloatingActionButton(
-//         onPressed: _launchWhatsApp,
-//         backgroundColor: Colors.green,
-//         child: const Icon(Icons.chat_rounded),
-//       ),
-//       body: const Center(child: Text("Tap the chat icon to open WhatsApp")),
-//     );
-//   }
-// }

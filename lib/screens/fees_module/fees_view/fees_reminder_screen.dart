@@ -21,12 +21,43 @@ class FeesReminderScreen extends StatefulWidget {
 }
 
 class _FeesReminderScreenState extends State<FeesReminderScreen> {
+  String? _selectedProjectCategory;
   TextEditingController nameController = TextEditingController();
+  TextEditingController projectController = TextEditingController();
+  TextEditingController feesStageController = TextEditingController();
+  TextEditingController invoiceNoController = TextEditingController();
+  TextEditingController amountPendingController = TextEditingController();
+  TextEditingController xxxxController = TextEditingController();
   TextEditingController dateMeetingController = TextEditingController();
-  TextEditingController workStageOnSiteController = TextEditingController();
+  TextEditingController noteController = TextEditingController();
 
   String? _selectedRegardsType;
   bool _showPreviewMessage = false; // Visibility flag for the message
+
+  String generateMessage() {
+    String name = nameController.text;
+    String invoice = invoiceNoController.text;
+    String feesStage = feesStageController.text;
+    String amount = amountPendingController.text;
+    String note = noteController.text;
+    String regards = _selectedRegardsType ?? "";
+
+    return '''
+Hi,
+$name
+
+alekha architects,
+
+Gentle reminder that your fees Rs. $amount is due for project no.${projectController.text} Invoice No. $invoice generated on ${dateMeetingController.text} for fees stage $feesStage. 
+Please check the last invoice shared for the same.
+
+${note.trim().isNotEmpty ? 'Note : \n$note\n' : ''}
+Regards
+$regards
+alekha architects
+''';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -61,30 +92,49 @@ class _FeesReminderScreenState extends State<FeesReminderScreen> {
                 keyboardType: TextInputType.name,
               ),
               PickHeightAndWidth.height10,
-              Row(
-                children: [
-                  Expanded(
-                    child: CommonTextFieldWithFocus(
-                      controller: nameController,
-                      labelText: "Project No.",
-                      hintText: "Project No.",
-                      keyboardType: TextInputType.name,
-                    ),
-                  ),
-                  PickHeightAndWidth.width10,
-                  Expanded(
-                    child: CommonTextFieldWithFocus(
-                      controller: nameController,
-                      labelText: "Fees Stage",
-                      hintText: "Fees Stage",
-                      keyboardType: TextInputType.name,
-                    ),
-                  ),
-                ],
+              CommonTextFieldWithFocus(
+                controller: projectController,
+                labelText: "Project No.",
+                hintText: "Project No.",
+                keyboardType: TextInputType.name,
+              ),
+              PickHeightAndWidth.height10,
+              CommonDropDownWithoutSearch(
+                borderColor: PickColors.primaryColor,
+                hintText: "Select Project category",
+                name: 'Project Category',
+                items: GlobalList.projectCategory
+                    .map((category) => DropdownMenuItem<String>(
+                          value: category,
+                          child: Text(
+                            category,
+                            style: CommonTextStyle().textFieldTitleTextStyle,
+                          ),
+                        ))
+                    .toList(),
+                isExpanded: false,
+                initialValue: _selectedProjectCategory,
+                onChanged: (newValue) {
+                  setState(
+                    () {
+                      _selectedProjectCategory = newValue.toString();
+                    },
+                  );
+                  debugPrint("----------$_selectedProjectCategory");
+                },
               ),
               PickHeightAndWidth.height10,
               Row(
                 children: [
+                  Expanded(
+                    child: CommonTextFieldWithFocus(
+                      controller: invoiceNoController,
+                      labelText: "Invoice No.",
+                      hintText: "Invoice No.",
+                      keyboardType: TextInputType.name,
+                    ),
+                  ),
+                  PickHeightAndWidth.width10,
                   Expanded(
                     child: CommonTextFieldWithBorder(
                       fillColor: Colors.transparent,
@@ -120,15 +170,6 @@ class _FeesReminderScreenState extends State<FeesReminderScreen> {
                       borderRadius: BorderRadius.circular(10),
                     ),
                   ),
-                  PickHeightAndWidth.width10,
-                  Expanded(
-                    child: CommonTextFieldWithFocus(
-                      controller: nameController,
-                      labelText: "Invoice No.",
-                      hintText: "Invoice No.",
-                      keyboardType: TextInputType.name,
-                    ),
-                  ),
                 ],
               ),
               PickHeightAndWidth.height10,
@@ -136,7 +177,7 @@ class _FeesReminderScreenState extends State<FeesReminderScreen> {
                 children: [
                   Expanded(
                     child: CommonTextFieldWithFocus(
-                      controller: nameController,
+                      controller: amountPendingController,
                       labelText: "Amount Pending",
                       hintText: "Amount Pending",
                       keyboardType: TextInputType.name,
@@ -145,9 +186,9 @@ class _FeesReminderScreenState extends State<FeesReminderScreen> {
                   PickHeightAndWidth.width10,
                   Expanded(
                     child: CommonTextFieldWithFocus(
-                      controller: nameController,
-                      labelText: "XXXXX ",
-                      hintText: "XX",
+                      controller: feesStageController,
+                      labelText: "Fees Stage",
+                      hintText: "Fees Stage",
                       keyboardType: TextInputType.name,
                     ),
                   ),
@@ -155,9 +196,9 @@ class _FeesReminderScreenState extends State<FeesReminderScreen> {
               ),
               PickHeightAndWidth.height10,
               CommonTextFieldWithFocus(
-                controller: workStageOnSiteController,
-                labelText: "Work Stage on Site",
-                hintText: "Work Stage on Site",
+                controller: noteController,
+                labelText: "Note",
+                hintText: "Note",
                 maxLines: 2,
               ),
               PickHeightAndWidth.height20,
@@ -212,18 +253,28 @@ class _FeesReminderScreenState extends State<FeesReminderScreen> {
                   style: CommonTextStyle().authSubTitleTextStyle,
                   children: [
                     TextSpan(text: "Hi,\n${nameController.text}\n\n"),
+                    // TextSpan(
+                    //   text: "alekha architects,\n\n",
+                    //   style: CommonTextStyle().authSubTitleTextStyle.copyWith(
+                    //         fontWeight: FontWeight.bold, // Dark/Bold text
+                    //         color: Colors.black, // Ensure it's dark
+                    //       ),
+                    // ),
                     TextSpan(
-                      text: "alekha architects,\n\n",
-                      style: CommonTextStyle().authSubTitleTextStyle.copyWith(
-                            fontWeight: FontWeight.bold, // Dark/Bold text
-                            color: Colors.black, // Ensure it's dark
-                          ),
+                      text:
+                          "Gentle reminder that your fees Rs. ${amountPendingController.text} is due for Project No. ${projectController.text} ${_selectedProjectCategory == 'Architecture - A' ? 'A' : _selectedProjectCategory == 'Interior - I' ? 'I' : _selectedProjectCategory == 'Architecture Interior - AI' ? 'AI' : ''} Invoice No. ${invoiceNoController.text} generated on ${dateMeetingController.text} for fees stage ${feesStageController.text}. \nPlease check the last invoice shared for the same.\n\n",
                     ),
-                    const TextSpan(
-                        text:
-                            "Shop no. 28-29, Hiranagar, nr. old vijay cinema, Bamroli road, Pandesara, Surat\n\nFor exact location please click on the link below:\n\n\n"),
+                    if (noteController.text.trim().isNotEmpty) ...[
+                      TextSpan(text: "Note\n"),
+                      TextSpan(text: "${noteController.text}\n\n"),
+                    ],
+                    // TextSpan(
+                    //     text:
+                    //         "Gentle reminder that your fees Rs. ${amountPendingController.text}  is due for Invoice No. ${invoiceNoController.text} for fees stage ${feesStageController.text}. \nPlease check the last invoice shared for the same.\n\nNote\n${noteController.text}"),
+                    // // "Shop no. 28-29, Hiranagar, nr. old vijay cinema, Bamroli road, Pandesara, Surat\n\nFor exact location please click on the link below:\n\n\n"),
                     TextSpan(
-                        text: "Regards\n${_selectedRegardsType.toString()}\n"),
+                        text:
+                            "\nRegards\n${_selectedRegardsType.toString()}\n"),
                     TextSpan(
                       text: "alekha architects",
                       style: CommonTextStyle().authSubTitleTextStyle.copyWith(
@@ -253,16 +304,15 @@ class _FeesReminderScreenState extends State<FeesReminderScreen> {
                   child: CommonMaterialButton(
                     borderColor: PickColors.authSubTitleTextColor,
                     title: "COPY TO CLIPBOARD",
-                    suffixIcon: PickImages.persionMailIcon,
+                    suffixIcon: PickImages.copyToClipboardIcon,
                     style: CommonTextStyle().buttonTextStyle,
                     color: PickColors.transparentColor,
                     onPressed: () {
                       String message =
-                          "Hi,\n${nameController.text}\n\nalekha architects,\n\nShop no. 28-29, Hiranagar, nr. old vijay cinema, Bamroli road, Pandesara, Surat\n\nFor exact location please click on the link below:\n\n\nRegards\n${_selectedRegardsType.toString()}\nalekha architects";
+                          generateMessage(); // 👈 Generate the message string
                       Clipboard.setData(
-                          ClipboardData(text: message)); // Copy to clipboard
+                          ClipboardData(text: message)); // 👈 Copy to clipboard
 
-                      // Show a snackbar to confirm the text has been copied
                       ScaffoldMessenger.of(context).showSnackBar(
                         const SnackBar(
                           content: Text("Message copied to clipboard!"),
@@ -273,6 +323,7 @@ class _FeesReminderScreenState extends State<FeesReminderScreen> {
                 )
               ],
             )
+          
           ],
         ),
       ),

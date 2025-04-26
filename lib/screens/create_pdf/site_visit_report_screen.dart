@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
-
 import 'package:alekha/constant/colors.dart';
 import 'package:alekha/constant/date_formates.dart';
 import 'package:alekha/constant/global_list.dart';
@@ -58,7 +57,8 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
     String projectNumber = projectNumberController.text;
 
     // Concatenate selected project category and project number
-    String formattedProject = '$selectedCategory-$projectNumber';
+    String formattedProject =
+        "${projectNumberController.text} ${_selectedProjectCategory == 'Architecture - A' ? 'A' : _selectedProjectCategory == 'Interior - I' ? 'I' : _selectedProjectCategory == 'Architecture Interior - AI' ? 'AI' : ''}";
 
     // Add pages to the PDF document
     pdf.addPage(
@@ -142,11 +142,10 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
                   'Client Name : ', clientNameController.text, pdf),
 
               // Add selected project category and formatted project number
-              _buildTextFieldRow('Project Number : ', formattedProject, pdf),
+              _buildTextFieldRow('Project No. : ', formattedProject, pdf),
 
               // Site Visit Number
-              _buildTextFieldRow(
-                  'Site Visit Number :', siteVisitNumber.text, pdf),
+              _buildTextFieldRow('Site Visit No. :', siteVisitNumber.text, pdf),
 
               // Date
               _buildTextFieldRow('Date : ', dateController.text, pdf),
@@ -186,11 +185,15 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
         ),
       );
     }
-
-    // // Save and share the generated PDF
-    final Uint8List bytes = await pdf.save();
-    await Printing.sharePdf(
-        bytes: bytes, filename: 'âlekha architects - Site Inspection');
+    // Print the PDF or show preview
+    await Printing.layoutPdf(
+        name:
+            '${projectNumberController.text} SITE VISIT ${dateController.text.replaceAll('_', '/')} ${clientNameController.text.toUpperCase()}',
+        onLayout: (PdfPageFormat format) async => pdf.save());
+    // // // Save and share the generated PDF
+    // final Uint8List bytes = await pdf.save();
+    // await Printing.sharePdf(
+    //     bytes: bytes, filename: 'âlekha architects - Site Inspection');
     // //Print the PDF or show preview
     // await Printing.layoutPdf(
     //     onLayout: (PdfPageFormat format) async => pdf.save());
@@ -290,15 +293,6 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
               const SizedBox(
                 height: 20,
               ),
-              CommonTextFieldWithFocus(
-                controller: siteVisitNumber,
-                labelText: "Site Visit No.",
-                hintText: "Site Visit No.",
-                keyboardType: TextInputType.number,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
               CommonDropDownWithoutSearch(
                 borderColor: PickColors.primaryColor,
                 hintText: "Select project category",
@@ -326,10 +320,19 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
               const SizedBox(
                 height: 20,
               ),
+              CommonTextFieldWithFocus(
+                controller: siteVisitNumber,
+                labelText: "Site Visit No.",
+                hintText: "Site Visit No.",
+                keyboardType: TextInputType.number,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
               CommonTextFieldWithBorder(
                 fillColor: Colors.transparent,
                 filled: true,
-                prefix: Padding(
+                prefix: const Padding(
                   padding: EdgeInsets.symmetric(
                     horizontal: 8.0,
                   ),

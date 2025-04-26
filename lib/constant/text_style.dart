@@ -8,15 +8,15 @@ class CommonTextStyle {
     color: PickColors.titleTextColor,
     fontSize: SizeConfig.fontSize30,
     fontWeight: FontWeight.w700,
-    fontFamily: 'Gilroy',
+    fontFamily: 'GOTHICB',
   );
 
   //auth title text style
   TextStyle authTitleTextStyle = TextStyle(
     color: PickColors.hintColor,
     fontSize: SizeConfig.fontSize28,
-    fontWeight: FontWeight.w700,
-    fontFamily: 'Gilroy',
+    fontWeight: FontWeight.w900,
+    fontFamily: 'GOTHICB',
   );
 
   //auth sub title text style
@@ -24,7 +24,7 @@ class CommonTextStyle {
     color: PickColors.authSubTitleTextColor,
     fontSize: SizeConfig.fontSize12,
     fontWeight: FontWeight.w500,
-    fontFamily: 'Gilroy',
+    fontFamily: 'GOTHICB',
   );
 
   //text field text style
@@ -32,7 +32,7 @@ class CommonTextStyle {
     color: PickColors.primaryTextColor,
     fontSize: SizeConfig.fontSize14,
     fontWeight: FontWeight.w500,
-    fontFamily: 'Gilroy',
+    fontFamily: 'GOTHICB',
   );
 
   //hint text style
@@ -40,7 +40,7 @@ class CommonTextStyle {
     color: PickColors.primaryTextColor.withOpacity(0.3),
     fontSize: SizeConfig.fontSize14,
     fontWeight: FontWeight.w500,
-    fontFamily: 'Gilroy',
+    fontFamily: 'GOTHICB',
   );
 
   //button text style
@@ -48,7 +48,7 @@ class CommonTextStyle {
     color: PickColors.blackColor,
     fontSize: SizeConfig.fontSize14,
     fontWeight: FontWeight.w500,
-    fontFamily: 'Gilroy',
+    fontFamily: 'GOTHICB',
   );
 
   //inkwell text style
@@ -58,7 +58,7 @@ class CommonTextStyle {
     fontWeight: FontWeight.w600,
     // decoration: TextDecoration.underline,
     decorationColor: PickColors.buttonColor,
-    fontFamily: 'Gilroy',
+    fontFamily: 'GOTHICB',
   );
 
   //smallest text style
@@ -66,7 +66,7 @@ class CommonTextStyle {
     color: PickColors.secondaryTextColor,
     fontSize: SizeConfig.fontSize12,
     fontWeight: FontWeight.w500,
-    fontFamily: 'Gilroy',
+    fontFamily: 'GOTHICB',
   );
 
   //textfield title text style text style
@@ -74,15 +74,15 @@ class CommonTextStyle {
     color: PickColors.questionTextColor,
     fontSize: SizeConfig.fontSize14,
     fontWeight: FontWeight.w500,
-    fontFamily: 'Gilroy',
+    fontFamily: 'GOTHICB',
   );
 
   //textfield title text style text style
   TextStyle sectionTextStyle = TextStyle(
     color: PickColors.questionTextColor,
-    fontSize: SizeConfig.fontSize18,
+    fontSize: SizeConfig.fontSize12,
     fontWeight: FontWeight.w500,
-    fontFamily: 'Gilroy',
+    fontFamily: 'GOTHICB',
   );
 
   //appbar text style text style
@@ -90,7 +90,7 @@ class CommonTextStyle {
     color: PickColors.questionTextColor,
     fontSize: SizeConfig.fontSize18,
     fontWeight: FontWeight.w600,
-    fontFamily: 'Gilroy',
+    fontFamily: 'GOTHICB',
   );
 
   //textfield title text style text style
@@ -98,7 +98,7 @@ class CommonTextStyle {
     fontSize: SizeConfig.fontSize28,
     color: PickColors.blackColor,
     fontWeight: FontWeight.w700,
-    fontFamily: 'Gilroy',
+    fontFamily: 'GOTHICB',
   );
 
   //shlok no text style
@@ -106,14 +106,14 @@ class CommonTextStyle {
     color: PickColors.blackColor.withOpacity(0.8),
     fontSize: SizeConfig.fontSize16,
     fontWeight: FontWeight.w600,
-    fontFamily: 'Gilroy',
+    fontFamily: 'GOTHICB',
   );
   //shlok text style
   TextStyle shlokTextStyle = TextStyle(
     color: PickColors.blackColor,
     fontSize: SizeConfig.fontSize18,
     fontWeight: FontWeight.w500,
-    fontFamily: 'Gilroy',
+    fontFamily: 'GOTHICB',
   );
 
   //news description text style
@@ -121,7 +121,7 @@ class CommonTextStyle {
     fontSize: SizeConfig.fontSize12,
     color: PickColors.subQuestionTextColor,
     fontWeight: FontWeight.w400,
-    fontFamily: 'Gilroy',
+    fontFamily: 'GOTHICB',
   );
 
   //drawer text style
@@ -129,7 +129,7 @@ class CommonTextStyle {
     fontSize: SizeConfig.fontSize14,
     color: PickColors.primaryTextColor.withOpacity(0.9),
     fontWeight: FontWeight.w600,
-    fontFamily: 'Gilroy',
+    fontFamily: 'GOTHICB',
   );
 
   //readMoreTextStyle
@@ -137,7 +137,7 @@ class CommonTextStyle {
     fontSize: SizeConfig.fontSize14,
     color: PickColors.subQuestionTextColor,
     fontWeight: FontWeight.w700,
-    fontFamily: 'Gilroy',
+    fontFamily: 'GOTHICB',
     decoration: TextDecoration.underline,
   );
 }

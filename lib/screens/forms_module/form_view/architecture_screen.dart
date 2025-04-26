@@ -19,7 +19,6 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:intl/intl.dart';
 
-
 class ArchitectureScreen extends StatefulWidget {
   const ArchitectureScreen({Key? key}) : super(key: key);
 
@@ -137,11 +136,11 @@ class _CreatePdfFromDataState extends State<ArchitectureScreen> {
                   'Client Name : ', clientNameController.text, pdf),
 
               // Contact Number
-              _buildTextFieldRow('Contact Number : ', contactNoController.text, pdf),
+              _buildTextFieldRow(
+                  'Contact No. : ', contactNoController.text, pdf),
 
               // Date
-              _buildTextFieldRow(
-                  'Date :', dateController.text, pdf),
+              _buildTextFieldRow('Date :', dateController.text, pdf),
 
               // Address
               _buildTextFieldRow('Address : ', addressController.text, pdf),
@@ -160,7 +159,6 @@ class _CreatePdfFromDataState extends State<ArchitectureScreen> {
               // Decision Pending
               _buildTextFieldRow(
                   'Site Context : ', siteContextController.text, pdf),
-
             ],
           );
         },
@@ -180,9 +178,14 @@ class _CreatePdfFromDataState extends State<ArchitectureScreen> {
     }
 
     // // Save and share the generated PDF
-    final Uint8List bytes = await pdf.save();
-    await Printing.sharePdf(
-        bytes: bytes, filename: 'âlekha architects - Site Inspection');
+    await Printing.layoutPdf(
+      name:
+          'ARCH FORM ${dateController.text.replaceAll('_', '/')} ${clientNameController.text.toUpperCase()}',
+      onLayout: (PdfPageFormat format) async => pdf.save(),
+    );
+    // final Uint8List bytes = await pdf.save();
+    // await Printing.sharePdf(
+    //     bytes: bytes, filename: 'âlekha architects - Site Inspection');
     // //Print the PDF or show preview
     // await Printing.layoutPdf(
     //     onLayout: (PdfPageFormat format) async => pdf.save());

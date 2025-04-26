@@ -148,7 +148,7 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
-        fontFamily: 'Nexa',
+        fontFamily: 'GOTHICB',
         colorScheme: ColorScheme.fromSeed(seedColor: PickColors.primaryColor),
         useMaterial3: true,
       ),

@@ -55,7 +55,7 @@ class _FeesScreenState extends State<FeesScreen> {
                 },
                 child: IconTitleContainer(
                   mainIcon: GlobalList.feesList[index]["icon"],
-                  mainText: GlobalList.feesList[index]["title"].toString(),
+                  mainText: GlobalList.feesList[index]["title"].toString().toUpperCase(),
                   subText: "",
                   mainTextTextStyle: CommonTextStyle().sectionTextStyle,
                 ),
