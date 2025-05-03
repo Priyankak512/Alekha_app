@@ -3,6 +3,7 @@ class PickImages {
   // static const cameraIcon = "assets/images/camera_icon.svg";
   static const alekhaArchitectsIcon = "assets/images/alekha_architects.png";
   static const invoiceContactPdfLogo = "assets/images/invoice_contact_pdf_logo.png";
+  static const siteVisitContactsPdfImage = "assets/images/site_visit_contacts_pdf.png";
   static const invoicePdfLogo = "assets/images/invoice_pdf_logo.png";
   
 
@@ -10,6 +11,7 @@ class PickImages {
   //Home screen
   static const persionMailIcon = "assets/icons/persion_mail_icon.svg";
   static const whatsAppIcon = "assets/icons/whatsapp_icon.svg";
+  static const pdfIcon = "assets/icons/pdf_icon.svg";
   static const architectureIcon = "assets/icons/architecture_icon.svg";
   static const interiorIcon = "assets/icons/interior_icon.svg";
   static const otherIcon = "assets/icons/other_icon.svg";

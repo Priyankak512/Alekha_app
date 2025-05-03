@@ -5,26 +5,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class CommonMaterialButton extends StatefulWidget {
-  // const CommonMaterialButton({
-  //   super.key,
-  //   required this.title,
-  //   this.style =  CommonTextStyle().buttonTextStyle,
-  //   required this.onPressed,
-  //   this.color = PickColors.primaryColor,
-  //   this.borderColor = Colors.transparent,
-  //   this.prefixIconColor,
-  //   this.isButtonDisable = false,
-  //   this.borderRadius = 10,
-  //   this.verticalPadding = 10,
-  //   this.prefixIcon,
-  // });
-
   CommonMaterialButton({
     super.key,
     required this.title,
     TextStyle? style,
     required this.onPressed,
-    this.color = PickColors.primaryColor,
+    this.color = PickColors.buttonColor,
     this.borderColor = Colors.transparent,
     this.prefixIconColor,
     this.suffixIconColor,
@@ -101,11 +87,14 @@ class _CommonMaterialButtonState extends State<CommonMaterialButton> {
                 ),
               ),
               if (widget.suffixIcon != null)
-                SvgPicture.asset(
-                  alignment: Alignment.centerRight,
-                  widget.suffixIcon!,
-                  height: 17,
-                  color: widget.suffixIconColor,
+                Padding(
+                  padding: const EdgeInsets.only(left:8.0),
+                  child: SvgPicture.asset(
+                    alignment: Alignment.centerRight,
+                    widget.suffixIcon!,
+                    height: 17,
+                    color: widget.suffixIconColor,
+                  ),
                 ),
             ],
           ),

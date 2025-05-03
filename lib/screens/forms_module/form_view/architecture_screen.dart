@@ -50,6 +50,10 @@ class _CreatePdfFromDataState extends State<ArchitectureScreen> {
         (await rootBundle.load(PickImages.alekhaArchitectsIcon))
             .buffer
             .asUint8List();
+    Uint8List invoiceContactPdfLogo =
+        (await rootBundle.load(PickImages.siteVisitContactsPdfImage))
+            .buffer
+            .asUint8List();
 
     // Retrieve selected project category and project number
     String selectedCategory = _selectedProjectType ?? '';
@@ -57,58 +61,89 @@ class _CreatePdfFromDataState extends State<ArchitectureScreen> {
     // Add pages to the PDF document
     pdf.addPage(
       pw.Page(
+        margin: const pw.EdgeInsets.all(20),
         build: (pw.Context context) {
           return pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
               pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                  children: [
-                    pw.Container(
-                      width: 170, // Adjust the width as needed
-                      height: 60, // Adjust the height as needed
-                      decoration: pw.BoxDecoration(
-                        image: pw.DecorationImage(
-                            image: pw.MemoryImage(imageData),
-                            // Load image from memory
-                            fit: pw.BoxFit.fill),
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Container(
+                    width: 170,
+                    height: 60,
+                    margin: const pw.EdgeInsets.only(bottom: 2),
+                    decoration: pw.BoxDecoration(
+                      image: pw.DecorationImage(
+                        image: pw.MemoryImage(imageData),
+                        fit: pw.BoxFit.fill,
                       ),
                     ),
-                    pw.Column(
-                      crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      children: [
-                        pw.Text(
-                          "Ar. Ronak Surendra Jain",
-                          style: pw.TextStyle(
-                              fontSize: 10,
-                              fontWeight: pw.FontWeight.normal,
-                              color: PdfColor.fromHex("#424242")),
-                        ),
-                        pw.Text(
-                          "93760 73577",
-                          style: pw.TextStyle(
-                              fontSize: 10,
-                              fontWeight: pw.FontWeight.normal,
-                              color: PdfColor.fromHex("#424242")),
-                        ),
-                        pw.SizedBox(height: 15),
-                        pw.Text(
-                          "Ar. Tushar N. Kachhadiya",
-                          style: pw.TextStyle(
-                              fontSize: 10,
-                              fontWeight: pw.FontWeight.normal,
-                              color: PdfColor.fromHex("#424242")),
-                        ),
-                        pw.Text(
-                          "87588 23271",
-                          style: pw.TextStyle(
-                              fontSize: 10,
-                              fontWeight: pw.FontWeight.normal,
-                              color: PdfColor.fromHex("#424242")),
-                        ),
-                      ],
+                  ),
+                  // pw.Expanded(
+                  //   child:
+                  pw.Container(
+                    width: 120,
+                    height: 60,
+                    decoration: pw.BoxDecoration(
+                      image: pw.DecorationImage(
+                        image: pw.MemoryImage(invoiceContactPdfLogo),
+                        fit: pw.BoxFit.contain,
+                      ),
                     ),
-                  ]),
+                    // ),
+                  )
+                ],
+              ),
+              // pw.Row(
+              //     mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+              //     children: [
+              //       pw.Container(
+              //         width: 170, // Adjust the width as needed
+              //         height: 60, // Adjust the height as needed
+              //         decoration: pw.BoxDecoration(
+              //           image: pw.DecorationImage(
+              //               image: pw.MemoryImage(imageData),
+              //               // Load image from memory
+              //               fit: pw.BoxFit.fill),
+              //         ),
+              //       ),
+              //       pw.Column(
+              //         crossAxisAlignment: pw.CrossAxisAlignment.start,
+              //         children: [
+              //           pw.Text(
+              //             "Ar. Ronak Surendra Jain",
+              //             style: pw.TextStyle(
+              //                 fontSize: 10,
+              //                 fontWeight: pw.FontWeight.normal,
+              //                 color: PdfColor.fromHex("#424242")),
+              //           ),
+              //           pw.Text(
+              //             "93760 73577",
+              //             style: pw.TextStyle(
+              //                 fontSize: 10,
+              //                 fontWeight: pw.FontWeight.normal,
+              //                 color: PdfColor.fromHex("#424242")),
+              //           ),
+              //           pw.SizedBox(height: 15),
+              //           pw.Text(
+              //             "Ar. Tushar N. Kachhadiya",
+              //             style: pw.TextStyle(
+              //                 fontSize: 10,
+              //                 fontWeight: pw.FontWeight.normal,
+              //                 color: PdfColor.fromHex("#424242")),
+              //           ),
+              //           pw.Text(
+              //             "87588 23271",
+              //             style: pw.TextStyle(
+              //                 fontSize: 10,
+              //                 fontWeight: pw.FontWeight.normal,
+              //                 color: PdfColor.fromHex("#424242")),
+              //           ),
+              //         ],
+              //       ),
+              //     ]),
+
               pw.SizedBox(height: 6),
               // pw.Divider(color: PdfColor.fromHex("#616161"), height: 5),
               pw.Divider(height: 3, color: PdfColor.fromHex("#616161")),
@@ -169,6 +204,7 @@ class _CreatePdfFromDataState extends State<ArchitectureScreen> {
       final image = pw.MemoryImage(imageFile.readAsBytesSync());
       pdf.addPage(
         pw.Page(
+          margin: const pw.EdgeInsets.all(20),
           pageFormat: PdfPageFormat.a4,
           build: (pw.Context context) {
             return pw.Center(child: pw.Image(image));

@@ -11,6 +11,7 @@ import 'package:alekha/widget/common_dropdown.dart';
 import 'package:alekha/widget/common_material_button.dart';
 import 'package:alekha/widget/common_text_field.dart';
 import 'package:alekha/widget/get_date_function.dart';
+import 'package:alekha/widget/html_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:image_picker/image_picker.dart';
@@ -34,15 +35,15 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
   TextEditingController siteVisitNumber = TextEditingController();
   TextEditingController dateController = TextEditingController();
   TextEditingController workStageOnSiteController = TextEditingController();
+  // HtmlEditorController workStageOnSiteController = HtmlEditorController();
   TextEditingController decisionController = TextEditingController();
   TextEditingController decisionPendingController = TextEditingController();
   TextEditingController changesOnSiteController = TextEditingController();
   TextEditingController nextOnSiteController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
 
   File? _image;
   List<File> _images = [];
-
-  int _currentStep = 0;
 
   Future<void> _generatePDF() async {
     final pdf = pw.Document();
@@ -51,10 +52,10 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
         (await rootBundle.load(PickImages.alekhaArchitectsIcon))
             .buffer
             .asUint8List();
-
-    // Retrieve selected project category and project number
-    String selectedCategory = _selectedProjectCategory ?? '';
-    String projectNumber = projectNumberController.text;
+    Uint8List invoiceContactPdfLogo =
+        (await rootBundle.load(PickImages.siteVisitContactsPdfImage))
+            .buffer
+            .asUint8List();
 
     // Concatenate selected project category and project number
     String formattedProject =
@@ -63,58 +64,40 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
     // Add pages to the PDF document
     pdf.addPage(
       pw.Page(
+        margin: const pw.EdgeInsets.all(20),
         build: (pw.Context context) {
           return pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
               pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                  children: [
-                    pw.Container(
-                      width: 170, // Adjust the width as needed
-                      height: 60, // Adjust the height as needed
-                      decoration: pw.BoxDecoration(
-                        image: pw.DecorationImage(
-                            image: pw.MemoryImage(imageData),
-                            // Load image from memory
-                            fit: pw.BoxFit.fill),
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                children: [
+                  pw.Container(
+                    width: 170,
+                    height: 60,
+                    margin: const pw.EdgeInsets.only(bottom: 2),
+                    decoration: pw.BoxDecoration(
+                      image: pw.DecorationImage(
+                        image: pw.MemoryImage(imageData),
+                        fit: pw.BoxFit.fill,
                       ),
                     ),
-                    pw.Column(
-                      crossAxisAlignment: pw.CrossAxisAlignment.start,
-                      children: [
-                        pw.Text(
-                          "Ar. Ronak Surendra Jain",
-                          style: pw.TextStyle(
-                              fontSize: 10,
-                              fontWeight: pw.FontWeight.normal,
-                              color: PdfColor.fromHex("#424242")),
-                        ),
-                        pw.Text(
-                          "93760 73577",
-                          style: pw.TextStyle(
-                              fontSize: 10,
-                              fontWeight: pw.FontWeight.normal,
-                              color: PdfColor.fromHex("#424242")),
-                        ),
-                        pw.SizedBox(height: 15),
-                        pw.Text(
-                          "Ar. Tushar N. Kachhadiya",
-                          style: pw.TextStyle(
-                              fontSize: 10,
-                              fontWeight: pw.FontWeight.normal,
-                              color: PdfColor.fromHex("#424242")),
-                        ),
-                        pw.Text(
-                          "87588 23271",
-                          style: pw.TextStyle(
-                              fontSize: 10,
-                              fontWeight: pw.FontWeight.normal,
-                              color: PdfColor.fromHex("#424242")),
-                        ),
-                      ],
+                  ),
+                  // pw.Expanded(
+                  //   child:
+                  pw.Container(
+                    width: 120,
+                    height: 60,
+                    decoration: pw.BoxDecoration(
+                      image: pw.DecorationImage(
+                        image: pw.MemoryImage(invoiceContactPdfLogo),
+                        fit: pw.BoxFit.contain,
+                      ),
                     ),
-                  ]),
+                    // ),
+                  )
+                ],
+              ),
               pw.SizedBox(height: 6),
               // pw.Divider(color: PdfColor.fromHex("#616161"), height: 5),
               pw.Divider(height: 3, color: PdfColor.fromHex("#616161")),
@@ -122,14 +105,14 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
                 children: [
                   pw.Text(
-                    "Site Inspection",
+                    "SITE VISIT",
                     style: pw.TextStyle(
-                        fontSize: 13, fontWeight: pw.FontWeight.normal),
+                        fontSize: 15, fontWeight: pw.FontWeight.bold),
                   ),
                   pw.Text(
-                    DateFormat('dd/MM/yyyy').format(DateTime.now()),
+                    dateController.text,
                     style: pw.TextStyle(
-                        fontSize: 13,
+                        fontSize: 15,
                         fontWeight: pw.FontWeight.normal,
                         color: PdfColor.fromHex("#616161")),
                   ),
@@ -137,96 +120,233 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
               ),
               pw.Divider(height: 3, color: PdfColor.fromHex("#BDBDBD")),
               pw.SizedBox(height: 5),
-              // Client Name
-              _buildTextFieldRow(
-                  'Client Name : ', clientNameController.text, pdf),
 
-              // Add selected project category and formatted project number
-              _buildTextFieldRow('Project No. : ', formattedProject, pdf),
-
-              // Site Visit Number
-              _buildTextFieldRow('Site Visit No. :', siteVisitNumber.text, pdf),
-
-              // Date
-              _buildTextFieldRow('Date : ', dateController.text, pdf),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  pw.Expanded(
+                    flex: 2,
+                    child: buildInlineTextFieldRow(
+                      'Client Name : ',
+                      clientNameController.text,
+                    ),
+                  ),
+                  pw.Expanded(
+                    child: buildInlineTextFieldRow(
+                      'Project No. : ',
+                      formattedProject,
+                    ),
+                  ),
+                ],
+              ),
+              pw.Row(
+                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                children: [
+                  pw.Expanded(
+                    flex: 2,
+                    child: buildInlineTextFieldRow(
+                      'Address : ',
+                      addressController.text,
+                    ),
+                  ),
+                  pw.Expanded(
+                    child: buildInlineTextFieldRow(
+                      'Site Visit No. : ',
+                      siteVisitNumber.text,
+                    ),
+                  ),
+                ],
+              ),
 
               // Work Stage On Site
-              _buildTextFieldRow(
-                  'Work Stage On Site : ', workStageOnSiteController.text, pdf),
+              buildMultilineField(
+                  label: "Work Stage On Site :",
+                  value: workStageOnSiteController.text),
 
               // Decision
-              _buildTextFieldRow('Decision :', decisionController.text, pdf),
+              buildMultilineField(
+                label: 'Decision :',
+                value: decisionController.text,
+              ),
 
               // Changes On Site
-              _buildTextFieldRow(
-                  'Decision Pending : ', decisionPendingController.text, pdf),
+              buildMultilineField(
+                label: 'Decision Pending :',
+                value: decisionPendingController.text,
+              ),
 
               // Decision Pending
-              _buildTextFieldRow(
-                  'Changes On Site : ', changesOnSiteController.text, pdf),
+              buildMultilineField(
+                label: 'Changes On Site : ',
+                value: changesOnSiteController.text,
+              ),
 
               // Next On Site
-              _buildTextFieldRow(
-                  'Next On Site : ', nextOnSiteController.text, pdf),
+              buildMultilineField(
+                label: 'Next On Site : ',
+                value: nextOnSiteController.text,
+              ),
+              pw.Spacer(),
+              pw.Divider(color: PdfColor.fromHex("#616161")),
+              pw.Align(
+                alignment: pw.Alignment.center,
+                child: pw.Text(
+                  "G.F. Plot No.29, Hira Nagar, Bamroll Road, Nr.Saraswati Hindi Vidyalaya, Surat, Gujarat.",
+                  style: const pw.TextStyle(fontSize: 11),
+                ),
+              ),
             ],
           );
         },
       ),
     );
 
-    for (var imageFile in _images) {
-      final image = pw.MemoryImage(imageFile.readAsBytesSync());
+    // for (var imageFile in _images) {
+    //   final image = pw.MemoryImage(imageFile.readAsBytesSync());
+    //   pdf.addPage(
+    //     pw.Page(
+    //       margin: const pw.EdgeInsets.all(20),
+    //       pageFormat: PdfPageFormat.a4,
+    //       build: (pw.Context context) {
+    //         return pw.Center(child: pw.Image(image));
+    //       },
+    //     ),
+    //   );
+    // }
+    // Add images 4 per page in 2x2 grid
+    for (int i = 0; i < _images.length; i += 4) {
       pdf.addPage(
         pw.Page(
           pageFormat: PdfPageFormat.a4,
+          margin:const pw.EdgeInsets.all(20), // optional: page margin
           build: (pw.Context context) {
-            return pw.Center(child: pw.Image(image));
+            return pw.Column(
+              children: [
+                // Top Row
+                pw.Expanded(
+                  child: pw.Row(
+                    children: [
+                      pw.Expanded(
+                        child: pw.Image(
+                          pw.MemoryImage(_images[i].readAsBytesSync()),
+                          // fit: pw.BoxFit.cover,
+                        ),
+                      ),
+                      if (i + 1 < _images.length) ...[
+                        pw.SizedBox(width: 20), // space between top images
+                        pw.Expanded(
+                          child: pw.Image(
+                            pw.MemoryImage(_images[i + 1].readAsBytesSync()),
+                            // fit: pw.BoxFit.cover,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+                pw.SizedBox(height: 20), // space between rows
+                // Bottom Row
+                pw.Expanded(
+                  child: pw.Row(
+                    children: [
+                      if (i + 2 < _images.length)
+                        pw.Expanded(
+                          child: pw.Image(
+                            pw.MemoryImage(_images[i + 2].readAsBytesSync()),
+                            // fit: pw.BoxFit.cover,
+                          ),
+                        ),
+                      if (i + 3 < _images.length) ...[
+                        pw.SizedBox(width: 20), // space between bottom images
+                        pw.Expanded(
+                          child: pw.Image(
+                            pw.MemoryImage(_images[i + 3].readAsBytesSync()),
+                            // fit: pw.BoxFit.cover,
+                          ),
+                        ),
+                      ],
+                    ],
+                  ),
+                ),
+              ],
+            );
           },
         ),
       );
     }
+
+
     // Print the PDF or show preview
     await Printing.layoutPdf(
         name:
             '${projectNumberController.text} SITE VISIT ${dateController.text.replaceAll('_', '/')} ${clientNameController.text.toUpperCase()}',
         onLayout: (PdfPageFormat format) async => pdf.save());
-    // // // Save and share the generated PDF
-    // final Uint8List bytes = await pdf.save();
-    // await Printing.sharePdf(
-    //     bytes: bytes, filename: 'âlekha architects - Site Inspection');
-    // //Print the PDF or show preview
-    // await Printing.layoutPdf(
-    //     onLayout: (PdfPageFormat format) async => pdf.save());
   }
 
-  // Helper function to build a row of text fields
-  pw.Widget _buildTextFieldRow(String label, String value, pw.Document pdf) {
-    if (value.isNotEmpty) {
-      return pw.Container(
-        margin: const pw.EdgeInsets.only(bottom: 5),
-        child: pw.Row(
-          crossAxisAlignment: pw.CrossAxisAlignment.start,
-          children: [
-            pw.Text(
-              label,
-              style: pw.TextStyle(
-                fontWeight: pw.FontWeight.bold,
-                fontSize: 13, // Adjust font size for label
-              ),
-            ),
-            pw.Text(
-              value,
-              style: const pw.TextStyle(
-                fontSize: 13, // Adjust font size for value
-              ),
-            ),
-          ],
-        ),
-      );
-    } else {
-      return pw.SizedBox(); // Return an empty SizedBox if value is empty
-    }
-  }
+  // // For inline short fields
+  // pw.Widget buildInlineTextFieldRow(
+  //     String label, String value, pw.Document pdf) {
+  //   if (value.isNotEmpty) {
+  //     return pw.Container(
+  //       margin: const pw.EdgeInsets.only(bottom: 5),
+  //       child: pw.Row(
+  //         crossAxisAlignment: pw.CrossAxisAlignment.start,
+  //         children: [
+  //           pw.Text(
+  //             label,
+  //             style: pw.TextStyle(
+  //               fontWeight: pw.FontWeight.bold,
+  //               fontSize: 13,
+  //             ),
+  //           ),
+  //           pw.SizedBox(width: 5),
+  //           pw.Expanded(
+  //             child: pw.Text(
+  //               value,
+  //               style: const pw.TextStyle(fontSize: 13),
+  //             ),
+  //           ),
+  //         ],
+  //       ),
+  //     );
+  //   } else {
+  //     return pw.SizedBox();
+  //   }
+  // }
+
+// // For multiline fields (label above, value below)
+//   pw.Widget _buildMultilineTextFieldRow(
+//       String label, String value, pw.Document pdf) {
+//     if (value.isNotEmpty) {
+//       return pw.Container(
+//         margin: const pw.EdgeInsets.only(bottom: 5),
+//         child: pw.Column(
+//           crossAxisAlignment: pw.CrossAxisAlignment.start,
+//           children: [
+//             pw.Text(
+//               label,
+//               style: pw.TextStyle(
+//                 fontWeight: pw.FontWeight.bold,
+//                 fontSize: 13,
+//               ),
+//             ),
+//             pw.SizedBox(height: 3),
+//             pw.Container(
+//               margin: const pw.EdgeInsets.only(left: 15), // indent here
+//               child: pw.Text(
+//                 value,
+//                 style: const pw.TextStyle(fontSize: 13),
+//               ),
+//             ),
+//           ],
+//         ),
+//       );
+//     } else {
+//       return pw.SizedBox();
+//     }
+//   }
 
   Future<void> _getImage() async {
     final pickedFile =
@@ -265,7 +385,7 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
         ),
         automaticallyImplyLeading: false,
         title: Text(
-          'Site Visit Report',
+          'Site Visit',
           style: CommonTextStyle().appBarTextStyle,
         ),
       ),
@@ -321,6 +441,15 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
                 height: 20,
               ),
               CommonTextFieldWithFocus(
+                controller: addressController,
+                labelText: "Address",
+                hintText: "Address",
+                // keyboardType: TextInputType.number,
+              ),
+              const SizedBox(
+                height: 20,
+              ),
+              CommonTextFieldWithFocus(
                 controller: siteVisitNumber,
                 labelText: "Site Visit No.",
                 hintText: "Site Visit No.",
@@ -368,8 +497,17 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
                 controller: workStageOnSiteController,
                 labelText: "Work Stage on Site",
                 hintText: "Work Stage on Site",
-                maxLines: 2,
+                maxLines: 4,
               ),
+              // HtmlEditorWidget(
+              //     jdDescriptionController: workStageOnSiteController,
+              //     initialText: "Initial Text",
+              //     onValueChanged: (value) async {
+              //       String? html = await workStageOnSiteController.getText();
+              //       String plainText =
+              //           Bidi.stripHtmlIfNeeded(html ?? "").trim();
+              //       print("Plain Text: $plainText");
+              //     }),
               const SizedBox(
                 height: 20,
               ),
@@ -377,7 +515,7 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
                 controller: decisionController,
                 labelText: "Decisions",
                 hintText: "Decisions",
-                maxLines: 2,
+                maxLines: 4,
               ),
               const SizedBox(
                 height: 20,
@@ -386,7 +524,7 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
                 controller: decisionPendingController,
                 labelText: "Decisions pending",
                 hintText: "Decisions pending",
-                maxLines: 2,
+                maxLines: 4,
               ),
               const SizedBox(
                 height: 20,
@@ -395,7 +533,7 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
                 controller: changesOnSiteController,
                 labelText: "Changes on site",
                 hintText: "Changes on site",
-                maxLines: 2,
+                maxLines: 4,
               ),
               const SizedBox(
                 height: 20,
@@ -404,43 +542,110 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
                 controller: nextOnSiteController,
                 labelText: "Next on site",
                 hintText: "Next on site",
-                maxLines: 2,
+                maxLines: 4,
               ),
               const SizedBox(height: 10),
+              // _images.isNotEmpty
+              //     ? SizedBox(
+              //         height: 400,
+              //         child: ListView.builder(
+              //           itemCount: _images.length,
+              //           itemBuilder: (context, index) {
+              //             return Container(
+              //               height: 400,
+              //               width: double.infinity,
+              //               margin: const EdgeInsets.all(8.00),
+              //               child: Image.file(
+              //                 _images[index],
+              //                 fit: BoxFit.cover,
+              //               ),
+              //             );
+              //           },
+              //         ),
+              //       )
+              //     : Container(),
+
               _images.isNotEmpty
                   ? SizedBox(
                       height: 400,
                       child: ListView.builder(
                         itemCount: _images.length,
                         itemBuilder: (context, index) {
-                          return Container(
-                            height: 400,
-                            width: double.infinity,
-                            margin: const EdgeInsets.all(8.00),
-                            child: Image.file(
-                              _images[index],
-                              fit: BoxFit.cover,
-                            ),
+                          return Stack(
+                            children: [
+                              Container(
+                                height: 400,
+                                width: double.infinity,
+                                margin: const EdgeInsets.all(8.0),
+                                child: Image.file(
+                                  _images[index],
+                                  fit: BoxFit.cover,
+                                  width: double.infinity,
+                                ),
+                              ),
+                              Positioned(
+                                top: 16,
+                                right: 16,
+                                child: GestureDetector(
+                                  onTap: () {
+                                    setState(() {
+                                      _images.removeAt(index);
+                                    });
+                                  },
+                                  child: Container(
+                                    decoration: const BoxDecoration(
+                                      color: Colors.black54,
+                                      shape: BoxShape.circle,
+                                    ),
+                                    padding: const EdgeInsets.all(4),
+                                    child: const Icon(
+                                      Icons.close,
+                                      color: Colors.white,
+                                      size: 24,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           );
                         },
                       ),
                     )
                   : Container(),
               const SizedBox(height: 20),
+
+              Row(
+                children: [
+                  Expanded(
+                    child: CommonMaterialButton(
+                      title: "Add Pictures",
+                      suffixIcon: PickImages.cameraIcon,
+                      onPressed: () {
+                        _getImage();
+                      },
+                    ),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                    child: CommonMaterialButton(
+                      title: "Export As Pdf",
+                      suffixIcon: PickImages.pdfIcon,
+                      style: CommonTextStyle().buttonTextStyle,
+                      onPressed: () {
+                        _generatePDF();
+                      },
+                    ),
+                  )
+                ],
+              ),
+              const SizedBox(height: 10),
               CommonMaterialButton(
-                  title: 'Add Image',
-                  onPressed: _getImage,
-                  style: CommonTextStyle().buttonTextStyle,
-                  prefixIcon: PickImages.cameraIcon,
-                  prefixIconColor: Colors.black,
-                  color: PickColors.primaryColor),
-              const SizedBox(height: 20),
-              CommonMaterialButton(
-                title: 'Create PDF',
-                style: CommonTextStyle().buttonTextStyle,
-                onPressed: _generatePDF,
-                color: PickColors.primaryColor,
-                verticalPadding: 20,
+                color: PickColors.successColor,
+                title: "Share On Whatsapp",
+                suffixIcon: PickImages.whatsAppIcon,
+                onPressed: () {},
               ),
             ],
           ),
@@ -448,4 +653,96 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
       ),
     );
   }
+}
+
+pw.Widget buildTwoColumnInfoRow({
+  required String label1,
+  required String value1,
+  required String label2,
+  required String value2,
+  required pw.Font pdfFont,
+}) {
+  return pw.Row(
+    mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+    crossAxisAlignment: pw.CrossAxisAlignment.start,
+    children: [
+      pw.Expanded(
+        flex: 2,
+        child: buildInlineTextFieldRow(
+          label1,
+          value1,
+        ),
+      ),
+      pw.Expanded(
+        child: buildInlineTextFieldRow(label2, value2),
+      ),
+    ],
+  );
+}
+
+// For inline short fields
+pw.Widget buildInlineTextFieldRow(String label, String value) {
+  if (value.isNotEmpty) {
+    return pw.Container(
+      margin: const pw.EdgeInsets.only(bottom: 5),
+      child: pw.Row(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Text(
+            label,
+            style: pw.TextStyle(
+              fontWeight: pw.FontWeight.bold,
+              fontSize: 15,
+            ),
+          ),
+          pw.SizedBox(width: 5),
+          pw.Expanded(
+            child: pw.Text(
+              value,
+              style: const pw.TextStyle(fontSize: 15),
+            ),
+          ),
+        ],
+      ),
+    );
+  } else {
+    return pw.SizedBox();
+  }
+}
+
+pw.Widget buildMultilineField({
+  required String label,
+  required String value,
+  double fontSize = 15,
+  double spacing = 3,
+  double indent = 15,
+  bool showIfEmpty = false,
+}) {
+  if (value.isEmpty && !showIfEmpty) {
+    return pw.SizedBox();
+  }
+
+  return pw.Container(
+    margin: const pw.EdgeInsets.only(bottom: 5),
+    child: pw.Column(
+      crossAxisAlignment: pw.CrossAxisAlignment.start,
+      children: [
+        pw.Text(
+          label,
+          style: pw.TextStyle(
+            fontWeight: pw.FontWeight.bold,
+            fontSize: fontSize,
+          ),
+        ),
+        pw.SizedBox(height: spacing),
+        pw.Container(
+          margin: pw.EdgeInsets.only(left: indent),
+          child: pw.Text(
+            value,
+            style: pw.TextStyle(fontSize: fontSize),
+          ),
+        ),
+      ],
+    ),
+  );
 }

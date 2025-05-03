@@ -21,7 +21,7 @@ class PickColors {
   static Color titleTextColor = const Color(0xff111827);
   static Color authSubTitleTextColor = const Color(0xff6C7278);
 
-  static Color buttonColor = const Color(0xff1D61E7);
+  static const  Color buttonColor = const Color(0xffE6E7E8);
   static Color textfieldBorderColor = const Color(0xffEDF1F3);
   static Color secondaryBGColor = const Color(0xffF4F6FA);
   static Color primaryTextColor = const Color(0xff1A1C1E);
@@ -41,7 +41,7 @@ class PickColors {
     redColor = Colors.red;
     fillColor = Colors.white;
     transparentColor = Colors.transparent;
-    buttonColor = const Color(0xff1D61E7);
+    // buttonColor = const Color(0xffE6E7E8);
     textfieldBorderColor = const Color(0xffEDF1F3);
     secondaryBGColor = const Color(0xffF4F6FA);
     primaryTextColor = const Color(0xff1A1C1E);
@@ -63,7 +63,7 @@ class PickColors {
     redColor = Colors.red;
     fillColor = const Color(0xff0D0D0D);
     transparentColor = Colors.transparent;
-    buttonColor = const Color(0xff1D61E7);
+    // buttonColor = const Color(0xffE6E7E8);
     textfieldBorderColor = Colors.white.withOpacity(0.4);
     secondaryBGColor = Colors.black.withOpacity(0.2);
     primaryTextColor = Colors.white;

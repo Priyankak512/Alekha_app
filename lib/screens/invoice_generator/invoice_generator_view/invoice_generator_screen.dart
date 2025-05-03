@@ -2,8 +2,10 @@ import 'package:alekha/constant/colors.dart';
 import 'package:alekha/constant/date_formates.dart';
 import 'package:alekha/constant/global_list.dart';
 import 'package:alekha/constant/hight_width_picker.dart';
+import 'package:alekha/constant/navigation_route.dart';
 import 'package:alekha/constant/text_style.dart';
 import 'package:alekha/widget/common_dropdown.dart';
+import 'package:alekha/widget/common_material_button.dart';
 import 'package:alekha/widget/common_text_field.dart';
 import 'package:alekha/widget/get_date_function.dart';
 import 'package:alekha/constant/images_route.dart';
@@ -121,6 +123,7 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
 
     pdf.addPage(
       pw.Page(
+        margin: const pw.EdgeInsets.all(20),
         build: (pw.Context context) {
           return pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
@@ -189,98 +192,6 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
                     pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold),
               ),
               pw.SizedBox(height: 20),
-              // pw.Table(
-              //   border: pw.TableBorder.all(),
-              //   columnWidths: {
-              //     0: const pw.FlexColumnWidth(0.5),
-              //     1: const pw.FlexColumnWidth(3),
-              //     2: const pw.FlexColumnWidth(0.7),
-              //   },
-              //   children: [
-              //     // Header Row
-              //     pw.TableRow(
-              //       decoration:
-              //           const pw.BoxDecoration(color: PdfColors.grey300),
-              //       children: [
-              //         pw.Padding(
-              //           padding: const pw.EdgeInsets.all(4),
-              //           child: pw.Center(
-              //             child: pw.Text('No.'.toUpperCase(),
-              //                 style:
-              //                     pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-              //           ),
-              //         ),
-              //         pw.Padding(
-              //           padding: const pw.EdgeInsets.all(4),
-              //           child: pw.Text('Description'.toUpperCase(),
-              //               style:
-              //                   pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-              //         ),
-              //         pw.Padding(
-              //           padding: const pw.EdgeInsets.all(4),
-              //           child: pw.Text('Amount'.toUpperCase(),
-              //               style:
-              //                   pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-              //         ),
-              //       ],
-              //     ),
-
-              //     // Data Rows
-              //     ...tableData.map(
-              //       (row) {
-              //         final isTotalRow = row[0].toUpperCase() == 'TOTAL';
-              //         const defaultTextStyle = pw.TextStyle();
-              //         final boldTextStyle = pw.TextStyle(
-              //           fontWeight: pw.FontWeight.bold,
-              //           fontSize: 1,
-              //         );
-              //         final totalAmountStyle = pw.TextStyle(
-              //           fontWeight: pw.FontWeight.bold,
-              //           fontSize: 12, // <- Increased font size for amount only
-              //         );
-
-              //         return pw.TableRow(
-              //           children: [
-              //             pw.Padding(
-              //               padding: const pw.EdgeInsets.all(4),
-              //               child: pw.Center(
-              //                 child: pw.Text(row[0],
-              //                     style: isTotalRow
-              //                         ? boldTextStyle
-              //                         : defaultTextStyle),
-
-              //               ),
-              //             ),
-              //             pw.Padding(
-              //               padding: const pw.EdgeInsets.all(4),
-              //               child: pw.Align(
-              //                 alignment: pw.Alignment.centerLeft,
-              //                 child: pw.Text(row[1],
-              //                     style: isTotalRow
-              //                         ? boldTextStyle
-              //                         : defaultTextStyle),
-              //               ),
-              //             ),
-              //             pw.Padding(
-              //               padding: const pw.EdgeInsets.all(4),
-              //               child: pw.Align(
-              //                 alignment: pw.Alignment.centerLeft,
-              //                 child: pw.Text(
-              //                   row[2],
-              //                   style: isTotalRow
-              //                       ? totalAmountStyle
-              //                       : defaultTextStyle,
-              //                 ),
-              //               ),
-              //             ),
-
-              //           ],
-              //         );
-              //       },
-              //     ),
-              //   ],
-              // ),
-
               pw.Table(
                 border: pw.TableBorder.all(),
                 columnWidths: {
@@ -368,58 +279,13 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
                       );
                     },
                   ),
-
-                  // Row for Amount in Words, spanning all columns
-                  // pw.TableRow(
-                  //   children: [
-                  //     pw.Padding(
-                  //       padding: const pw.EdgeInsets.all(4),
-                  //       child: pw.Text(
-                  //         'Amount in Words: ${amountController.text}', // Assuming you have a function to convert the number to words
-                  //         style: pw.TextStyle(
-                  //             fontWeight: pw.FontWeight.bold, fontSize: 12),
-                  //         textAlign: pw.TextAlign.center,
-                  //       ),
-                  //     ),
-                  //     pw.Container(),
-                  //     pw.Container(),
-                  //   ],
-                  // ),
-                  // "Amount in Words" row (span across the full width of the table)
-
-                  // pw.TableRow(
-                  //   children: [
-                  //     // We create a single cell that spans the full width
-                  //     pw.Expanded(
-                  //       flex: 4,
-                  //       child: pw.Padding(
-                  //         padding: const pw.EdgeInsets.all(4),
-                  //         child: pw.Text(
-                  //           'Amount in Words: ${amountController.text}',
-                  //           style: pw.TextStyle(
-                  //               fontWeight: pw.FontWeight.bold, fontSize: 12),
-                  //           textAlign: pw.TextAlign.center,
-                  //         ),
-                  //       ),
-                  //     ),
-
-                  //     // Empty cells to fill in for other columns
-                  //     pw.Expanded(
-                  //       child: pw.Container(),
-                  //     ),
-
-                  //     pw.Expanded(
-                  //       child: pw.Container(),
-                  //     ),
-                  //   ],
-                  // ),
                 ],
               ),
               pw.Container(
-                padding: pw.EdgeInsets.all(5.00),
+                padding: const pw.EdgeInsets.all(5.00),
                 width: double.infinity,
                 decoration: pw.BoxDecoration(
-                  borderRadius: pw.BorderRadius.only(
+                  borderRadius: const pw.BorderRadius.only(
                     bottomRight: pw.Radius.circular(0),
                     bottomLeft: pw.Radius.circular(0),
                   ),
@@ -428,11 +294,10 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
                   ),
                 ),
                 child: pw.Text(
-                  "${amountController.text}",
+                  amountController.text,
                   textAlign: pw.TextAlign.center,
                 ),
               ),
-
               pw.Spacer(),
               pw.Container(
                 padding: const pw.EdgeInsets.all(5),
@@ -493,9 +358,24 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: PickColors.whiteColor,
       appBar: AppBar(
+        backgroundColor: PickColors.whiteColor,
         centerTitle: true,
-        title: const Text("Invoice"),
+        leading: GestureDetector(
+          onTap: () {
+            backToScreen(context: context);
+          },
+          child: Icon(
+            Icons.arrow_left_outlined,
+            color: PickColors.hintColor,
+          ),
+        ),
+        automaticallyImplyLeading: false,
+        title: Text(
+          'Site Visit',
+          style: CommonTextStyle().appBarTextStyle,
+        ),
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -634,9 +514,9 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
                   Expanded(
                     child: CommonTextFieldWithFocus(
                       controller: priceController,
-                      labelText: "Amount in words",
+                      labelText: "Amount",
                       keyboardType: TextInputType.number,
-                      hintText: "Amount in words",
+                      hintText: "Amount in",
                     ),
                   ),
                 ],
@@ -827,9 +707,9 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
               ),
               CommonTextFieldWithFocus(
                 controller: amountController,
-                labelText: "Amount",
-                hintText: "Amount",
-                maxLines: 2,
+                labelText: "Amount in words",
+                hintText: "Amount in words",
+                // maxLines: 2,
               ),
               const SizedBox(
                 height: 20,
@@ -861,7 +741,7 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
               const SizedBox(height: 20),
               // Comm
               Container(
-                margin: EdgeInsets.all(0),
+                margin: const EdgeInsets.all(0),
                 padding: const EdgeInsets.all(10),
                 decoration: BoxDecoration(
                   border: Border.all(color: PickColors.textfieldBorderColor),
@@ -873,20 +753,52 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
                 ),
               ),
               const SizedBox(height: 20),
-              ElevatedButton(
-                onPressed: () async {
-                  await _createPdf();
+              Row(
+                children: [
+                  Expanded(
+                    child: CommonMaterialButton(
+                      title: "Export as Pdf",
+                      suffixIcon: PickImages.pdfIcon,
+                      onPressed: () async {
+                        await _createPdf();
 
-                  // Show snackbar after successful PDF generation
-                  ScaffoldMessenger.of(context).showSnackBar(
-                    const SnackBar(
-                      content: Text('PDF generated successfully!'),
-                      backgroundColor: Colors.green,
+                        // Show snackbar after successful PDF generation
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                            content: Text('PDF generated successfully!'),
+                          ),
+                        );
+                      },
                     ),
-                  );
-                },
-                child: const Text("Generate PDF"),
+                  ),
+                  const SizedBox(
+                    width: 10,
+                  ),
+                  Expanded(
+                    child: CommonMaterialButton(
+                      title: "Whatsapp",
+                      suffixIcon: PickImages.whatsAppIcon,
+                      style: CommonTextStyle().buttonTextStyle,
+                      color: PickColors.successColor,
+                      onPressed: () async {},
+                    ),
+                  )
+                ],
               ),
+              // ElevatedButton(
+              //   onPressed: () async {
+              //     await _createPdf();
+
+              //     // Show snackbar after successful PDF generation
+              //     ScaffoldMessenger.of(context).showSnackBar(
+              //       const SnackBar(
+              //         content: Text('PDF generated successfully!'),
+              //         backgroundColor: Colors.green,
+              //       ),
+              //     );
+              //   },
+              //   child: const Text("Generate PDF"),
+              // ),
             ],
           ),
         ),
