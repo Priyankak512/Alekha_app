@@ -27,6 +27,7 @@ class _FeesScreenState extends State<FeesScreen> {
             },
             child: Icon(
               Icons.arrow_left_outlined,
+              size: 35,
               color: PickColors.hintColor,
             ),
           ),

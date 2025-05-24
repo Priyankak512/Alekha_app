@@ -7,6 +7,7 @@ import 'package:alekha/constant/global_list.dart';
 import 'package:alekha/constant/images_route.dart';
 import 'package:alekha/constant/navigation_route.dart';
 import 'package:alekha/constant/text_style.dart';
+import 'package:alekha/services/general_helper.dart';
 import 'package:alekha/widget/common_dropdown.dart';
 import 'package:alekha/widget/common_material_button.dart';
 import 'package:alekha/widget/common_text_field.dart';
@@ -19,6 +20,7 @@ import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
+import 'package:provider/provider.dart';
 
 class SiteVisitReportScreen extends StatefulWidget {
   const SiteVisitReportScreen({Key? key}) : super(key: key);
@@ -220,7 +222,7 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
       pdf.addPage(
         pw.Page(
           pageFormat: PdfPageFormat.a4,
-          margin:const pw.EdgeInsets.all(20), // optional: page margin
+          margin: const pw.EdgeInsets.all(20), // optional: page margin
           build: (pw.Context context) {
             return pw.Column(
               children: [
@@ -277,76 +279,12 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
       );
     }
 
-
     // Print the PDF or show preview
     await Printing.layoutPdf(
         name:
             '${projectNumberController.text} SITE VISIT ${dateController.text.replaceAll('_', '/')} ${clientNameController.text.toUpperCase()}',
         onLayout: (PdfPageFormat format) async => pdf.save());
   }
-
-  // // For inline short fields
-  // pw.Widget buildInlineTextFieldRow(
-  //     String label, String value, pw.Document pdf) {
-  //   if (value.isNotEmpty) {
-  //     return pw.Container(
-  //       margin: const pw.EdgeInsets.only(bottom: 5),
-  //       child: pw.Row(
-  //         crossAxisAlignment: pw.CrossAxisAlignment.start,
-  //         children: [
-  //           pw.Text(
-  //             label,
-  //             style: pw.TextStyle(
-  //               fontWeight: pw.FontWeight.bold,
-  //               fontSize: 13,
-  //             ),
-  //           ),
-  //           pw.SizedBox(width: 5),
-  //           pw.Expanded(
-  //             child: pw.Text(
-  //               value,
-  //               style: const pw.TextStyle(fontSize: 13),
-  //             ),
-  //           ),
-  //         ],
-  //       ),
-  //     );
-  //   } else {
-  //     return pw.SizedBox();
-  //   }
-  // }
-
-// // For multiline fields (label above, value below)
-//   pw.Widget _buildMultilineTextFieldRow(
-//       String label, String value, pw.Document pdf) {
-//     if (value.isNotEmpty) {
-//       return pw.Container(
-//         margin: const pw.EdgeInsets.only(bottom: 5),
-//         child: pw.Column(
-//           crossAxisAlignment: pw.CrossAxisAlignment.start,
-//           children: [
-//             pw.Text(
-//               label,
-//               style: pw.TextStyle(
-//                 fontWeight: pw.FontWeight.bold,
-//                 fontSize: 13,
-//               ),
-//             ),
-//             pw.SizedBox(height: 3),
-//             pw.Container(
-//               margin: const pw.EdgeInsets.only(left: 15), // indent here
-//               child: pw.Text(
-//                 value,
-//                 style: const pw.TextStyle(fontSize: 13),
-//               ),
-//             ),
-//           ],
-//         ),
-//       );
-//     } else {
-//       return pw.SizedBox();
-//     }
-//   }
 
   Future<void> _getImage() async {
     final pickedFile =
@@ -369,289 +307,297 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: PickColors.whiteColor,
-      appBar: AppBar(
-        backgroundColor: PickColors.whiteColor,
-        centerTitle: true,
-        leading: GestureDetector(
-          onTap: () {
-            backToScreen(context: context);
-          },
-          child: Icon(
-            Icons.arrow_left_outlined,
-            color: PickColors.hintColor,
+    return Consumer(builder: (context, GeneralHelper helper, snapshot) {
+      return WillPopScope(
+        onWillPop: () => helper.onWillPop(context),
+        child: Scaffold(
+          backgroundColor: PickColors.whiteColor,
+          appBar: AppBar(
+            backgroundColor: PickColors.whiteColor,
+            centerTitle: true,
+            leading: GestureDetector(
+              onTap: () {
+                backToScreen(context: context);
+              },
+              child: Icon(
+                Icons.arrow_left_outlined,
+                size: 35,
+                color: PickColors.hintColor,
+              ),
+            ),
+            automaticallyImplyLeading: false,
+            title: Text(
+              'Site Visit',
+              style: CommonTextStyle().appBarTextStyle,
+            ),
           ),
-        ),
-        automaticallyImplyLeading: false,
-        title: Text(
-          'Site Visit',
-          style: CommonTextStyle().appBarTextStyle,
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              CommonTextFieldWithFocus(
-                controller: clientNameController,
-                labelText: "Client Name",
-                hintText: "Client Name",
-                keyboardType: TextInputType.name,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              CommonTextFieldWithFocus(
-                controller: projectNumberController,
-                labelText: "Project No.",
-                hintText: "Project No.",
-                keyboardType: TextInputType.number,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              CommonDropDownWithoutSearch(
-                borderColor: PickColors.primaryColor,
-                hintText: "Select project category",
-                name: 'Project Category',
-                items: GlobalList.projectCategory
-                    .map((category) => DropdownMenuItem<String>(
-                          value: category,
-                          child: Text(
-                            category,
-                            style: CommonTextStyle().textFieldTitleTextStyle,
-                          ),
-                        ))
-                    .toList(),
-                isExpanded: false,
-                initialValue: _selectedProjectCategory,
-                onChanged: (newValue) {
-                  setState(
-                    () {
-                      _selectedProjectCategory = newValue.toString();
-                    },
-                  );
-                  debugPrint("----------$_selectedProjectCategory");
-                },
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              CommonTextFieldWithFocus(
-                controller: addressController,
-                labelText: "Address",
-                hintText: "Address",
-                // keyboardType: TextInputType.number,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              CommonTextFieldWithFocus(
-                controller: siteVisitNumber,
-                labelText: "Site Visit No.",
-                hintText: "Site Visit No.",
-                keyboardType: TextInputType.number,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              CommonTextFieldWithBorder(
-                fillColor: Colors.transparent,
-                filled: true,
-                prefix: const Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 8.0,
-                  ),
-                  child: Icon(Icons.calendar_month_outlined,
-                      color: PickColors.primaryColor),
-                ),
-                isRequired: true,
-                readOnly: true,
-                hint: "Date",
-                controller: dateController,
-                textInputAction: TextInputAction.none,
-                keyboardType: TextInputType.none,
-                validator: (value) {
-                  return null;
-                },
-                onTap: () async {
-                  DateTime? pickedDate = await getDateFunction(
-                    isOldDate: true,
-                    context: context,
-                  );
-                  if (pickedDate != null) {
-                    String formattedDate =
-                        DateFormate.normalDateFormate.format(pickedDate);
-                    dateController.text = formattedDate; // Set the picked date
-                  }
-                },
-                borderRadius: BorderRadius.circular(10),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              CommonTextFieldWithFocus(
-                controller: workStageOnSiteController,
-                labelText: "Work Stage on Site",
-                hintText: "Work Stage on Site",
-                maxLines: 4,
-              ),
-              // HtmlEditorWidget(
-              //     jdDescriptionController: workStageOnSiteController,
-              //     initialText: "Initial Text",
-              //     onValueChanged: (value) async {
-              //       String? html = await workStageOnSiteController.getText();
-              //       String plainText =
-              //           Bidi.stripHtmlIfNeeded(html ?? "").trim();
-              //       print("Plain Text: $plainText");
-              //     }),
-              const SizedBox(
-                height: 20,
-              ),
-              CommonTextFieldWithFocus(
-                controller: decisionController,
-                labelText: "Decisions",
-                hintText: "Decisions",
-                maxLines: 4,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              CommonTextFieldWithFocus(
-                controller: decisionPendingController,
-                labelText: "Decisions pending",
-                hintText: "Decisions pending",
-                maxLines: 4,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              CommonTextFieldWithFocus(
-                controller: changesOnSiteController,
-                labelText: "Changes on site",
-                hintText: "Changes on site",
-                maxLines: 4,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              CommonTextFieldWithFocus(
-                controller: nextOnSiteController,
-                labelText: "Next on site",
-                hintText: "Next on site",
-                maxLines: 4,
-              ),
-              const SizedBox(height: 10),
-              // _images.isNotEmpty
-              //     ? SizedBox(
-              //         height: 400,
-              //         child: ListView.builder(
-              //           itemCount: _images.length,
-              //           itemBuilder: (context, index) {
-              //             return Container(
-              //               height: 400,
-              //               width: double.infinity,
-              //               margin: const EdgeInsets.all(8.00),
-              //               child: Image.file(
-              //                 _images[index],
-              //                 fit: BoxFit.cover,
-              //               ),
-              //             );
-              //           },
-              //         ),
-              //       )
-              //     : Container(),
-
-              _images.isNotEmpty
-                  ? SizedBox(
-                      height: 400,
-                      child: ListView.builder(
-                        itemCount: _images.length,
-                        itemBuilder: (context, index) {
-                          return Stack(
-                            children: [
-                              Container(
-                                height: 400,
-                                width: double.infinity,
-                                margin: const EdgeInsets.all(8.0),
-                                child: Image.file(
-                                  _images[index],
-                                  fit: BoxFit.cover,
-                                  width: double.infinity,
-                                ),
-                              ),
-                              Positioned(
-                                top: 16,
-                                right: 16,
-                                child: GestureDetector(
-                                  onTap: () {
-                                    setState(() {
-                                      _images.removeAt(index);
-                                    });
-                                  },
-                                  child: Container(
-                                    decoration: const BoxDecoration(
-                                      color: Colors.black54,
-                                      shape: BoxShape.circle,
-                                    ),
-                                    padding: const EdgeInsets.all(4),
-                                    child: const Icon(
-                                      Icons.close,
-                                      color: Colors.white,
-                                      size: 24,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
-                          );
-                        },
-                      ),
-                    )
-                  : Container(),
-              const SizedBox(height: 20),
-
-              Row(
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Expanded(
-                    child: CommonMaterialButton(
-                      title: "Add Pictures",
-                      suffixIcon: PickImages.cameraIcon,
-                      onPressed: () {
-                        _getImage();
-                      },
-                    ),
+                  CommonTextFieldWithFocus(
+                    controller: clientNameController,
+                    labelText: "Client Name",
+                    hintText: "Client Name",
+                    keyboardType: TextInputType.name,
                   ),
                   const SizedBox(
-                    width: 10,
+                    height: 20,
                   ),
-                  Expanded(
-                    child: CommonMaterialButton(
-                      title: "Export As Pdf",
-                      suffixIcon: PickImages.pdfIcon,
-                      style: CommonTextStyle().buttonTextStyle,
-                      onPressed: () {
-                        _generatePDF();
-                      },
+                  CommonTextFieldWithFocus(
+                    controller: projectNumberController,
+                    labelText: "Project No.",
+                    hintText: "Project No.",
+                    keyboardType: TextInputType.number,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  CommonDropDownWithoutSearch(
+                    borderColor: PickColors.primaryColor,
+                    hintText: "Select project category",
+                    name: 'Project Category',
+                    items: GlobalList.projectCategory
+                        .map((category) => DropdownMenuItem<String>(
+                              value: category,
+                              child: Text(
+                                category,
+                                style:
+                                    CommonTextStyle().textFieldTitleTextStyle,
+                              ),
+                            ))
+                        .toList(),
+                    isExpanded: false,
+                    initialValue: _selectedProjectCategory,
+                    onChanged: (newValue) {
+                      setState(
+                        () {
+                          _selectedProjectCategory = newValue.toString();
+                        },
+                      );
+                      debugPrint("----------$_selectedProjectCategory");
+                    },
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  CommonTextFieldWithFocus(
+                    controller: addressController,
+                    labelText: "Address",
+                    hintText: "Address",
+                    // keyboardType: TextInputType.number,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  CommonTextFieldWithFocus(
+                    controller: siteVisitNumber,
+                    labelText: "Site Visit No.",
+                    hintText: "Site Visit No.",
+                    keyboardType: TextInputType.number,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  CommonTextFieldWithBorder(
+                    fillColor: Colors.transparent,
+                    filled: true,
+                    prefix: const Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8.0,
+                      ),
+                      child: Icon(Icons.calendar_month_outlined,
+                          color: PickColors.primaryColor),
                     ),
-                  )
+                    isRequired: true,
+                    readOnly: true,
+                    hint: "Date",
+                    controller: dateController,
+                    textInputAction: TextInputAction.none,
+                    keyboardType: TextInputType.none,
+                    validator: (value) {
+                      return null;
+                    },
+                    onTap: () async {
+                      DateTime? pickedDate = await getDateFunction(
+                        isOldDate: true,
+                        context: context,
+                      );
+                      if (pickedDate != null) {
+                        String formattedDate =
+                            DateFormate.normalDateFormate.format(pickedDate);
+                        dateController.text =
+                            formattedDate; // Set the picked date
+                      }
+                    },
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  CommonTextFieldWithFocus(
+                    controller: workStageOnSiteController,
+                    labelText: "Work Stage on Site",
+                    hintText: "Work Stage on Site",
+                    maxLines: 4,
+                  ),
+                  // HtmlEditorWidget(
+                  //     jdDescriptionController: workStageOnSiteController,
+                  //     initialText: "Initial Text",
+                  //     onValueChanged: (value) async {
+                  //       String? html = await workStageOnSiteController.getText();
+                  //       String plainText =
+                  //           Bidi.stripHtmlIfNeeded(html ?? "").trim();
+                  //       print("Plain Text: $plainText");
+                  //     }),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  CommonTextFieldWithFocus(
+                    controller: decisionController,
+                    labelText: "Decisions",
+                    hintText: "Decisions",
+                    maxLines: 4,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  CommonTextFieldWithFocus(
+                    controller: decisionPendingController,
+                    labelText: "Decisions pending",
+                    hintText: "Decisions pending",
+                    maxLines: 4,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  CommonTextFieldWithFocus(
+                    controller: changesOnSiteController,
+                    labelText: "Changes on site",
+                    hintText: "Changes on site",
+                    maxLines: 4,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  CommonTextFieldWithFocus(
+                    controller: nextOnSiteController,
+                    labelText: "Next on site",
+                    hintText: "Next on site",
+                    maxLines: 4,
+                  ),
+                  const SizedBox(height: 10),
+                  // _images.isNotEmpty
+                  //     ? SizedBox(
+                  //         height: 400,
+                  //         child: ListView.builder(
+                  //           itemCount: _images.length,
+                  //           itemBuilder: (context, index) {
+                  //             return Container(
+                  //               height: 400,
+                  //               width: double.infinity,
+                  //               margin: const EdgeInsets.all(8.00),
+                  //               child: Image.file(
+                  //                 _images[index],
+                  //                 fit: BoxFit.cover,
+                  //               ),
+                  //             );
+                  //           },
+                  //         ),
+                  //       )
+                  //     : Container(),
+
+                  _images.isNotEmpty
+                      ? SizedBox(
+                          height: 400,
+                          child: ListView.builder(
+                            itemCount: _images.length,
+                            itemBuilder: (context, index) {
+                              return Stack(
+                                children: [
+                                  Container(
+                                    height: 400,
+                                    width: double.infinity,
+                                    margin: const EdgeInsets.all(8.0),
+                                    child: Image.file(
+                                      _images[index],
+                                      fit: BoxFit.cover,
+                                      width: double.infinity,
+                                    ),
+                                  ),
+                                  Positioned(
+                                    top: 16,
+                                    right: 16,
+                                    child: GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          _images.removeAt(index);
+                                        });
+                                      },
+                                      child: Container(
+                                        decoration: const BoxDecoration(
+                                          color: Colors.black54,
+                                          shape: BoxShape.circle,
+                                        ),
+                                        padding: const EdgeInsets.all(4),
+                                        child: const Icon(
+                                          Icons.close,
+                                          color: Colors.white,
+                                          size: 24,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
+                          ),
+                        )
+                      : Container(),
+                  const SizedBox(height: 20),
+
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CommonMaterialButton(
+                          title: "Add Pictures",
+                          suffixIcon: PickImages.cameraIcon,
+                          onPressed: () {
+                            _getImage();
+                          },
+                        ),
+                      ),
+                      const SizedBox(
+                        width: 10,
+                      ),
+                      Expanded(
+                        child: CommonMaterialButton(
+                          title: "Export As Pdf",
+                          suffixIcon: PickImages.pdfIcon,
+                          style: CommonTextStyle().buttonTextStyle,
+                          onPressed: () {
+                            _generatePDF();
+                          },
+                        ),
+                      )
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  CommonMaterialButton(
+                    color: PickColors.successColor,
+                    title: "Share On Whatsapp",
+                    suffixIcon: PickImages.whatsAppIcon,
+                    onPressed: () {},
+                  ),
                 ],
               ),
-              const SizedBox(height: 10),
-              CommonMaterialButton(
-                color: PickColors.successColor,
-                title: "Share On Whatsapp",
-                suffixIcon: PickImages.whatsAppIcon,
-                onPressed: () {},
-              ),
-            ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 }
 

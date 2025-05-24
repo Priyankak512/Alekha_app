@@ -71,7 +71,7 @@ class CommonTextStyle {
 
   //textfield title text style text style
   TextStyle textFieldTitleTextStyle = TextStyle(
-    color: PickColors.questionTextColor,
+    color: PickColors.hintColor,
     fontSize: SizeConfig.fontSize14,
     fontWeight: FontWeight.w500,
     fontFamily: 'GOTHICB',
@@ -79,7 +79,7 @@ class CommonTextStyle {
 
   //textfield title text style text style
   TextStyle sectionTextStyle = TextStyle(
-    color: PickColors.questionTextColor,
+    color: PickColors.hintColor,
     fontSize: SizeConfig.fontSize12,
     fontWeight: FontWeight.w500,
     fontFamily: 'GOTHICB',
@@ -95,7 +95,7 @@ class CommonTextStyle {
 
   //textfield title text style text style
   TextStyle homeFlowTitleTextStyle = TextStyle(
-    fontSize: SizeConfig.fontSize28,
+    fontSize: SizeConfig.fontSize18,
     color: PickColors.blackColor,
     fontWeight: FontWeight.w700,
     fontFamily: 'GOTHICB',
@@ -127,7 +127,7 @@ class CommonTextStyle {
   //drawer text style
   TextStyle drawerTextStyle = TextStyle(
     fontSize: SizeConfig.fontSize14,
-    color: PickColors.primaryTextColor.withOpacity(0.9),
+    color: PickColors.hintColor,
     fontWeight: FontWeight.w600,
     fontFamily: 'GOTHICB',
   );

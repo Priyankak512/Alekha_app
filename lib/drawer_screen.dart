@@ -1,12 +1,14 @@
 import 'package:alekha/constant/colors.dart';
+import 'package:alekha/constant/global_list.dart';
+import 'package:alekha/constant/hight_width_picker.dart';
 import 'package:alekha/constant/images_route.dart';
 import 'package:alekha/constant/navigation_route.dart';
 import 'package:alekha/constant/text_style.dart';
-import 'package:alekha/screens/create_pdf/site_visit_report_screen.dart';
-import 'package:alekha/screens/invoice_generator/invoice_generator_view/invoice_generator_screen.dart';
-
+import 'package:alekha/services/general_helper.dart';
+import 'package:alekha/widget/common_dialog_box.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:provider/provider.dart';
 
 class DrawerWidget extends StatefulWidget {
   // bool isShow = true;
@@ -19,16 +21,12 @@ class DrawerWidget extends StatefulWidget {
 }
 
 class _DrawerWidgetState extends State<DrawerWidget> {
-  // bool _isLoading = false;
-
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      // width: SizeConfig.screenWidth! * 0.9,
       shape: const RoundedRectangleBorder(borderRadius: BorderRadius.zero),
       backgroundColor: PickColors.whiteColor,
       child: Stack(
-        
         children: [
           SingleChildScrollView(
             child: Padding(
@@ -44,62 +42,68 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                     ),
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        Row(
-                          children: [
-                            // PickHeightAndWidth.width10,
-                            Expanded(
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "âlekha architects",
-                                    overflow: TextOverflow.ellipsis,
-                                    maxLines: 1,
-                                    style:
-                                        CommonTextStyle().drawerTextStyle
-                                  ),
-                                  const SizedBox(
-                                    height: 5,
-                                  ), // Text("------------------"),
-                                ],
-                              ),
-                            ),
-                            InkWell(
-                              onTap: () {},
-                              child: SvgPicture.asset(PickImages.alekhaLogo),
-                            ),
-                          ],
+                        Image.asset(
+                          PickImages.alekhaArchitectsTextSingleLineImage,
+                          // height: 40,
                         ),
                         // PickHeightAndWidth.height10,
-                         Divider(
-                          thickness: 2,
+                        Divider(
+                          thickness: 1,
                           color: PickColors.blackColor,
                         ),
                         ListView.builder(
                           padding: EdgeInsets.zero,
                           shrinkWrap: true,
                           physics: const NeverScrollableScrollPhysics(),
-                          itemCount: drawerList.length,
+                          itemCount: GlobalList.drawerList.length,
                           itemBuilder: (context, index) {
                             return InkWell(
                               onTap: () async {
+                                if (GlobalList.drawerList[index]["id"] == 4) {
+                                  showDialog(
+                                    context: context,
+                                    builder: (context) {
+                                      return Consumer(builder:
+                                          (BuildContext context,
+                                              GeneralHelper helper, snapshot) {
+                                        return CommonConfirmationDialogBox(
+                                          title: "Confirmation" ?? "-",
+                                          buttonTitle: "Yes" ?? "-",
+                                          subTitle:
+                                              "Are you sure change the mode?",
+                                          onPressButton: () async {
+                                            helper.updateTheme(
+                                                isDarkTheme:
+                                                    !helper.isDarkThemeCurrent);
+                                            backToScreen(context: context);
+                                            backToScreen(context: context);
+                                          },
+                                          isCancel: true,
+                                        );
+                                      });
+                                    },
+                                  );
+                                }
                                 changeScreen(
                                     context: context,
-                                    widget: drawerList[index]["Screen"]);
+                                    widget: GlobalList.drawerList[index]
+                                        ["Screen"]);
                               },
                               child: Padding(
                                 padding:
                                     const EdgeInsets.symmetric(vertical: 10),
                                 child: Row(
                                   children: [
-                                    // SvgPicture.asset(GlobalList
-                                    //     .drawerList[index]["icon"]),
-                                    // PickHeightAndWidth.width10,
+                                    SvgPicture.asset(GlobalList
+                                        .drawerList[index]["icon"]
+                                        .toString()),
+                                    PickHeightAndWidth.width10,
                                     Text(
-                                      drawerList[index]["title"],
+                                      GlobalList.drawerList[index]["title"],
+                                      style: CommonTextStyle().drawerTextStyle,
                                     ),
-                                    // PickHeightAndWidth.height30,
                                   ],
                                 ),
                               ),
@@ -109,8 +113,6 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                       ],
                     ),
                   ),
-
-                  // PickHeightAndWidth.height25,
                   const SizedBox(
                     height: 25,
                   )
@@ -118,42 +120,8 @@ class _DrawerWidgetState extends State<DrawerWidget> {
               ),
             ),
           ),
-          // if (_isLoading)
-          // Positioned.fill(
-          //   child: Container(
-          //     color: Colors.black54,
-          //     child: const Center(
-          //       child: CircularProgressIndicator(),
-          //     ),
-          //   ),
-          // ),
         ],
       ),
     );
   }
 }
-
-List drawerList = [
-  {
-    "id": 1,
-    "icon": Icons.home,
-    "title": "Site Visit Report",
-    "Screen": const SiteVisitReportScreen(),
-  },
-  {
-    "id": 2,
-    "icon": Icons.person_add_alt_1,
-    "title": "Invoice Generator",
-    "Screen": const InvoiceGeneratorScreen(),
-  },
-  // {
-  //   "id": 3,
-  //   "icon": Icons.call_to_action_rounded,
-  //   "title": "Actions",
-  // },
-  // {
-  //   "id": 4,
-  //   "icon": Icons.settings,
-  //   "title": "Settings",
-  // },
-];

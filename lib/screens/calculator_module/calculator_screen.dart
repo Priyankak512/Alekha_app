@@ -1,20 +1,19 @@
-
-
 import 'package:alekha/constant/colors.dart';
 import 'package:alekha/constant/global_list.dart';
 import 'package:alekha/constant/navigation_route.dart';
 import 'package:alekha/constant/text_style.dart';
 import 'package:alekha/screens/home/home_common_widgets/icon_title_container.dart';
 import 'package:flutter/material.dart';
+import 'package:url_launcher/url_launcher.dart';
 
-class FormsScreen extends StatefulWidget {
-  const FormsScreen({super.key});
+class CalculatorScreen extends StatefulWidget {
+  const CalculatorScreen({super.key});
 
   @override
-  State<FormsScreen> createState() => _FormsScreenState();
+  State<CalculatorScreen> createState() => _CalculatorScreenState();
 }
 
-class _FormsScreenState extends State<FormsScreen> {
+class _CalculatorScreenState extends State<CalculatorScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -35,7 +34,7 @@ class _FormsScreenState extends State<FormsScreen> {
           ),
           automaticallyImplyLeading: false,
           title: Text(
-            'FORMS',
+            'Calculator',
             style: CommonTextStyle().appBarTextStyle,
           ),
         ),
@@ -47,18 +46,25 @@ class _FormsScreenState extends State<FormsScreen> {
               mainAxisSpacing: 8.0, // vertical space between items
               crossAxisSpacing: 8.0, // horizontal space between items
             ),
-            itemCount: GlobalList.formsList.length,
+            itemCount: GlobalList.calculatorList.length,
             itemBuilder: (context, index) {
               return InkWell(
-                onTap: () {
-                  changeScreen(
-                    context: context,
-                    widget: GlobalList.formsList[index]["screen"],
-                  );
+                onTap: () async {
+                  if (GlobalList.calculatorList[index]["id"] == "1") {
+                    const url =
+                        'https://www.civil-engineering-calculators.com/Quantity-estimator/Cement-Concrete-Calculator#google_vignette';
+                    await openUrl(url, context);
+                  } else {
+                    changeScreen(
+                      context: context,
+                      widget: GlobalList.calculatorList[index]["screen"],
+                    );
+                  }
                 },
                 child: IconTitleContainer(
-                  mainIcon: GlobalList.formsList[index]["icon"],
-                  mainText: GlobalList.formsList[index]["title"].toString()
+                  mainIcon: GlobalList.calculatorList[index]["icon"],
+                  mainText: GlobalList.calculatorList[index]["title"]
+                      .toString()
                       .toUpperCase(),
                   subText: "",
                   mainTextTextStyle: CommonTextStyle().sectionTextStyle,
@@ -69,5 +75,24 @@ class _FormsScreenState extends State<FormsScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> openUrl(String url, BuildContext context) async {
+    final Uri uri = Uri.parse(url);
+
+    try {
+      if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+        if (!await launchUrl(uri, mode: LaunchMode.inAppBrowserView)) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Could not open the link')),
+          );
+        }
+      }
+    } catch (e) {
+      debugPrint('Error launching URL: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Something went wrong!')),
+      );
+    }
   }
 }

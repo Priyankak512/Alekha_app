@@ -54,6 +54,9 @@ dependencies:
   share_plus: ^9.0.0
   bot_toast: ^4.1.3
   webview_flutter: ^4.0.7
+  # contacts_service: ^0.6.3
+  permission_handler: ^11.0.0
+  flutter_native_contact_picker:
   
  
   
@@ -104,15 +107,6 @@ flutter:
       fonts:
         - asset: assets/fonts/GOTHICB.ttf
         - asset: assets/fonts/Century Gothic.ttf
-        # - asset: assets/fonts/CenturyGothic.ttf
-        # - asset: assets/fonts/GOTHIC.ttf
-        # - asset: assets/fonts/GOTHICB0.ttf
-        # - asset: assets/fonts/GOTHICBI.ttf
-        # - asset: assets/fonts/GOTHICI.ttf
-        # - asset: assets/fonts/calibri-bold.ttf
-        # - asset: assets/fonts/calibri-bold-italic.ttf
-        # - asset: assets/fonts/calibri-italic.ttf
-        # - asset: assets/fonts/calibri-regular.ttf
         
 
   #         style: italic

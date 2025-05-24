@@ -1,4 +1,6 @@
 import 'package:alekha/constant/images_route.dart';
+import 'package:alekha/screens/calculator_module/calculator_screen.dart';
+import 'package:alekha/screens/calculator_module/pythagoras_screen.dart';
 import 'package:alekha/screens/create_pdf/site_visit_report_screen.dart';
 import 'package:alekha/screens/fees_module/fees_view/fees_received_screen.dart';
 import 'package:alekha/screens/fees_module/fees_view/fees_reminder_screen.dart';
@@ -16,6 +18,7 @@ import 'package:alekha/screens/share_module/share_view/location_screen.dart';
 import 'package:alekha/screens/share_module/share_view/profile_screen.dart';
 import 'package:alekha/screens/share_module/share_view/share_sceen.dart';
 import 'package:alekha/screens/share_module/share_view/social_screen.dart';
+import 'package:flutter/material.dart';
 
 class GlobalList {
   static List<String> projectCategory = [
@@ -38,10 +41,43 @@ class GlobalList {
     "Residential",
     "Retail",
     "Office"
-    "Other"
+        "Other"
   ];
 
-  static List<String> regardsName = ["Ar.Tushar Kachhadiya", "Ar.Ronak Jain"];
+  static List drawerList = [
+    {
+      "id": 1,
+      "icon": Icons.language_sharp,
+      "title": "Language",
+      // "Screen": const SiteVisitReportScreen(),
+    },
+    {
+      "id": 2,
+      "icon": Icons.devices,
+      "title": "Manage Devices",
+      // "Screen": const InvoiceGeneratorScreen(),
+    },
+    {
+      "id": 3,
+      "icon": Icons.notification_add_outlined,
+      "title": "Notification",
+    },
+    {
+      "id": 4,
+      "icon": Icons.mode_night_outlined,
+      "title": "Mode",
+    },
+    {
+      "id": 4,
+      "icon": Icons.draw_outlined,
+      "title": "Artoshophy",
+    },
+  ];
+
+  static List<String> regardsName = [
+    "Ar.Tushar Kachhadiya     ",
+    "Ar.Ronak Jain             "
+  ];
   static List<String> paymentModeList = ["Cash", "UPI", "Bank Transfer"];
 
   static List<String> timeStatus = ["AM", "PM"];
@@ -106,7 +142,7 @@ class GlobalList {
       "id": "10",
       "title": "Calculator",
       "icon": PickImages.calculatorIcon,
-      "screen": '',
+      "screen": const CalculatorScreen(),
     },
     {
       "id": "11",
@@ -114,12 +150,7 @@ class GlobalList {
       "icon": PickImages.compassIcon,
       "screen": '',
     },
-    {
-      "id": "12",
-      "title": "Draw",
-      "icon": PickImages.drawIcon,
-      "screen": const MeetingScreen(),
-    }
+    {"id": "12", "title": "Draw", "icon": PickImages.drawIcon, "screen": null}
   ];
 
   //Forms List =======================
@@ -242,6 +273,28 @@ class GlobalList {
     },
   ];
 
+//Calculator List =======================
+  static List calculatorList = [
+    {
+      "id": "1",
+      "title": "Area-Length",
+      "icon": PickImages.areaLengthIcon,
+      "screen": null,
+    },
+    {
+      "id": "2",
+      "title": "Water Tank",
+      "icon": PickImages.waterTankIcon,
+      "screen": null,
+    },
+    {
+      "id": "3",
+      "title": "Pythagoras",
+      "icon": PickImages.pythagorasIcon,
+      "screen": const PythagorasScreen(),
+    },
+  ];
+
   //Drive List =======================
   static List projectFilesList = [
     {
@@ -287,6 +340,75 @@ class GlobalList {
       "id": "8",
       "title": "2025 PROJECTS",
       "link": '',
+    },
+  ];
+
+  //Inch and fit list========================================
+  static List inchAndFitList = [
+    {
+      "id": 1,
+      "inch": "1''",
+      "title": "0,0833 ft",
+    },
+    {
+      "id": 2,
+      "inch": "2''",
+      "title": "0,1667 ft",
+    },
+    {
+      "id": 3,
+      "inch": "3''",
+      "title": "0,2500 ft",
+    },
+    {
+      "id": 4,
+      "inch": "4''",
+      "title": "0,3333 ft",
+    },
+    {
+      "id": 5,
+      "inch": "5''",
+      "title": "0,4167 ft",
+    },
+    {
+      "id": 6,
+      "inch": "6''",
+      "title": "0,5000 ft",
+    },
+    {
+      "id": 7,
+      "inch": "7''",
+      "title": "0,5833 ft",
+    },
+    {
+      "id": 8,
+      "inch": "8''",
+      "title": "0,6667 ft",
+    },
+    {
+      "id": 9,
+      "inch": "9''",
+      "title": "0,7500 ft",
+    },
+    {
+      "id": 10,
+      "inch": "10''",
+      "title": "0,8333",
+    },
+    {
+      "id": 8,
+      "inch": "20''",
+      "title": "1,6667 ft",
+    },
+    {
+      "id": 9,
+      "inch": "30''",
+      "title": "2,5000 ft",
+    },
+    {
+      "id": 10,
+      "inch": "40''",
+      "title": "3,3333",
     },
   ];
 }

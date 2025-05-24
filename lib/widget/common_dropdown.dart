@@ -1,3 +1,4 @@
+import 'package:alekha/constant/colors.dart';
 import 'package:alekha/constant/text_style.dart';
 import 'package:flutter/material.dart';
 
@@ -55,6 +56,7 @@ class _CommonDropDownWithoutSearchState
         validator: widget.validator,
         isExpanded: widget.isExpanded,
         value: widget.initialValue,
+        dropdownColor:PickColors.whiteColor,
         // style: widget.isDisabled
         //     ? const TextStyle(
         //         color: Colors.black,
@@ -67,7 +69,7 @@ class _CommonDropDownWithoutSearchState
             constraints: widget.constraints,
             helperText: widget.isInRow ? "" : null,
             fillColor: widget.fillColor,
-            labelText: widget.labelText,  
+            labelText: widget.labelText,
             filled: widget.filled,
             errorBorder: OutlineInputBorder(
               borderRadius: BorderRadius.circular(10),

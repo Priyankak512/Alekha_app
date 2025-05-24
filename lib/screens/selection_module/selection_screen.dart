@@ -6,6 +6,7 @@ import 'package:alekha/constant/hight_width_picker.dart';
 import 'package:alekha/constant/images_route.dart';
 import 'package:alekha/constant/navigation_route.dart';
 import 'package:alekha/constant/text_style.dart';
+import 'package:alekha/services/general_helper.dart';
 import 'package:alekha/widget/common_dropdown.dart';
 import 'package:alekha/widget/common_material_button.dart';
 import 'package:alekha/widget/common_text_field.dart';
@@ -18,6 +19,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
+import 'package:provider/provider.dart';
 
 class SelectionScreen extends StatefulWidget {
   const SelectionScreen({super.key});
@@ -280,340 +282,355 @@ class _SelectionScreenState extends State<SelectionScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: PickColors.whiteColor,
-      appBar: AppBar(
-        backgroundColor: PickColors.whiteColor,
-        centerTitle: true,
-        leading: GestureDetector(
-          onTap: () {
-            backToScreen(context: context);
-          },
-          child: Icon(
-            Icons.arrow_left_outlined,
-            color: PickColors.hintColor,
+    return Consumer(builder: (context, GeneralHelper helper, snapshot) {
+      return WillPopScope(
+        onWillPop: () => helper.onWillPop(context),
+        child: Scaffold(
+          backgroundColor: PickColors.whiteColor,
+          appBar: AppBar(
+            backgroundColor: PickColors.whiteColor,
+            centerTitle: true,
+            leading: GestureDetector(
+              onTap: () {
+                backToScreen(context: context);
+              },
+              child: Icon(
+                Icons.arrow_left_outlined,
+                size: 35,
+                color: PickColors.hintColor,
+              ),
+            ),
+            automaticallyImplyLeading: false,
+            title: Text(
+              'Selection',
+              style: CommonTextStyle().appBarTextStyle,
+            ),
           ),
-        ),
-        automaticallyImplyLeading: false,
-        title: Text(
-          'Selection',
-          style: CommonTextStyle().appBarTextStyle,
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              CommonTextFieldWithFocus(
-                controller: clientNameController,
-                labelText: "Client Name",
-                hintText: "Client Name",
-                keyboardType: TextInputType.name,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              CommonTextFieldWithFocus(
-                controller: projectNumberController,
-                labelText: "Project No.",
-                hintText: "Project No.",
-                keyboardType: TextInputType.number,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              CommonDropDownWithoutSearch(
-                borderColor: PickColors.primaryColor,
-                hintText: "Select project type",
-                name: 'Project Type',
-                items: GlobalList.projectCategory
-                    .map((category) => DropdownMenuItem<String>(
-                          value: category,
-                          child: Text(
-                            category,
-                            style: CommonTextStyle().textFieldTitleTextStyle,
-                          ),
-                        ))
-                    .toList(),
-                isExpanded: false,
-                initialValue: _selectedProjectType,
-                onChanged: (newValue) {
-                  setState(
-                    () {
-                      _selectedProjectType = newValue.toString();
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  CommonTextFieldWithFocus(
+                    controller: clientNameController,
+                    labelText: "Client Name",
+                    hintText: "Client Name",
+                    keyboardType: TextInputType.name,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  CommonTextFieldWithFocus(
+                    controller: projectNumberController,
+                    labelText: "Project No.",
+                    hintText: "Project No.",
+                    keyboardType: TextInputType.number,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  CommonDropDownWithoutSearch(
+                    borderColor: PickColors.primaryColor,
+                    hintText: "Select project type",
+                    name: 'Project Type',
+                    items: GlobalList.projectCategory
+                        .map((category) => DropdownMenuItem<String>(
+                              value: category,
+                              child: Text(
+                                category,
+                                style:
+                                    CommonTextStyle().textFieldTitleTextStyle,
+                              ),
+                            ))
+                        .toList(),
+                    isExpanded: false,
+                    initialValue: _selectedProjectType,
+                    onChanged: (newValue) {
+                      setState(
+                        () {
+                          _selectedProjectType = newValue.toString();
+                        },
+                      );
+                      debugPrint("----------$_selectedProjectType");
                     },
-                  );
-                  debugPrint("----------$_selectedProjectType");
-                },
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              CommonTextFieldWithBorder(
-                fillColor: Colors.transparent,
-                filled: true,
-                prefix: const Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 8.0,
                   ),
-                  child: Icon(Icons.calendar_month_outlined,
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  CommonTextFieldWithBorder(
+                    fillColor: Colors.transparent,
+                    filled: true,
+                    prefix: const Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8.0,
+                      ),
+                      child: Icon(Icons.calendar_month_outlined,
+                          color: PickColors.primaryColor),
+                    ),
+                    isRequired: true,
+                    readOnly: true,
+                    hint: "Date",
+                    controller: dateMeetingController,
+                    textInputAction: TextInputAction.none,
+                    keyboardType: TextInputType.none,
+                    validator: (value) {
+                      return null;
+                    },
+                    onTap: () async {
+                      DateTime? pickedDate = await getDateFunction(
+                        isOldDate: true,
+                        context: context,
+                      );
+                      if (pickedDate != null) {
+                        String formattedDate =
+                            DateFormate.normalDateFormate.format(pickedDate);
+                        dateMeetingController.text =
+                            formattedDate; // Set the picked date
+                      }
+                    },
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  CommonTextFieldWithFocus(
+                    controller: selectionTimeController,
+                    labelText: "Selection Time",
+                    hintText: "Selection Time",
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CommonTextFieldWithFocus(
+                          controller: description1Controller,
+                          labelText: "Description",
+                          hintText: "Description",
+                        ),
+                      ),
+                      PickHeightAndWidth.width5,
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 10),
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(8)),
+                          border: Border.all(
+                              color: PickColors.textfieldBorderColor),
+                        ),
+                        child: SvgPicture.asset(PickImages.cameraIcon),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CommonTextFieldWithFocus(
+                          controller: description2Controller,
+                          labelText: "Description",
+                          hintText: "Description",
+                        ),
+                      ),
+                      PickHeightAndWidth.width5,
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 10),
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(8)),
+                          border: Border.all(
+                              color: PickColors.textfieldBorderColor),
+                        ),
+                        child: SvgPicture.asset(PickImages.cameraIcon),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CommonTextFieldWithFocus(
+                          controller: description3Controller,
+                          labelText: "Description",
+                          hintText: "Description",
+                        ),
+                      ),
+                      PickHeightAndWidth.width5,
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 10),
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(8)),
+                          border: Border.all(
+                              color: PickColors.textfieldBorderColor),
+                        ),
+                        child: SvgPicture.asset(PickImages.cameraIcon),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CommonTextFieldWithFocus(
+                          controller: description4Controller,
+                          labelText: "Description",
+                          hintText: "Description",
+                        ),
+                      ),
+                      PickHeightAndWidth.width5,
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 10),
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(8)),
+                          border: Border.all(
+                              color: PickColors.textfieldBorderColor),
+                        ),
+                        child: SvgPicture.asset(PickImages.cameraIcon),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CommonTextFieldWithFocus(
+                          controller: description5Controller,
+                          labelText: "Description",
+                          hintText: "Description",
+                        ),
+                      ),
+                      PickHeightAndWidth.width5,
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 10),
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(8)),
+                          border: Border.all(
+                              color: PickColors.textfieldBorderColor),
+                        ),
+                        child: SvgPicture.asset(PickImages.cameraIcon),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CommonTextFieldWithFocus(
+                          controller: description6Controller,
+                          labelText: "Description",
+                          hintText: "Description",
+                        ),
+                      ),
+                      PickHeightAndWidth.width5,
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 10),
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(8)),
+                          border: Border.all(
+                              color: PickColors.textfieldBorderColor),
+                        ),
+                        child: SvgPicture.asset(PickImages.cameraIcon),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CommonTextFieldWithFocus(
+                          controller: description7Controller,
+                          labelText: "Description",
+                          hintText: "Description",
+                        ),
+                      ),
+                      PickHeightAndWidth.width5,
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 10),
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(8)),
+                          border: Border.all(
+                              color: PickColors.textfieldBorderColor),
+                        ),
+                        child: SvgPicture.asset(PickImages.cameraIcon),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CommonTextFieldWithFocus(
+                          controller: description8Controller,
+                          labelText: "Description",
+                          hintText: "Description",
+                        ),
+                      ),
+                      PickHeightAndWidth.width5,
+                      Container(
+                        padding: const EdgeInsets.symmetric(
+                            horizontal: 10, vertical: 10),
+                        decoration: BoxDecoration(
+                          borderRadius:
+                              const BorderRadius.all(Radius.circular(8)),
+                          border: Border.all(
+                              color: PickColors.textfieldBorderColor),
+                        ),
+                        child: SvgPicture.asset(PickImages.cameraIcon),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  CommonMaterialButton(
+                      title: 'Add Image',
+                      onPressed: _getImage,
+                      style: CommonTextStyle().buttonTextStyle,
+                      prefixIcon: PickImages.cameraIcon,
+                      prefixIconColor: Colors.black,
                       color: PickColors.primaryColor),
-                ),
-                isRequired: true,
-                readOnly: true,
-                hint: "Date",
-                controller: dateMeetingController,
-                textInputAction: TextInputAction.none,
-                keyboardType: TextInputType.none,
-                validator: (value) {
-                  return null;
-                },
-                onTap: () async {
-                  DateTime? pickedDate = await getDateFunction(
-                    isOldDate: true,
-                    context: context,
-                  );
-                  if (pickedDate != null) {
-                    String formattedDate =
-                        DateFormate.normalDateFormate.format(pickedDate);
-                    dateMeetingController.text =
-                        formattedDate; // Set the picked date
-                  }
-                },
-                borderRadius: BorderRadius.circular(10),
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              CommonTextFieldWithFocus(
-                controller: selectionTimeController,
-                labelText: "Selection Time",
-                hintText: "Selection Time",
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: CommonTextFieldWithFocus(
-                      controller: description1Controller,
-                      labelText: "Description",
-                      hintText: "Description",
-                    ),
-                  ),
-                  PickHeightAndWidth.width5,
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 10),
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.all(Radius.circular(8)),
-                      border:
-                          Border.all(color: PickColors.textfieldBorderColor),
-                    ),
-                    child: SvgPicture.asset(PickImages.cameraIcon),
+                  const SizedBox(height: 20),
+                  CommonMaterialButton(
+                    title: 'Create PDF',
+                    style: CommonTextStyle().buttonTextStyle,
+                    onPressed: _generatePDF,
+                    color: PickColors.primaryColor,
+                    verticalPadding: 20,
                   ),
                 ],
               ),
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: CommonTextFieldWithFocus(
-                      controller: description2Controller,
-                      labelText: "Description",
-                      hintText: "Description",
-                    ),
-                  ),
-                  PickHeightAndWidth.width5,
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 10),
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.all(Radius.circular(8)),
-                      border:
-                          Border.all(color: PickColors.textfieldBorderColor),
-                    ),
-                    child: SvgPicture.asset(PickImages.cameraIcon),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: CommonTextFieldWithFocus(
-                      controller: description3Controller,
-                      labelText: "Description",
-                      hintText: "Description",
-                    ),
-                  ),
-                  PickHeightAndWidth.width5,
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 10),
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.all(Radius.circular(8)),
-                      border:
-                          Border.all(color: PickColors.textfieldBorderColor),
-                    ),
-                    child: SvgPicture.asset(PickImages.cameraIcon),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: CommonTextFieldWithFocus(
-                      controller: description4Controller,
-                      labelText: "Description",
-                      hintText: "Description",
-                    ),
-                  ),
-                  PickHeightAndWidth.width5,
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 10),
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.all(Radius.circular(8)),
-                      border:
-                          Border.all(color: PickColors.textfieldBorderColor),
-                    ),
-                    child: SvgPicture.asset(PickImages.cameraIcon),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: CommonTextFieldWithFocus(
-                      controller: description5Controller,
-                      labelText: "Description",
-                      hintText: "Description",
-                    ),
-                  ),
-                  PickHeightAndWidth.width5,
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 10),
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.all(Radius.circular(8)),
-                      border:
-                          Border.all(color: PickColors.textfieldBorderColor),
-                    ),
-                    child: SvgPicture.asset(PickImages.cameraIcon),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: CommonTextFieldWithFocus(
-                      controller: description6Controller,
-                      labelText: "Description",
-                      hintText: "Description",
-                    ),
-                  ),
-                  PickHeightAndWidth.width5,
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 10),
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.all(Radius.circular(8)),
-                      border:
-                          Border.all(color: PickColors.textfieldBorderColor),
-                    ),
-                    child: SvgPicture.asset(PickImages.cameraIcon),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: CommonTextFieldWithFocus(
-                      controller: description7Controller,
-                      labelText: "Description",
-                      hintText: "Description",
-                    ),
-                  ),
-                  PickHeightAndWidth.width5,
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 10),
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.all(Radius.circular(8)),
-                      border:
-                          Border.all(color: PickColors.textfieldBorderColor),
-                    ),
-                    child: SvgPicture.asset(PickImages.cameraIcon),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: CommonTextFieldWithFocus(
-                      controller: description8Controller,
-                      labelText: "Description",
-                      hintText: "Description",
-                    ),
-                  ),
-                  PickHeightAndWidth.width5,
-                  Container(
-                    padding: const EdgeInsets.symmetric(
-                        horizontal: 10, vertical: 10),
-                    decoration: BoxDecoration(
-                      borderRadius: const BorderRadius.all(Radius.circular(8)),
-                      border:
-                          Border.all(color: PickColors.textfieldBorderColor),
-                    ),
-                    child: SvgPicture.asset(PickImages.cameraIcon),
-                  ),
-                ],
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              CommonMaterialButton(
-                  title: 'Add Image',
-                  onPressed: _getImage,
-                  style: CommonTextStyle().buttonTextStyle,
-                  prefixIcon: PickImages.cameraIcon,
-                  prefixIconColor: Colors.black,
-                  color: PickColors.primaryColor),
-              const SizedBox(height: 20),
-              CommonMaterialButton(
-                title: 'Create PDF',
-                style: CommonTextStyle().buttonTextStyle,
-                onPressed: _generatePDF,
-                color: PickColors.primaryColor,
-                verticalPadding: 20,
-              ),
-            ],
+            ),
           ),
         ),
-      ),
-    );
+      );
+    });
   }
 }

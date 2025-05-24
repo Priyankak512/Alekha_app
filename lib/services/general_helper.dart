@@ -1,6 +1,5 @@
-import 'dart:convert';
+
 import 'package:alekha/constant/colors.dart';
-import 'package:alekha/constant/global_list.dart';
 import 'package:alekha/constant/share_pref_keys.dart';
 import 'package:alekha/constant/share_preference.dart';
 import 'package:alekha/logical_functions/debug_print.dart';
@@ -119,6 +118,90 @@ class GeneralHelper with ChangeNotifier {
     //     await Shared_Preferences.prefGetBool(SharedP.selectedTheme, true);
     printDebug(textString: "isDarkThemeCurrent    $isDarkThemeCurrent");
     notifyListeners();
+  }
+
+  Future<bool> onWillPop(BuildContext context) async {
+    bool canPop = false;
+    await showDialog(
+      context: context,
+      builder: (context) {
+        return Dialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10.0),
+          ),
+          elevation: 0.0,
+          backgroundColor: Colors.transparent,
+          child: Container(
+            decoration: BoxDecoration(
+              color: Colors.white,
+              borderRadius: BorderRadius.circular(10.0),
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: <Widget>[
+                const Padding(
+                  padding: EdgeInsets.all(20.0),
+                  child: Text(
+                    'Are you sure you want to quit?',
+                    style: TextStyle(
+                      fontSize: 16.0,
+                      fontFamily: 'Manrope',
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+                const Divider(
+                  height: 0,
+                  color: Colors.grey,
+                ),
+                IntrinsicHeight(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    children: <Widget>[
+                      TextButton(
+                        onPressed: () {
+                          HapticFeedback.mediumImpact();
+                          canPop = false;
+                          Navigator.pop(context);
+                        },
+                        child: const Text(
+                          'No',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14.0,
+                            fontFamily: 'Manrope',
+                          ),
+                        ),
+                      ),
+                      const VerticalDivider(
+                        width: 0,
+                        color: Colors.grey,
+                      ),
+                      TextButton(
+                        onPressed: () {
+                          HapticFeedback.mediumImpact();
+                          canPop = true;
+                          Navigator.pop(context);
+                        },
+                        child: const Text(
+                          'Yes',
+                          style: TextStyle(
+                            color: Colors.black,
+                            fontSize: 14.0,
+                            fontFamily: 'Manrope',
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+              ],
+            ),
+          ),
+        );
+      },
+    );
+    return canPop;
   }
 
   // bool isBookStyleCurrent = false;

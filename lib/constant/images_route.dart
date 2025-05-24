@@ -1,10 +1,12 @@
 class PickImages {
   static const alekhaLogo = "assets/images/alekha_logo.png";
-  // static const cameraIcon = "assets/images/camera_icon.svg";
+  static const alekhaArchitectsTextSingleLineImage = "assets/images/alekha_architects_text_single_line.png";
   static const alekhaArchitectsIcon = "assets/images/alekha_architects.png";
   static const invoiceContactPdfLogo = "assets/images/invoice_contact_pdf_logo.png";
   static const siteVisitContactsPdfImage = "assets/images/site_visit_contacts_pdf.png";
   static const invoicePdfLogo = "assets/images/invoice_pdf_logo.png";
+  static const tusharSignatureImage = "assets/images/tushar_signature.png";
+  static const ronakSignatureImage = "assets/images/ronak_signature.png";
   
 
 
@@ -40,6 +42,8 @@ class PickImages {
   static const compassIcon = "assets/icons/compass_icon.svg";
   static const drawIcon = "assets/icons/draw_icon.svg";
   static const copyToClipboardIcon = "assets/icons/copy_to_clipboard_icon.svg";
-
+  static const pythagorasIcon = "assets/icons/pythagoras_icon.svg";
+  static const waterTankIcon = "assets/icons/water_tank_icon.svg";
   static const cameraIcon = "assets/icons/camera_icon.svg";
+  static const areaLengthIcon = "assets/icons/area_length_icon.svg";
 }

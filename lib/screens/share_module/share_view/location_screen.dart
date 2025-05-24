@@ -359,11 +359,13 @@ import 'package:alekha/constant/hight_width_picker.dart';
 import 'package:alekha/constant/images_route.dart';
 import 'package:alekha/constant/navigation_route.dart';
 import 'package:alekha/constant/text_style.dart';
+import 'package:alekha/services/general_helper.dart';
 import 'package:alekha/widget/common_dropdown.dart';
 import 'package:alekha/widget/common_material_button.dart';
 import 'package:alekha/widget/common_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class LocationScreen extends StatefulWidget {
@@ -390,159 +392,166 @@ class _LocationScreenState extends State<LocationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: PickColors.whiteColor,
-      appBar: AppBar(
-        backgroundColor: PickColors.whiteColor,
-        centerTitle: true,
-        leading: GestureDetector(
-          onTap: () {
-            backToScreen(context: context);
-          },
-          child: Icon(
-            Icons.arrow_left_outlined,
-            color: PickColors.hintColor,
-          ),
-        ),
-        automaticallyImplyLeading: false,
-        title: Text(
-          'Location',
-          style: CommonTextStyle().appBarTextStyle,
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            children: [
-              CommonTextFieldWithFocus(
-                controller: nameController,
-                labelText: "Name",
-                hintText: "Name",
-                keyboardType: TextInputType.name,
-              ),
-              PickHeightAndWidth.height20,
-              CommonDropDownWithoutSearch(
-                borderColor: PickColors.primaryColor,
-                hintText: "Regards",
-                name: 'Regards',
-                items: GlobalList.regardsName
-                    .map((category) => DropdownMenuItem<String>(
-                          value: category,
-                          child: Text(
-                            category,
-                            style: CommonTextStyle().textFieldTitleTextStyle,
-                          ),
-                        ))
-                    .toList(),
-                isExpanded: false,
-                initialValue: _selectedRegardsType,
-                onChanged: (newValue) {
-                  setState(() {
-                    _selectedRegardsType = newValue.toString();
-                  });
-                  debugPrint("----------$_selectedRegardsType");
+    return Consumer(builder: (context, GeneralHelper helper, snapshot) {
+        return WillPopScope(
+        onWillPop: () => helper.onWillPop(context),
+          child: Scaffold(
+            backgroundColor: PickColors.whiteColor,
+            appBar: AppBar(
+              backgroundColor: PickColors.whiteColor,
+              centerTitle: true,
+              leading: GestureDetector(
+                onTap: () {
+                  backToScreen(context: context);
                 },
+                child: Icon(
+                  Icons.arrow_left_outlined,
+                  size: 35,
+                  color: PickColors.hintColor,
+                ),
               ),
-            ],
-          ),
-        ),
-      ),
-      bottomNavigationBar: Padding(
-        padding: const EdgeInsets.all(20.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CommonMaterialButton(
-              title: "Create Message",
-              onPressed: () {
-                setState(() {
-                  _showPreviewMessage = true;
-                });
-              },
+              automaticallyImplyLeading: false,
+              title: Text(
+                'Location',
+                style: CommonTextStyle().appBarTextStyle,
+              ),
             ),
-            const SizedBox(height: 10),
-            if (_showPreviewMessage)
-              RichText(
-                text: TextSpan(
-                  style: CommonTextStyle().authSubTitleTextStyle,
+            body: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
                   children: [
-                    TextSpan(text: "Hi,\n${nameController.text}\n\n"),
-                    TextSpan(
-                      text: "alekha architects,\n\n",
-                      style: CommonTextStyle().authSubTitleTextStyle.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
+                    CommonTextFieldWithFocus(
+                      controller: nameController,
+                      labelText: "Name",
+                      hintText: "Name",
+                      keyboardType: TextInputType.name,
                     ),
-                    const TextSpan(
-                      text:
-                          "Shop no. 28-29, Hiranagar, nr. old vijay cinema, Bamroli road, Pandesara, Surat\n\nFor exact location please click on the link below:\n",
-                    ),
-                    WidgetSpan(
-                      child: GestureDetector(
-                        onTap: _launchMapUrl,
-                        child: Text(
-                          "https://maps.app.goo.gl/yyvjEDHmwLHJmLor8",
-                          style:
-                              CommonTextStyle().authSubTitleTextStyle.copyWith(
-                                    fontWeight: FontWeight.bold,
-                                    color: Colors.blue,
-                                    decoration: TextDecoration.underline,
-                                  ),
-                        ),
-                      ),
-                    ),
-                    const TextSpan(text: "\n\n\n"),
-                    TextSpan(
-                        text: "Regards\n${_selectedRegardsType.toString()}\n"),
-                    TextSpan(
-                      text: "alekha architects",
-                      style: CommonTextStyle().authSubTitleTextStyle.copyWith(
-                            fontWeight: FontWeight.bold,
-                            color: Colors.black,
-                          ),
+                    PickHeightAndWidth.height20,
+                    CommonDropDownWithoutSearch(
+                      borderColor: PickColors.primaryColor,
+                      hintText: "Regards",
+                      name: 'Regards',
+                      items: GlobalList.regardsName
+                          .map((category) => DropdownMenuItem<String>(
+                                value: category,
+                                child: Text(
+                                  category,
+                                  style: CommonTextStyle().textFieldTitleTextStyle,
+                                ),
+                              ))
+                          .toList(),
+                      isExpanded: false,
+                      initialValue: _selectedRegardsType,
+                      onChanged: (newValue) {
+                        setState(() {
+                          _selectedRegardsType = newValue.toString();
+                        });
+                        debugPrint("----------$_selectedRegardsType");
+                      },
                     ),
                   ],
                 ),
               ),
-            Row(
-              children: [
-                Expanded(
-                  child: CommonMaterialButton(
-                    color: PickColors.successColor,
-                    title: "SHARE ON WHATSAPP",
-                    suffixIcon: PickImages.whatsAppIcon,
+            ),
+            bottomNavigationBar: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  CommonMaterialButton(
+                    title: "Create Message",
                     onPressed: () {
-                      // _launchWhatsapp();
+                      setState(() {
+                        _showPreviewMessage = true;
+                      });
                     },
                   ),
-                ),
-                const SizedBox(width: 10),
-                Expanded(
-                  child: CommonMaterialButton(
-                    borderColor: PickColors.authSubTitleTextColor,
-                    title: "COPY TO CLIPBOARD",
-                    suffixIcon: PickImages.persionMailIcon,
-                    style: CommonTextStyle().buttonTextStyle,
-                    color: PickColors.transparentColor,
-                    onPressed: () {
-                      String message =
-                          "Hi,\n${nameController.text}\n\nalekha architects,\n\nShop no. 28-29, Hiranagar, nr. old vijay cinema, Bamroli road, Pandesara, Surat\n\nFor exact location please click on the link below:\nhttps://maps.app.goo.gl/yyvjEDHmwLHJmLor8\n\n\nRegards\n${_selectedRegardsType.toString()}\nalekha architects";
-                      Clipboard.setData(ClipboardData(text: message));
-                      ScaffoldMessenger.of(context).showSnackBar(
-                        const SnackBar(
-                          content: Text("Message copied to clipboard!"),
+                  const SizedBox(height: 10),
+                  if (_showPreviewMessage)
+                    RichText(
+                      text: TextSpan(
+                        style: CommonTextStyle().authSubTitleTextStyle,
+                        children: [
+                          TextSpan(text: "Hi,\n${nameController.text}\n\n"),
+                          TextSpan(
+                            text: "alekha architects,\n\n",
+                            style: CommonTextStyle().authSubTitleTextStyle.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                          ),
+                          const TextSpan(
+                            text:
+                                "Shop no. 28-29, Hiranagar, nr. old vijay cinema, Bamroli road, Pandesara, Surat\n\nFor exact location please click on the link below:\n",
+                          ),
+                          WidgetSpan(
+                            child: GestureDetector(
+                              onTap: _launchMapUrl,
+                              child: Text(
+                                "https://maps.app.goo.gl/yyvjEDHmwLHJmLor8",
+                                style:
+                                    CommonTextStyle().authSubTitleTextStyle.copyWith(
+                                          fontWeight: FontWeight.bold,
+                                          color: Colors.blue,
+                                          decoration: TextDecoration.underline,
+                                        ),
+                              ),
+                            ),
+                          ),
+                          const TextSpan(text: "\n\n\n"),
+                          TextSpan(
+                              text: "Regards\n${_selectedRegardsType.toString()}\n"),
+                          TextSpan(
+                            text: "alekha architects",
+                            style: CommonTextStyle().authSubTitleTextStyle.copyWith(
+                                  fontWeight: FontWeight.bold,
+                                  color: Colors.black,
+                                ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CommonMaterialButton(
+                          color: PickColors.successColor,
+                          title: "SHARE ON WHATSAPP",
+                          suffixIcon: PickImages.whatsAppIcon,
+                          onPressed: () {
+                            // _launchWhatsapp();
+                          },
                         ),
-                      );
-                    },
-                  ),
-                )
-              ],
-            )
-          ],
-        ),
-      ),
+                      ),
+                      const SizedBox(width: 10),
+                      Expanded(
+                        child: CommonMaterialButton(
+                          borderColor: PickColors.authSubTitleTextColor,
+                          title: "COPY TO CLIPBOARD",
+                          suffixIcon: PickImages.persionMailIcon,
+                          style: CommonTextStyle().buttonTextStyle,
+                          color: PickColors.transparentColor,
+                          onPressed: () {
+                            String message =
+                                "Hi,\n${nameController.text}\n\nalekha architects,\n\nShop no. 28-29, Hiranagar, nr. old vijay cinema, Bamroli road, Pandesara, Surat\n\nFor exact location please click on the link below:\nhttps://maps.app.goo.gl/yyvjEDHmwLHJmLor8\n\n\nRegards\n${_selectedRegardsType.toString()}\nalekha architects";
+                            Clipboard.setData(ClipboardData(text: message));
+                            ScaffoldMessenger.of(context).showSnackBar(
+                              const SnackBar(
+                                content: Text("Message copied to clipboard!"),
+                              ),
+                            );
+                          },
+                        ),
+                      )
+                    ],
+                  )
+                ],
+              ),
+            ),
+          ),
+        );
+      }
     );
   }
 }

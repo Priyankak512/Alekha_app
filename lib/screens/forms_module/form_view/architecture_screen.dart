@@ -7,17 +7,21 @@ import 'package:alekha/constant/global_list.dart';
 import 'package:alekha/constant/images_route.dart';
 import 'package:alekha/constant/navigation_route.dart';
 import 'package:alekha/constant/text_style.dart';
+import 'package:alekha/services/general_helper.dart';
 import 'package:alekha/widget/common_dropdown.dart';
 import 'package:alekha/widget/common_material_button.dart';
 import 'package:alekha/widget/common_text_field.dart';
 import 'package:alekha/widget/get_date_function.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
+// import 'package:html_editor_enhanced/html_editor.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
+// import 'package:alekha/widget/html_widget.dart';
 
 class ArchitectureScreen extends StatefulWidget {
   const ArchitectureScreen({Key? key}) : super(key: key);
@@ -35,8 +39,9 @@ class _CreatePdfFromDataState extends State<ArchitectureScreen> {
   TextEditingController dateController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController plotSizeController = TextEditingController();
-  TextEditingController requirementController = TextEditingController();
+  // TextEditingController requirementController = TextEditingController();
   TextEditingController siteContextController = TextEditingController();
+  // HtmlEditorController requirementController = HtmlEditorController();
 
   File? _image;
   List<File> _images = [];
@@ -55,10 +60,10 @@ class _CreatePdfFromDataState extends State<ArchitectureScreen> {
             .buffer
             .asUint8List();
 
-    // Retrieve selected project category and project number
-    String selectedCategory = _selectedProjectType ?? '';
+    // Retrieve the plain text content from the HtmlEditorWidget
+    // String htmlContent = await requirementController.getText();
+    // String requirementsText = Bidi.stripHtmlIfNeeded(htmlContent).trim();
 
-    // Add pages to the PDF document
     pdf.addPage(
       pw.Page(
         margin: const pw.EdgeInsets.all(20),
@@ -80,8 +85,6 @@ class _CreatePdfFromDataState extends State<ArchitectureScreen> {
                       ),
                     ),
                   ),
-                  // pw.Expanded(
-                  //   child:
                   pw.Container(
                     width: 120,
                     height: 60,
@@ -91,61 +94,10 @@ class _CreatePdfFromDataState extends State<ArchitectureScreen> {
                         fit: pw.BoxFit.contain,
                       ),
                     ),
-                    // ),
                   )
                 ],
               ),
-              // pw.Row(
-              //     mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-              //     children: [
-              //       pw.Container(
-              //         width: 170, // Adjust the width as needed
-              //         height: 60, // Adjust the height as needed
-              //         decoration: pw.BoxDecoration(
-              //           image: pw.DecorationImage(
-              //               image: pw.MemoryImage(imageData),
-              //               // Load image from memory
-              //               fit: pw.BoxFit.fill),
-              //         ),
-              //       ),
-              //       pw.Column(
-              //         crossAxisAlignment: pw.CrossAxisAlignment.start,
-              //         children: [
-              //           pw.Text(
-              //             "Ar. Ronak Surendra Jain",
-              //             style: pw.TextStyle(
-              //                 fontSize: 10,
-              //                 fontWeight: pw.FontWeight.normal,
-              //                 color: PdfColor.fromHex("#424242")),
-              //           ),
-              //           pw.Text(
-              //             "93760 73577",
-              //             style: pw.TextStyle(
-              //                 fontSize: 10,
-              //                 fontWeight: pw.FontWeight.normal,
-              //                 color: PdfColor.fromHex("#424242")),
-              //           ),
-              //           pw.SizedBox(height: 15),
-              //           pw.Text(
-              //             "Ar. Tushar N. Kachhadiya",
-              //             style: pw.TextStyle(
-              //                 fontSize: 10,
-              //                 fontWeight: pw.FontWeight.normal,
-              //                 color: PdfColor.fromHex("#424242")),
-              //           ),
-              //           pw.Text(
-              //             "87588 23271",
-              //             style: pw.TextStyle(
-              //                 fontSize: 10,
-              //                 fontWeight: pw.FontWeight.normal,
-              //                 color: PdfColor.fromHex("#424242")),
-              //           ),
-              //         ],
-              //       ),
-              //     ]),
-
               pw.SizedBox(height: 6),
-              // pw.Divider(color: PdfColor.fromHex("#616161"), height: 5),
               pw.Divider(height: 3, color: PdfColor.fromHex("#616161")),
               pw.Row(
                 mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
@@ -166,40 +118,35 @@ class _CreatePdfFromDataState extends State<ArchitectureScreen> {
               ),
               pw.Divider(height: 3, color: PdfColor.fromHex("#BDBDBD")),
               pw.SizedBox(height: 5),
-              // Client Name
-              _buildTextFieldRow(
-                  'Client Name : ', clientNameController.text, pdf),
-
-              // Contact Number
-              _buildTextFieldRow(
-                  'Contact No. : ', contactNoController.text, pdf),
-
-              // Date
+              _buildTextFieldRow('Client Name : ', clientNameController.text,pdf),
+              _buildTextFieldRow('Contact No. : ', contactNoController.text, pdf),
               _buildTextFieldRow('Date :', dateController.text, pdf),
-
-              // Address
               _buildTextFieldRow('Address : ', addressController.text, pdf),
-
-              // Project Type
-              _buildTextFieldRow(
-                  'Project Type : ', _selectedProjectType.toString(), pdf),
-
-              // Project Size
+              _buildTextFieldRow('Project Type : ', _selectedProjectType ?? "", pdf),
               _buildTextFieldRow('Plot Size :', plotSizeController.text, pdf),
-
-              // Changes On Site
-              _buildTextFieldRow(
-                  'Requirement : ', requirementController.text, pdf),
-
-              // Decision Pending
-              _buildTextFieldRow(
-                  'Site Context : ', siteContextController.text, pdf),
+              _buildTextFieldRow('Site Context : ', siteContextController.text, pdf),
+              pw.SizedBox(height: 5),
+              pw.Text(
+                "Requirements:",
+                style: pw.TextStyle(
+                  fontSize: 13,
+                  fontWeight: pw.FontWeight.bold,
+                ),
+              ),
+              pw.SizedBox(height: 2),
+              // pw.Text(
+              //   requirementsText.isNotEmpty
+              //       ? requirementsText
+              //       : "No requirements provided.",
+              //   style: pw.TextStyle(fontSize: 12),
+              // ),
             ],
           );
         },
       ),
     );
 
+    // Add images to the PDF
     for (var imageFile in _images) {
       final image = pw.MemoryImage(imageFile.readAsBytesSync());
       pdf.addPage(
@@ -213,19 +160,139 @@ class _CreatePdfFromDataState extends State<ArchitectureScreen> {
       );
     }
 
-    // // Save and share the generated PDF
+    // Save and share the generated PDF
     await Printing.layoutPdf(
       name:
           'ARCH FORM ${dateController.text.replaceAll('_', '/')} ${clientNameController.text.toUpperCase()}',
       onLayout: (PdfPageFormat format) async => pdf.save(),
     );
-    // final Uint8List bytes = await pdf.save();
-    // await Printing.sharePdf(
-    //     bytes: bytes, filename: 'âlekha architects - Site Inspection');
-    // //Print the PDF or show preview
-    // await Printing.layoutPdf(
-    //     onLayout: (PdfPageFormat format) async => pdf.save());
   }
+
+  // Future<void> _generatePDF() async {
+  //   final pdf = pw.Document();
+
+  //   Uint8List imageData =
+  //       (await rootBundle.load(PickImages.alekhaArchitectsIcon))
+  //           .buffer
+  //           .asUint8List();
+  //   Uint8List invoiceContactPdfLogo =
+  //       (await rootBundle.load(PickImages.siteVisitContactsPdfImage))
+  //           .buffer
+  //           .asUint8List();
+
+  //   // Retrieve selected project category and project number
+  //   String selectedCategory = _selectedProjectType ?? '';
+
+  //   // Add pages to the PDF document
+  //   pdf.addPage(
+  //     pw.Page(
+  //       margin: const pw.EdgeInsets.all(20),
+  //       build: (pw.Context context) {
+  //         return pw.Column(
+  //           crossAxisAlignment: pw.CrossAxisAlignment.start,
+  //           children: [
+  //             pw.Row(
+  //               mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+  //               children: [
+  //                 pw.Container(
+  //                   width: 170,
+  //                   height: 60,
+  //                   margin: const pw.EdgeInsets.only(bottom: 2),
+  //                   decoration: pw.BoxDecoration(
+  //                     image: pw.DecorationImage(
+  //                       image: pw.MemoryImage(imageData),
+  //                       fit: pw.BoxFit.fill,
+  //                     ),
+  //                   ),
+  //                 ),
+  //                 // pw.Expanded(
+  //                 //   child:
+  //                 pw.Container(
+  //                   width: 120,
+  //                   height: 60,
+  //                   decoration: pw.BoxDecoration(
+  //                     image: pw.DecorationImage(
+  //                       image: pw.MemoryImage(invoiceContactPdfLogo),
+  //                       fit: pw.BoxFit.contain,
+  //                     ),
+  //                   ),
+  //                   // ),
+  //                 )
+  //               ],
+  //             ),
+  //             pw.SizedBox(height: 6),
+  //             pw.Divider(height: 3, color: PdfColor.fromHex("#616161")),
+  //             pw.Row(
+  //               mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+  //               children: [
+  //                 pw.Text(
+  //                   "Architecture Form",
+  //                   style: pw.TextStyle(
+  //                       fontSize: 13, fontWeight: pw.FontWeight.normal),
+  //                 ),
+  //                 pw.Text(
+  //                   DateFormat('dd/MM/yyyy').format(DateTime.now()),
+  //                   style: pw.TextStyle(
+  //                       fontSize: 13,
+  //                       fontWeight: pw.FontWeight.normal,
+  //                       color: PdfColor.fromHex("#616161")),
+  //                 ),
+  //               ],
+  //             ),
+  //             pw.Divider(height: 3, color: PdfColor.fromHex("#BDBDBD")),
+  //             pw.SizedBox(height: 5),
+  //             // Client Name
+  //             _buildTextFieldRow(
+  //                 'Client Name : ', clientNameController.text, pdf),
+
+  //             // Contact Number
+  //             _buildTextFieldRow(
+  //                 'Contact No. : ', contactNoController.text, pdf),
+
+  //             // Date
+  //             _buildTextFieldRow('Date :', dateController.text, pdf),
+
+  //             // Address
+  //             _buildTextFieldRow('Address : ', addressController.text, pdf),
+
+  //             // Project Type
+  //             _buildTextFieldRow(
+  //                 'Project Type : ', _selectedProjectType.toString(), pdf),
+
+  //             // Project Size
+  //             _buildTextFieldRow('Plot Size :', plotSizeController.text, pdf),
+
+  //             // Changes On Site
+
+  //             // Decision Pending
+  //             _buildTextFieldRow(
+  //                 'Site Context : ', siteContextController.text, pdf),
+  //           ],
+  //         );
+  //       },
+  //     ),
+  //   );
+
+  //   for (var imageFile in _images) {
+  //     final image = pw.MemoryImage(imageFile.readAsBytesSync());
+  //     pdf.addPage(
+  //       pw.Page(
+  //         margin: const pw.EdgeInsets.all(20),
+  //         pageFormat: PdfPageFormat.a4,
+  //         build: (pw.Context context) {
+  //           return pw.Center(child: pw.Image(image));
+  //         },
+  //       ),
+  //     );
+  //   }
+
+  //   // // Save and share the generated PDF
+  //   await Printing.layoutPdf(
+  //     name:
+  //         'ARCH FORM ${dateController.text.replaceAll('_', '/')} ${clientNameController.text.toUpperCase()}',
+  //     onLayout: (PdfPageFormat format) async => pdf.save(),
+  //   );
+  // }
 
   // Helper function to build a row of text fields
   pw.Widget _buildTextFieldRow(String label, String value, pw.Document pdf) {
@@ -277,186 +344,201 @@ class _CreatePdfFromDataState extends State<ArchitectureScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: PickColors.whiteColor,
-      appBar: AppBar(
-        backgroundColor: PickColors.whiteColor,
-        centerTitle: true,
-        leading: GestureDetector(
-          onTap: () {
-            backToScreen(context: context);
-          },
-          child: Icon(
-            Icons.arrow_left_outlined,
-            color: PickColors.hintColor,
-          ),
-        ),
-        automaticallyImplyLeading: false,
-        title: Text(
-          'Architecture Form',
-          style: CommonTextStyle().appBarTextStyle,
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              CommonTextFieldWithFocus(
-                controller: clientNameController,
-                labelText: "Client Name",
-                hintText: "Client Name",
-                keyboardType: TextInputType.name,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              CommonTextFieldWithFocus(
-                controller: contactNoController,
-                labelText: "Contact No.",
-                hintText: "Contact No.",
-                keyboardType: TextInputType.number,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              CommonTextFieldWithBorder(
-                fillColor: Colors.transparent,
-                filled: true,
-                prefix: const Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 8.0,
-                  ),
-                  child: Icon(Icons.calendar_month_outlined,
-                      color: PickColors.primaryColor),
+    return Consumer(builder: (context, GeneralHelper helper, snapshot) {
+        return WillPopScope(
+        onWillPop: () => helper.onWillPop(context),
+          child: Scaffold(
+            backgroundColor: PickColors.whiteColor,
+            appBar: AppBar(
+              backgroundColor: PickColors.whiteColor,
+              centerTitle: true,
+              leading: GestureDetector(
+                onTap: () {
+                  backToScreen(context: context);
+                },
+                child: Icon(
+                  Icons.arrow_left_outlined,size:35,
+                  color: PickColors.hintColor,
                 ),
-                isRequired: true,
-                readOnly: true,
-                hint: "Date",
-                controller: dateController,
-                textInputAction: TextInputAction.none,
-                keyboardType: TextInputType.none,
-                validator: (value) {
-                  return null;
-                },
-                onTap: () async {
-                  DateTime? pickedDate = await getDateFunction(
-                    isOldDate: true,
-                    context: context,
-                  );
-                  if (pickedDate != null) {
-                    String formattedDate =
-                        DateFormate.normalDateFormate.format(pickedDate);
-                    dateController.text = formattedDate; // Set the picked date
-                  }
-                },
-                borderRadius: BorderRadius.circular(10),
               ),
-              const SizedBox(
-                height: 20,
+              automaticallyImplyLeading: false,
+              title: Text(
+                'Architecture Form',
+                style: CommonTextStyle().appBarTextStyle,
               ),
-              CommonTextFieldWithFocus(
-                controller: addressController,
-                labelText: "Address",
-                hintText: "Address",
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              CommonDropDownWithoutSearch(
-                borderColor: PickColors.primaryColor,
-                hintText: "Project Type",
-                name: 'Project Type',
-                items: GlobalList.projectCategory
-                    .map((category) => DropdownMenuItem<String>(
-                          value: category,
-                          child: Text(
-                            category,
-                            style: CommonTextStyle().textFieldTitleTextStyle,
-                          ),
-                        ))
-                    .toList(),
-                isExpanded: false,
-                initialValue: _selectedProjectType,
-                onChanged: (newValue) {
-                  setState(
-                    () {
-                      _selectedProjectType = newValue.toString();
-                    },
-                  );
-                  debugPrint("----------$_selectedProjectType");
-                },
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              CommonTextFieldWithFocus(
-                controller: plotSizeController,
-                labelText: "Plot Size",
-                hintText: "Plot Size",
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              CommonTextFieldWithFocus(
-                controller: requirementController,
-                labelText: "Requirement",
-                hintText: "Requirement",
-                maxLines: 2,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              CommonTextFieldWithFocus(
-                controller: siteContextController,
-                labelText: "Site Context",
-                hintText: "Site Context",
-                maxLines: 3,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              const SizedBox(height: 10),
-              _images.isNotEmpty
-                  ? SizedBox(
-                      height: 400,
-                      child: ListView.builder(
-                        itemCount: _images.length,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            height: 400,
-                            width: double.infinity,
-                            margin: const EdgeInsets.all(8.00),
-                            child: Image.file(
-                              _images[index],
-                              fit: BoxFit.cover,
-                            ),
-                          );
-                        },
+            ),
+            body: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    CommonTextFieldWithFocus(
+                      controller: clientNameController,
+                      labelText: "Client Name",
+                      hintText: "Client Name",
+                      keyboardType: TextInputType.name,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    CommonTextFieldWithFocus(
+                      controller: contactNoController,
+                      labelText: "Contact No.",
+                      hintText: "Contact No.",
+                      keyboardType: TextInputType.number,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    CommonTextFieldWithBorder(
+                      fillColor: Colors.transparent,
+                      filled: true,
+                      prefix: const Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8.0,
+                        ),
+                        child: Icon(Icons.calendar_month_outlined,
+                            color: PickColors.primaryColor),
                       ),
-                    )
-                  : Container(),
-              const SizedBox(height: 20),
-              CommonMaterialButton(
-                  title: 'Add Image',
-                  onPressed: _getImage,
-                  style: CommonTextStyle().buttonTextStyle,
-                  prefixIcon: PickImages.cameraIcon,
-                  prefixIconColor: Colors.black,
-                  color: PickColors.primaryColor),
-              const SizedBox(height: 20),
-              CommonMaterialButton(
-                title: 'Create PDF',
-                style: CommonTextStyle().buttonTextStyle,
-                onPressed: _generatePDF,
-                color: PickColors.primaryColor,
-                verticalPadding: 20,
+                      isRequired: true,
+                      readOnly: true,
+                      hint: "Date",
+                      controller: dateController,
+                      textInputAction: TextInputAction.none,
+                      keyboardType: TextInputType.none,
+                      validator: (value) {
+                        return null;
+                      },
+                      onTap: () async {
+                        DateTime? pickedDate = await getDateFunction(
+                          isOldDate: true,
+                          context: context,
+                        );
+                        if (pickedDate != null) {
+                          String formattedDate =
+                              DateFormate.normalDateFormate.format(pickedDate);
+                          dateController.text = formattedDate; // Set the picked date
+                        }
+                      },
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    CommonTextFieldWithFocus(
+                      controller: addressController,
+                      labelText: "Address",
+                      hintText: "Address",
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    CommonDropDownWithoutSearch(
+                      borderColor: PickColors.primaryColor,
+                      hintText: "Project Type",
+                      name: 'Project Type',
+                      items: GlobalList.projectCategory
+                          .map((category) => DropdownMenuItem<String>(
+                                value: category,
+                                child: Text(
+                                  category,
+                                  style: CommonTextStyle().textFieldTitleTextStyle,
+                                ),
+                              ))
+                          .toList(),
+                      isExpanded: false,
+                      initialValue: _selectedProjectType,
+                      onChanged: (newValue) {
+                        setState(
+                          () {
+                            _selectedProjectType = newValue.toString();
+                          },
+                        );
+                        debugPrint("----------$_selectedProjectType");
+                      },
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    CommonTextFieldWithFocus(
+                      controller: plotSizeController,
+                      labelText: "Plot Size",
+                      hintText: "Plot Size",
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    // CommonTextFieldWithFocus(
+                    //   controller: requirementController,
+                    //   labelText: "Requirement",
+                    //   hintText: "Requirement",
+                    //   maxLines: 2,
+                    // ),
+                    // HtmlEditorWidget(
+                    //     jdDescriptionController: requirementController,
+                    //     initialText: "Initial Text",
+                    //     onValueChanged: (value) async {
+                    //       String? html = await requirementController.getText();
+                    //       String plainText =
+                    //           Bidi.stripHtmlIfNeeded(html ?? "").trim();
+                    //       print("Plain Text: $plainText");
+                    //     }),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    CommonTextFieldWithFocus(
+                      controller: siteContextController,
+                      labelText: "Site Context",
+                      hintText: "Site Context",
+                      maxLines: 3,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    const SizedBox(height: 10),
+                    _images.isNotEmpty
+                        ? SizedBox(
+                            height: 400,
+                            child: ListView.builder(
+                              itemCount: _images.length,
+                              itemBuilder: (context, index) {
+                                return Container(
+                                  height: 400,
+                                  width: double.infinity,
+                                  margin: const EdgeInsets.all(8.00),
+                                  child: Image.file(
+                                    _images[index],
+                                    fit: BoxFit.cover,
+                                  ),
+                                );
+                              },
+                            ),
+                          )
+                        : Container(),
+                    const SizedBox(height: 20),
+                    CommonMaterialButton(
+                        title: 'Add Image',
+                        onPressed: _getImage,
+                        style: CommonTextStyle().buttonTextStyle,
+                        prefixIcon: PickImages.cameraIcon,
+                        prefixIconColor: Colors.black,
+                        color: PickColors.primaryColor),
+                    const SizedBox(height: 20),
+                    CommonMaterialButton(
+                      title: 'Create PDF',
+                      style: CommonTextStyle().buttonTextStyle,
+                      onPressed: _generatePDF,
+                      color: PickColors.primaryColor,
+                      verticalPadding: 20,
+                    ),
+                  ],
+                ),
               ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      }
     );
   }
 }

@@ -7,6 +7,7 @@ import 'package:alekha/constant/global_list.dart';
 import 'package:alekha/constant/images_route.dart';
 import 'package:alekha/constant/navigation_route.dart';
 import 'package:alekha/constant/text_style.dart';
+import 'package:alekha/services/general_helper.dart';
 import 'package:alekha/widget/common_dropdown.dart';
 import 'package:alekha/widget/common_material_button.dart';
 import 'package:alekha/widget/common_text_field.dart';
@@ -18,6 +19,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class InteriorScreen extends StatefulWidget {
   const InteriorScreen({Key? key}) : super(key: key);
@@ -294,251 +296,258 @@ class _CreatePdfFromDataState extends State<InteriorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      backgroundColor: PickColors.whiteColor,
-      appBar: AppBar(
-        backgroundColor: PickColors.whiteColor,
-        centerTitle: true,
-        leading: GestureDetector(
-          onTap: () {
-            backToScreen(context: context);
-          },
-          child: Icon(
-            Icons.arrow_left_outlined,
-            color: PickColors.hintColor,
-          ),
-        ),
-        automaticallyImplyLeading: false,
-        title: Text(
-          'Interior Form',
-          style: CommonTextStyle().appBarTextStyle,
-        ),
-      ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.all(20.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: [
-              CommonTextFieldWithFocus(
-                controller: clientNameController,
-                labelText: "Client Name",
-                hintText: "Client Name",
-                keyboardType: TextInputType.name,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              CommonTextFieldWithFocus(
-                controller: contactNoController,
-                labelText: "Contact No.",
-                hintText: "Contact No.",
-                keyboardType: TextInputType.number,
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              CommonTextFieldWithBorder(
-                fillColor: Colors.transparent,
-                filled: true,
-                prefix: const Padding(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: 8.0,
-                  ),
-                  child: Icon(Icons.calendar_month_outlined,
-                      color: PickColors.primaryColor),
+    return Consumer(builder: (context, GeneralHelper helper, snapshot) {
+        return WillPopScope(
+        onWillPop: () => helper.onWillPop(context),
+          child: Scaffold(
+            backgroundColor: PickColors.whiteColor,
+            appBar: AppBar(
+              backgroundColor: PickColors.whiteColor,
+              centerTitle: true,
+              leading: GestureDetector(
+                onTap: () {
+                  backToScreen(context: context);
+                },
+                child: Icon(
+                  Icons.arrow_left_outlined,
+                  size: 35,
+                  color: PickColors.hintColor,
                 ),
-                isRequired: true,
-                readOnly: true,
-                hint: "Date",
-                controller: dateController,
-                textInputAction: TextInputAction.none,
-                keyboardType: TextInputType.none,
-                validator: (value) {
-                  return null;
-                },
-                onTap: () async {
-                  DateTime? pickedDate = await getDateFunction(
-                    isOldDate: true,
-                    context: context,
-                  );
-                  if (pickedDate != null) {
-                    String formattedDate =
-                        DateFormate.normalDateFormate.format(pickedDate);
-                    dateController.text = formattedDate; // Set the picked date
-                  }
-                },
-                borderRadius: BorderRadius.circular(10),
               ),
-              const SizedBox(
-                height: 20,
+              automaticallyImplyLeading: false,
+              title: Text(
+                'Interior Form',
+                style: CommonTextStyle().appBarTextStyle,
               ),
-              CommonTextFieldWithFocus(
-                controller: addressController,
-                labelText: "Address",
-                hintText: "Address",
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              CommonDropDownWithoutSearch(
-                borderColor: PickColors.primaryColor,
-                hintText: "Project Type",
-                name: 'Project Type',
-                items: GlobalList.interiorProjectTypeList
-                    .map((category) => DropdownMenuItem<String>(
-                          value: category,
-                          child: Text(
-                            category,
-                            style: CommonTextStyle().textFieldTitleTextStyle,
-                          ),
-                        ))
-                    .toList(),
-                isExpanded: false,
-                initialValue: _selectedProjectType,
-                onChanged: (newValue) {
-                  setState(
-                    () {
-                      _selectedProjectType = newValue.toString();
-                    },
-                  );
-                  debugPrint("----------$_selectedProjectType");
-                },
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              CommonDropDownWithoutSearch(
-                borderColor: PickColors.primaryColor,
-                hintText: "Category Type",
-                name: 'Category Type',
-                items: GlobalList.interiorCategoryList
-                    .map((category) => DropdownMenuItem<String>(
-                          value: category,
-                          child: Text(
-                            category,
-                            style: CommonTextStyle().textFieldTitleTextStyle,
-                          ),
-                        ))
-                    .toList(),
-                isExpanded: false,
-                initialValue: _selectedCategory,
-                onChanged: (newValue) {
-                  setState(
-                    () {
-                      _selectedCategory = newValue.toString();
-                    },
-                  );
-                  debugPrint("----------$_selectedCategory");
-                },
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              CommonTextFieldWithFocus(
-                controller: carpetAreaController,
-                labelText: "Carpet Area",
-                hintText: "Carpet Area",
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              CommonTextFieldWithFocus(
-                controller: builtUpAreaController,
-                labelText: "Built-Up-Area",
-                hintText: "Built-Up-Area",
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              CommonTextFieldWithFocus(
-                controller: noOfUsersController,
-                labelText: "No. Of Users",
-                hintText: "No. Of Users",
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              CommonTextFieldWithFocus(
-                controller: budgetController,
-                labelText: "Budget",
-                hintText: "Budget",
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              CommonDropDownWithoutSearch(
-                borderColor: PickColors.primaryColor,
-                hintText: "Hiring Interior Designer/S For",
-                name: 'Hiring Interior Designer/S For',
-                items: GlobalList.hiringInteriorDesignerList
-                    .map((category) => DropdownMenuItem<String>(
-                          value: category,
-                          child: Text(
-                            category,
-                            style: CommonTextStyle().textFieldTitleTextStyle,
-                          ),
-                        ))
-                    .toList(),
-                isExpanded: false,
-                initialValue: _selectedHiringInteriorDesigner,
-                onChanged: (newValue) {
-                  setState(
-                    () {
-                      _selectedHiringInteriorDesigner = newValue.toString();
-                    },
-                  );
-                  debugPrint("----------$_selectedHiringInteriorDesigner");
-                },
-              ),
-              const SizedBox(
-                height: 20,
-              ),
-              CommonTextFieldWithFocus(
-                controller: requirementsController,
-                labelText: "Requirements",
-                hintText: "Requirements",
-              ),
-              const SizedBox(height: 10),
-              _images.isNotEmpty
-                  ? SizedBox(
-                      height: 400,
-                      child: ListView.builder(
-                        itemCount: _images.length,
-                        itemBuilder: (context, index) {
-                          return Container(
-                            height: 400,
-                            width: double.infinity,
-                            margin: const EdgeInsets.all(8.00),
-                            child: Image.file(
-                              _images[index],
-                              fit: BoxFit.cover,
-                            ),
-                          );
-                        },
+            ),
+            body: SingleChildScrollView(
+              child: Padding(
+                padding: const EdgeInsets.all(20.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: [
+                    CommonTextFieldWithFocus(
+                      controller: clientNameController,
+                      labelText: "Client Name",
+                      hintText: "Client Name",
+                      keyboardType: TextInputType.name,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    CommonTextFieldWithFocus(
+                      controller: contactNoController,
+                      labelText: "Contact No.",
+                      hintText: "Contact No.",
+                      keyboardType: TextInputType.number,
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    CommonTextFieldWithBorder(
+                      fillColor: Colors.transparent,
+                      filled: true,
+                      prefix: const Padding(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: 8.0,
+                        ),
+                        child: Icon(Icons.calendar_month_outlined,
+                            color: PickColors.primaryColor),
                       ),
-                    )
-                  : Container(),
-              const SizedBox(height: 20),
-              CommonMaterialButton(
-                  title: 'Add Image',
-                  onPressed: _getImage,
-                  style: CommonTextStyle().buttonTextStyle,
-                  prefixIcon: PickImages.cameraIcon,
-                  prefixIconColor: Colors.black,
-                  color: PickColors.primaryColor),
-              const SizedBox(height: 20),
-              CommonMaterialButton(
-                title: 'Create PDF',
-                style: CommonTextStyle().buttonTextStyle,
-                onPressed: _generatePDF,
-                color: PickColors.primaryColor,
-                verticalPadding: 20,
+                      isRequired: true,
+                      readOnly: true,
+                      hint: "Date",
+                      controller: dateController,
+                      textInputAction: TextInputAction.none,
+                      keyboardType: TextInputType.none,
+                      validator: (value) {
+                        return null;
+                      },
+                      onTap: () async {
+                        DateTime? pickedDate = await getDateFunction(
+                          isOldDate: true,
+                          context: context,
+                        );
+                        if (pickedDate != null) {
+                          String formattedDate =
+                              DateFormate.normalDateFormate.format(pickedDate);
+                          dateController.text = formattedDate; // Set the picked date
+                        }
+                      },
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    CommonTextFieldWithFocus(
+                      controller: addressController,
+                      labelText: "Address",
+                      hintText: "Address",
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    CommonDropDownWithoutSearch(
+                      borderColor: PickColors.primaryColor,
+                      hintText: "Project Type",
+                      name: 'Project Type',
+                      items: GlobalList.interiorProjectTypeList
+                          .map((category) => DropdownMenuItem<String>(
+                                value: category,
+                                child: Text(
+                                  category,
+                                  style: CommonTextStyle().textFieldTitleTextStyle,
+                                ),
+                              ))
+                          .toList(),
+                      isExpanded: false,
+                      initialValue: _selectedProjectType,
+                      onChanged: (newValue) {
+                        setState(
+                          () {
+                            _selectedProjectType = newValue.toString();
+                          },
+                        );
+                        debugPrint("----------$_selectedProjectType");
+                      },
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    CommonDropDownWithoutSearch(
+                      borderColor: PickColors.primaryColor,
+                      hintText: "Category Type",
+                      name: 'Category Type',
+                      items: GlobalList.interiorCategoryList
+                          .map((category) => DropdownMenuItem<String>(
+                                value: category,
+                                child: Text(
+                                  category,
+                                  style: CommonTextStyle().textFieldTitleTextStyle,
+                                ),
+                              ))
+                          .toList(),
+                      isExpanded: false,
+                      initialValue: _selectedCategory,
+                      onChanged: (newValue) {
+                        setState(
+                          () {
+                            _selectedCategory = newValue.toString();
+                          },
+                        );
+                        debugPrint("----------$_selectedCategory");
+                      },
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    CommonTextFieldWithFocus(
+                      controller: carpetAreaController,
+                      labelText: "Carpet Area",
+                      hintText: "Carpet Area",
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    CommonTextFieldWithFocus(
+                      controller: builtUpAreaController,
+                      labelText: "Built-Up-Area",
+                      hintText: "Built-Up-Area",
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    CommonTextFieldWithFocus(
+                      controller: noOfUsersController,
+                      labelText: "No. Of Users",
+                      hintText: "No. Of Users",
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    CommonTextFieldWithFocus(
+                      controller: budgetController,
+                      labelText: "Budget",
+                      hintText: "Budget",
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    CommonDropDownWithoutSearch(
+                      borderColor: PickColors.primaryColor,
+                      hintText: "Hiring Interior Designer/S For",
+                      name: 'Hiring Interior Designer/S For',
+                      items: GlobalList.hiringInteriorDesignerList
+                          .map((category) => DropdownMenuItem<String>(
+                                value: category,
+                                child: Text(
+                                  category,
+                                  style: CommonTextStyle().textFieldTitleTextStyle,
+                                ),
+                              ))
+                          .toList(),
+                      isExpanded: false,
+                      initialValue: _selectedHiringInteriorDesigner,
+                      onChanged: (newValue) {
+                        setState(
+                          () {
+                            _selectedHiringInteriorDesigner = newValue.toString();
+                          },
+                        );
+                        debugPrint("----------$_selectedHiringInteriorDesigner");
+                      },
+                    ),
+                    const SizedBox(
+                      height: 20,
+                    ),
+                    CommonTextFieldWithFocus(
+                      controller: requirementsController,
+                      labelText: "Requirements",
+                      hintText: "Requirements",
+                    ),
+                    const SizedBox(height: 10),
+                    _images.isNotEmpty
+                        ? SizedBox(
+                            height: 400,
+                            child: ListView.builder(
+                              itemCount: _images.length,
+                              itemBuilder: (context, index) {
+                                return Container(
+                                  height: 400,
+                                  width: double.infinity,
+                                  margin: const EdgeInsets.all(8.00),
+                                  child: Image.file(
+                                    _images[index],
+                                    fit: BoxFit.cover,
+                                  ),
+                                );
+                              },
+                            ),
+                          )
+                        : Container(),
+                    const SizedBox(height: 20),
+                    CommonMaterialButton(
+                        title: 'Add Image',
+                        onPressed: _getImage,
+                        style: CommonTextStyle().buttonTextStyle,
+                        prefixIcon: PickImages.cameraIcon,
+                        prefixIconColor: Colors.black,
+                        color: PickColors.primaryColor),
+                    const SizedBox(height: 20),
+                    CommonMaterialButton(
+                      title: 'Create PDF',
+                      style: CommonTextStyle().buttonTextStyle,
+                      onPressed: _generatePDF,
+                      color: PickColors.primaryColor,
+                      verticalPadding: 20,
+                    ),
+                  ],
+                ),
               ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      }
     );
   }
 }

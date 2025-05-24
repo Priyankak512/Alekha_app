@@ -47,41 +47,29 @@ class _ProjectFilesScreenState extends State<ProjectFilesScreen> {
                 itemBuilder: (context, index) {
                   return InkWell(
                     onTap: () async {
-                      final link = GlobalList.projectFilesList[index]["link"];
-                      if (link != null && link.isNotEmpty) {
-                        final uri = Uri.parse(link);
-                        if (await canLaunchUrl(uri)) {
-                          await launchUrl(uri,
-                              mode: LaunchMode.externalApplication);
-                        } else {
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text('Could not launch link')),
-                          );
-                        }
+                      if (GlobalList.projectFilesList[index]["id"] == "3") {
+                        const url =
+                            'https://drive.google.com/drive/folders/1ukuigvz1zphJqUhMzLh-g0R8u-fDt7ee?usp=drive_link';
+                        await openUrl(url, context);
+                      } else if (GlobalList.homeList[index]["id"] == "4") {
+                        const url =
+                            'https://drive.google.com/drive/folders/1-bwTv0ih6bQtXQAtrtZW-oOd4xGR50gD?usp=drive_link';
+                        await openUrl(url, context);
+                      } else if (GlobalList.homeList[index]["id"] == "5") {
+                        const url =
+                            'https://drive.google.com/drive/folders/1AR_qwauqLKcJLUlZQ-_uypidVujRKhZX?usp=sharing';
+
+                        await openUrl(url, context);
+                      } else if (GlobalList.homeList[index]["id"] == "6") {
+                        const url =
+                            'https://drive.google.com/drive/folders/1A9DJzY49lSDZK7iStogIHQByrTBjG2j4?usp=drive_link';
+
+                        await openUrl(url, context);
                       } else {
                         ScaffoldMessenger.of(context).showSnackBar(
                           const SnackBar(content: Text('Link not available')),
                         );
                       }
-
-                      // final link = GlobalList.projectFilesList[index]["link"];
-                      // if (link != null && link.isNotEmpty) {
-                      //   final uri = Uri.parse(link);
-                      //   if (await canLaunchUrl(uri)) {
-                      //     await launchUrl(uri,
-                      //         mode: LaunchMode.externalApplication);
-                      //   } else {
-                      //     ScaffoldMessenger.of(context).showSnackBar(
-                      //       const SnackBar(
-                      //           content: Text('Could not launch link')),
-                      //     );
-                      //   }
-                      // } else {
-                      //   ScaffoldMessenger.of(context).showSnackBar(
-                      //     const SnackBar(content: Text('Link not available')),
-                      //   );
-                      // }
                     },
                     child: Container(
                       margin: const EdgeInsets.all(5.00),
@@ -110,5 +98,24 @@ class _ProjectFilesScreenState extends State<ProjectFilesScreen> {
         ),
       ),
     );
+  }
+
+  Future<void> openUrl(String url, BuildContext context) async {
+    final Uri uri = Uri.parse(url);
+
+    try {
+      if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
+        if (!await launchUrl(uri, mode: LaunchMode.inAppBrowserView)) {
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(content: Text('Could not open the link')),
+          );
+        }
+      }
+    } catch (e) {
+      debugPrint('Error launching URL: $e');
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Something went wrong!')),
+      );
+    }
   }
 }

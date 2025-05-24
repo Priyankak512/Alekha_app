@@ -1,5 +1,6 @@
 import 'package:alekha/constant/global_list.dart';
 import 'package:alekha/constant/size_config.dart';
+import 'package:alekha/drawer_screen.dart';
 import 'package:alekha/services/general_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:alekha/constant/colors.dart';
@@ -20,7 +21,7 @@ class _HomeScreenState extends State<HomeScreen> {
   // Function to launch WhatsApp
   void _launchWhatsApp() async {
     const phoneNumber = '+919512738943'; // Replace with your WhatsApp number
-    final url = 'https://wa.me/$phoneNumber'; // WhatsApp link with number
+    const url = 'https://wa.me/$phoneNumber'; // WhatsApp link with number
     if (await canLaunch(url)) {
       await launch(url);
     } else {
@@ -37,22 +38,24 @@ class _HomeScreenState extends State<HomeScreen> {
           return Scaffold(
             backgroundColor: PickColors.whiteColor,
             appBar: AppBar(
+              iconTheme: IconThemeData(color: PickColors.hintColor),
               centerTitle: true,
               backgroundColor: PickColors.whiteColor,
               title: Text("âlekha architects",
                   style: CommonTextStyle().authTitleTextStyle),
-              actions: [
-                GestureDetector(
-                  onTap: () {
-                    helper.updateTheme(isDarkTheme: !helper.isDarkThemeCurrent);
-                  },
-                  child: Icon(
-                    Icons.dark_mode,
-                    color: PickColors.hintColor,
-                  ),
-                ),
-              ],
+              // actions: [
+              //   GestureDetector(
+              //     onTap: () {
+              //       helper.updateTheme(isDarkTheme: !helper.isDarkThemeCurrent);
+              //     },
+              //     child: Icon(
+              //       Icons.dark_mode,
+              //       color: PickColors.hintColor,
+              //     ),
+              //   ),
+              // ],
             ),
+            drawer: const DrawerWidget(),
             body: Padding(
               padding: const EdgeInsets.all(8.0),
               child: GridView.builder(
@@ -64,27 +67,13 @@ class _HomeScreenState extends State<HomeScreen> {
                 itemCount: GlobalList.homeList.length,
                 itemBuilder: (context, index) {
                   return InkWell(
-                    // onTap: () async {
-                    //   if (GlobalList.homeList[index]["id"] == "10") {
-                    //     const url =
-                    //         'https://www.civil-engineering-calculators.com/Quantity-estimator/Cement-Concrete-Calculator#google_vignette';
-                    //     await openUrl(url, context);
-                    //   } else if (GlobalList.homeList[index]["id"] == "11") {
-                    //     const url = 'https://byte-tools.com/en/compass/';
-                    //     await openUrl(url, context);
-                    //   } else {
-                    //     changeScreen(
-                    //       context: context,
-                    //       widget: GlobalList.homeList[index]["screen"],
-                    //     );
-                    //   }
-                    // },
                     onTap: () async {
-                      if (GlobalList.homeList[index]["id"] == "10") {
-                        const url =
-                            'https://www.civil-engineering-calculators.com/Quantity-estimator/Cement-Concrete-Calculator#google_vignette';
-                        await openUrl(url, context);
-                      } else if (GlobalList.homeList[index]["id"] == "11") {
+                      // if (GlobalList.homeList[index]["id"] == "10") {
+                      //   const url =
+                      //       'https://www.civil-engineering-calculators.com/Quantity-estimator/Cement-Concrete-Calculator#google_vignette';
+                      //   await openUrl(url, context);
+                      // } else
+                       if (GlobalList.homeList[index]["id"] == "11") {
                         const url = 'https://byte-tools.com/en/compass/';
                         await openUrl(url, context);
                       } else if (GlobalList.homeList[index]["id"] == "7") {
@@ -98,7 +87,6 @@ class _HomeScreenState extends State<HomeScreen> {
                         );
                       }
                     },
-
                     child: IconTitleContainer(
                       mainIcon: GlobalList.homeList[index]["icon"],
                       mainText: GlobalList.homeList[index]["title"]

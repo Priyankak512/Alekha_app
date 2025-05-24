@@ -1,3 +1,5 @@
+// ignore_for_file: unused_local_variable, body_might_complete_normally_nullable
+
 import 'package:alekha/constant/colors.dart';
 import 'package:alekha/constant/text_style.dart';
 import 'package:alekha/widget/textfield_label.dart';
@@ -239,7 +241,6 @@ String? validateTextFieldByKey({
   RegExp ifscCodeExpression = RegExp("^[A-Z]{4}[0][A-Z0-9]{6}");
 }
 
-
 class CommonTextFieldWithFocus extends StatelessWidget {
   final TextEditingController controller;
   final String hintText;
@@ -249,7 +250,9 @@ class CommonTextFieldWithFocus extends StatelessWidget {
   final dynamic keyboardType;
   final void Function(String)? onSubmitted;
   final void Function(bool)? onFocusChange;
-  final List<TextInputFormatter>? inputFormatters; // New parameter
+  final List<TextInputFormatter>? inputFormatters;
+  final Widget? prefixIcon; // New parameter
+  final Widget? suffixIcon; // New parameter
 
   const CommonTextFieldWithFocus({
     Key? key,
@@ -261,7 +264,9 @@ class CommonTextFieldWithFocus extends StatelessWidget {
     this.textInputAction,
     this.onFocusChange,
     this.keyboardType,
-    this.inputFormatters, // Initialize optional parameter
+    this.inputFormatters,
+    this.prefixIcon, // Initialize optional parameter
+    this.suffixIcon, // Initialize optional parameter
   }) : super(key: key);
 
   @override
@@ -275,7 +280,8 @@ class CommonTextFieldWithFocus extends StatelessWidget {
         cursorColor: PickColors.questionTextColor,
         style: CommonTextStyle().textFieldTitleTextStyle,
         decoration: InputDecoration(
-          contentPadding: const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
           hintText: hintText,
           hintStyle: CommonTextStyle().textFieldTitleTextStyle,
           label: Text(
@@ -303,10 +309,12 @@ class CommonTextFieldWithFocus extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             borderSide: BorderSide(color: PickColors.textfieldBorderColor),
           ),
+          prefixIcon: prefixIcon, // Add prefixIcon
+          suffixIcon: suffixIcon, // Add suffixIcon
         ),
         onSubmitted: onSubmitted,
         textInputAction: textInputAction,
-        inputFormatters: inputFormatters, // Pass inputFormatters to TextField
+        inputFormatters: inputFormatters,
       ),
     );
   }
