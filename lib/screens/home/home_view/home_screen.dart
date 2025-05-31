@@ -20,7 +20,7 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   // Function to launch WhatsApp
   void _launchWhatsApp() async {
-    const phoneNumber = '+919512738943'; // Replace with your WhatsApp number
+    const phoneNumber = '+91875882321'; // Replace with your WhatsApp number
     const url = 'https://wa.me/$phoneNumber'; // WhatsApp link with number
     if (await canLaunch(url)) {
       await launch(url);
@@ -43,17 +43,6 @@ class _HomeScreenState extends State<HomeScreen> {
               backgroundColor: PickColors.whiteColor,
               title: Text("âlekha architects",
                   style: CommonTextStyle().authTitleTextStyle),
-              // actions: [
-              //   GestureDetector(
-              //     onTap: () {
-              //       helper.updateTheme(isDarkTheme: !helper.isDarkThemeCurrent);
-              //     },
-              //     child: Icon(
-              //       Icons.dark_mode,
-              //       color: PickColors.hintColor,
-              //     ),
-              //   ),
-              // ],
             ),
             drawer: const DrawerWidget(),
             body: Padding(
@@ -73,7 +62,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       //       'https://www.civil-engineering-calculators.com/Quantity-estimator/Cement-Concrete-Calculator#google_vignette';
                       //   await openUrl(url, context);
                       // } else
-                       if (GlobalList.homeList[index]["id"] == "11") {
+                      if (GlobalList.homeList[index]["id"] == "11") {
                         const url = 'https://byte-tools.com/en/compass/';
                         await openUrl(url, context);
                       } else if (GlobalList.homeList[index]["id"] == "7") {

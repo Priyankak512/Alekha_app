@@ -14,12 +14,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart'
     as ncp;
-
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
-// import 'package:contacts_service/contacts_service.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
 
 class InvoiceGeneratorScreen extends StatefulWidget {
@@ -30,6 +27,7 @@ class InvoiceGeneratorScreen extends StatefulWidget {
 }
 
 class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
+  String? _selectedOption;
   String? _selectedRegardsType;
   String? _selectedProjectCategory;
 
@@ -64,8 +62,6 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
   TextEditingController amountController = TextEditingController();
 
   final ncp.FlutterContactPicker _contactPicker = ncp.FlutterContactPicker();
-
- 
 
   Future<void> _pickContact(TextEditingController controller) async {
     try {
@@ -104,6 +100,11 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
         (await rootBundle.load(PickImages.ronakSignatureImage))
             .buffer
             .asUint8List();
+    Uint8List feesPaidImage =
+        (await rootBundle.load(PickImages.paidFeesImage)).buffer.asUint8List();
+
+        Uint8List a4PdfBgImage =
+        (await rootBundle.load(PickImages.a4PdfBgImage)).buffer.asUint8List();
 
     // Parse prices to double for calculations
     double price1 = double.tryParse(priceController.text) ?? 0.0;
@@ -160,251 +161,564 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
     }
 
     final pdf = pw.Document();
-
     pdf.addPage(
       pw.Page(
         margin: const pw.EdgeInsets.all(20),
         build: (pw.Context context) {
-          return pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                children: [
-                  pw.Container(
-                    width: 170,
-                    height: 60,
-                    margin: const pw.EdgeInsets.only(bottom: 2),
-                    decoration: pw.BoxDecoration(
-                      image: pw.DecorationImage(
-                        image: pw.MemoryImage(imageData),
-                        fit: pw.BoxFit.fill,
-                      ),
-                    ),
-                  ),
-                  // pw.Expanded(
-                  //   child:
-                  pw.Container(
-                    width: 120,
-                    height: 60,
-                    decoration: pw.BoxDecoration(
-                      image: pw.DecorationImage(
-                        image: pw.MemoryImage(invoiceContactPdfLogo),
-                        fit: pw.BoxFit.contain,
-                      ),
-                    ),
-                    // ),
-                  )
-                ],
-              ),
-              pw.SizedBox(height: 6),
-              pw.Divider(height: 3, color: PdfColor.fromHex("#616161")),
-              pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                children: [
-                  pw.Text("INVOICE",
-                      style: pw.TextStyle(
-                          fontSize: 13, fontWeight: pw.FontWeight.bold)),
-                  pw.Text("Date : ${dateController.text}",
-                      style: pw.TextStyle(
-                          fontSize: 13, color: PdfColor.fromHex("#616161"))),
-                ],
-              ),
-              pw.Divider(height: 3, color: PdfColor.fromHex("#BDBDBD")),
-              pw.SizedBox(height: 5),
-              pw.Text(
-                  "Project No. : ${projectNoController.text} ${_selectedProjectCategory == 'Architecture - A' ? 'A' : _selectedProjectCategory == 'Interior - I' ? 'I' : _selectedProjectCategory == 'Architecture Interior - AI' ? 'AI' : ''}"
-                  // $_selectedProjectCategory",
-                  ),
-              pw.Text(
-                  "Invoice No. : ${invoiceNoController.text.toUpperCase()}"),
-              pw.Text(
-                  "Invoice Reference No. : ${invoiceReferenceNoController.text}"),
-              pw.Text("For : "),
-              pw.Text(
-                "${clientNameController.text.toUpperCase()} - ${contactNoController.text}",
-                style:
-                    pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold),
-              ),
-              pw.Text(
-                addressController.text,
-                style:
-                    pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold),
-              ),
-              pw.SizedBox(height: 20),
-              pw.Table(
-                border: pw.TableBorder.all(),
-                columnWidths: {
-                  0: const pw.FlexColumnWidth(0.5),
-                  1: const pw.FlexColumnWidth(3),
-                  2: const pw.FlexColumnWidth(0.7),
-                },
-                children: [
-                  // Header Row
-                  pw.TableRow(
-                    decoration:
-                        const pw.BoxDecoration(color: PdfColors.grey300),
-                    children: [
-                      pw.Padding(
-                        padding: const pw.EdgeInsets.all(4),
-                        child: pw.Center(
-                          child: pw.Text('No.'.toUpperCase(),
-                              style:
-                                  pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-                        ),
-                      ),
-                      pw.Padding(
-                        padding: const pw.EdgeInsets.all(4),
-                        child: pw.Text('Description'.toUpperCase(),
-                            style:
-                                pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-                      ),
-                      pw.Padding(
-                        padding: const pw.EdgeInsets.all(4),
-                        child: pw.Text('Amount'.toUpperCase(),
-                            style:
-                                pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-                      ),
-                    ],
-                  ),
-
-                  // Data Rows
-                  ...tableData.map(
-                    (row) {
-                      final isTotalRow = row[0].toUpperCase() == 'TOTAL';
-                      const defaultTextStyle = pw.TextStyle();
-                      final boldTextStyle = pw.TextStyle(
-                        fontWeight: pw.FontWeight.bold,
-                        fontSize: 12,
-                      );
-                      final totalAmountStyle = pw.TextStyle(
-                        fontWeight: pw.FontWeight.bold,
-                        fontSize: 12, // <- Increased font size for amount only
-                      );
-
-                      return pw.TableRow(
-                        children: [
-                          pw.Padding(
-                            padding: const pw.EdgeInsets.all(4),
-                            child: pw.Center(
-                              child: pw.Text(row[0],
-                                  style: isTotalRow
-                                      ? boldTextStyle
-                                      : defaultTextStyle),
-                            ),
-                          ),
-                          pw.Padding(
-                            padding: const pw.EdgeInsets.all(4),
-                            child: pw.Align(
-                              alignment: pw.Alignment.centerLeft,
-                              child: pw.Text(row[1],
-                                  style: isTotalRow
-                                      ? boldTextStyle
-                                      : defaultTextStyle),
-                            ),
-                          ),
-                          pw.Padding(
-                            padding: const pw.EdgeInsets.all(4),
-                            child: pw.Align(
-                              alignment: pw.Alignment.centerLeft,
-                              child: pw.Text(
-                                row[2],
-                                style: isTotalRow
-                                    ? totalAmountStyle
-                                    : defaultTextStyle,
-                              ),
-                            ),
-                          ),
-                        ],
-                      );
-                    },
-                  ),
-                ],
-              ),
-              pw.Container(
-                padding: const pw.EdgeInsets.all(5.00),
-                width: double.infinity,
-                decoration: pw.BoxDecoration(
-                  borderRadius: const pw.BorderRadius.only(
-                    bottomRight: pw.Radius.circular(0),
-                    bottomLeft: pw.Radius.circular(0),
-                  ),
-                  border: pw.Border.all(
-                    width: 1,
-                  ),
-                ),
-                child: pw.Text(
-                  amountController.text,
-                  textAlign: pw.TextAlign.center,
+          return pw.FullPage(
+            ignoreMargins: true, // Ignore margins for full control
+            child: pw.Container(
+              width: 60,
+              height: 60,
+              decoration: pw.BoxDecoration(
+                image: pw.DecorationImage(
+                  image: pw.MemoryImage(
+                      a4PdfBgImage), // This will be your background
+                  fit: pw.BoxFit.contain,
                 ),
               ),
-              pw.Spacer(),
-              pw.Container(
-                padding: const pw.EdgeInsets.all(5),
+              child: pw.Padding(
+                padding: const pw.EdgeInsets.all(20),
                 child: pw.Column(
                   crossAxisAlignment: pw.CrossAxisAlignment.start,
                   children: [
-                    pw.Align(
-                      alignment: pw.Alignment.topRight,
-                      child: pw.Text("ALEKHA ARCHITECTS",
-                          style: pw.TextStyle(
-                              fontSize: 12, fontWeight: pw.FontWeight.bold)),
-                    ),
-                    pw.SizedBox(height: 5),
-                    pw.Align(
-                      alignment: pw.Alignment.topRight,
-                      child: pw.Text(_selectedRegardsType.toString(),
-                          style: const pw.TextStyle(fontSize: 10)),
-                    ),
-                    pw.Align(
-                      alignment: pw.Alignment.topRight,
-                      child: pw.Container(
-                        width: 120,
-                        height: 60,
-                        decoration: pw.BoxDecoration(
-                          image: pw.DecorationImage(
-                            image: pw.MemoryImage(
-                              _selectedRegardsType ==
-                                      "Ar.Tushar Kachhadiya     "
-                                  ? tusharSignatureImage
-                                  : ronakSignatureImage,
+                    pw.Row(
+                      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                      children: [
+                        pw.Container(
+                          width: 170,
+                          height: 60,
+                          margin: const pw.EdgeInsets.only(bottom: 2),
+                          decoration: pw.BoxDecoration(
+                            image: pw.DecorationImage(
+                              image: pw.MemoryImage(imageData),
+                              fit: pw.BoxFit.fill,
                             ),
-                            fit: pw.BoxFit.contain,
                           ),
                         ),
-                      ),
+                        // pw.Expanded(
+                        //   child:
+                        pw.Container(
+                          width: 120,
+                          height: 60,
+                          decoration: pw.BoxDecoration(
+                            image: pw.DecorationImage(
+                              image: pw.MemoryImage(invoiceContactPdfLogo),
+                              fit: pw.BoxFit.contain,
+                            ),
+                          ),
+                          // ),
+                        )
+                      ],
+                    ),
+                    pw.SizedBox(height: 6),
+                    pw.Divider(height: 3, color: PdfColor.fromHex("#616161")),
+                    pw.Row(
+                      mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                      children: [
+                        pw.Text("INVOICE",
+                            style: pw.TextStyle(
+                                fontSize: 13, fontWeight: pw.FontWeight.bold)),
+                        pw.Text("Date : ${dateController.text}",
+                            style: pw.TextStyle(
+                                fontSize: 13,
+                                color: PdfColor.fromHex("#616161"))),
+                      ],
+                    ),
+                    pw.Divider(height: 3, color: PdfColor.fromHex("#BDBDBD")),
+                    pw.SizedBox(height: 5),
+                    pw.Text(
+                        "Project No. : ${projectNoController.text} ${_selectedProjectCategory == 'Architecture - A' ? 'A' : _selectedProjectCategory == 'Interior - I' ? 'I' : _selectedProjectCategory == 'Architecture Interior - AI' ? 'AI' : ''}"
+                        // $_selectedProjectCategory",
+                        ),
+                    pw.Text(
+                        "Invoice No. : ${invoiceNoController.text.toUpperCase()}"),
+                    pw.Text(
+                        "Invoice Reference No. : ${invoiceReferenceNoController.text}"),
+                    pw.Text("For : "),
+                    pw.Text(
+                      "${clientNameController.text.toUpperCase()} - ${contactNoController.text}",
+                      style: pw.TextStyle(
+                          fontSize: 12, fontWeight: pw.FontWeight.bold),
+                    ),
+                    pw.Text(
+                      addressController.text,
+                      style: pw.TextStyle(
+                          fontSize: 12, fontWeight: pw.FontWeight.bold),
                     ),
                     pw.SizedBox(height: 20),
-                    pw.Align(
-                      alignment: pw.Alignment.center,
+                    pw.Table(
+                      border: pw.TableBorder.all(),
+                      columnWidths: {
+                        0: const pw.FlexColumnWidth(0.5),
+                        1: const pw.FlexColumnWidth(3),
+                        2: const pw.FlexColumnWidth(0.7),
+                      },
+                      children: [
+                        // Header Row
+                        pw.TableRow(
+                          decoration:
+                              const pw.BoxDecoration(color: PdfColors.grey300),
+                          children: [
+                            pw.Padding(
+                              padding: const pw.EdgeInsets.all(4),
+                              child: pw.Center(
+                                child: pw.Text('No.'.toUpperCase(),
+                                    style: pw.TextStyle(
+                                        fontWeight: pw.FontWeight.bold)),
+                              ),
+                            ),
+                            pw.Padding(
+                              padding: const pw.EdgeInsets.all(4),
+                              child: pw.Text('Description'.toUpperCase(),
+                                  style: pw.TextStyle(
+                                      fontWeight: pw.FontWeight.bold)),
+                            ),
+                            pw.Padding(
+                              padding: const pw.EdgeInsets.all(4),
+                              child: pw.Text('Amount'.toUpperCase(),
+                                  style: pw.TextStyle(
+                                      fontWeight: pw.FontWeight.bold)),
+                            ),
+                          ],
+                        ),
+
+                        // Data Rows
+                        ...tableData.map(
+                          (row) {
+                            final isTotalRow = row[0].toUpperCase() == 'TOTAL';
+                            const defaultTextStyle = pw.TextStyle();
+                            final boldTextStyle = pw.TextStyle(
+                              fontWeight: pw.FontWeight.bold,
+                              fontSize: 12,
+                            );
+                            final totalAmountStyle = pw.TextStyle(
+                              fontWeight: pw.FontWeight.bold,
+                              fontSize:
+                                  12, // <- Increased font size for amount only
+                            );
+
+                            return pw.TableRow(
+                              children: [
+                                pw.Padding(
+                                  padding: const pw.EdgeInsets.all(4),
+                                  child: pw.Center(
+                                    child: pw.Text(row[0],
+                                        style: isTotalRow
+                                            ? boldTextStyle
+                                            : defaultTextStyle),
+                                  ),
+                                ),
+                                pw.Padding(
+                                  padding: const pw.EdgeInsets.all(4),
+                                  child: pw.Align(
+                                    alignment: pw.Alignment.centerLeft,
+                                    child: pw.Text(row[1],
+                                        style: isTotalRow
+                                            ? boldTextStyle
+                                            : defaultTextStyle),
+                                  ),
+                                ),
+                                pw.Padding(
+                                  padding: const pw.EdgeInsets.all(4),
+                                  child: pw.Align(
+                                    alignment: pw.Alignment.centerLeft,
+                                    child: pw.Text(
+                                      row[2],
+                                      style: isTotalRow
+                                          ? totalAmountStyle
+                                          : defaultTextStyle,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            );
+                          },
+                        ),
+                      ],
+                    ),
+                    pw.Container(
+                      padding: const pw.EdgeInsets.all(5.00),
+                      width: double.infinity,
+                      decoration: pw.BoxDecoration(
+                        borderRadius: const pw.BorderRadius.only(
+                          bottomRight: pw.Radius.circular(0),
+                          bottomLeft: pw.Radius.circular(0),
+                        ),
+                        border: pw.Border.all(
+                          width: 1,
+                        ),
+                      ),
                       child: pw.Text(
-                        "This is computer generated invoice doesn't required signature.",
-                        style: pw.TextStyle(
-                            fontSize: 11, color: PdfColor.fromHex("#949494")),
+                        amountController.text,
+                        textAlign: pw.TextAlign.center,
                       ),
                     ),
-                    pw.Divider(color: PdfColor.fromHex("#616161")),
-                    pw.Text("BANK DETAILS :"),
-                    pw.Text("A/C NAME - ALEKHA ARCHITECTS"),
-                    pw.Text("BANK NAME - SURAT NATIONAL CO. OP. BANK"),
-                    pw.Text("A/C NO. - 008120100004535"),
-                    pw.Text("IFS CODE - SUNB0000008"),
-                    pw.Divider(color: PdfColor.fromHex("#616161")),
-                    pw.Align(
-                      alignment: pw.Alignment.center,
-                      child: pw.Text(
-                        "G.F. Plot No.29, Hira Nagar, Bamroll Road, Nr.Saraswati Hindi Vidyalaya, Surat, Gujarat.",
-                        style: const pw.TextStyle(fontSize: 11),
+                    pw.Spacer(),
+                    pw.Container(
+                      padding: const pw.EdgeInsets.all(5),
+                      child: pw.Column(
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: [
+                          pw.Align(
+                            alignment: pw.Alignment.topRight,
+                            child: pw.Text("ALEKHA ARCHITECTS",
+                                style: pw.TextStyle(
+                                    fontSize: 12,
+                                    fontWeight: pw.FontWeight.bold)),
+                          ),
+                          pw.SizedBox(height: 5),
+                          pw.Align(
+                            alignment: pw.Alignment.topRight,
+                            child: pw.Text(_selectedRegardsType.toString(),
+                                style: const pw.TextStyle(fontSize: 10)),
+                          ),
+                          pw.Align(
+                            alignment: pw.Alignment.topRight,
+                            child: pw.Container(
+                              width: 120,
+                              height: 60,
+                              decoration: pw.BoxDecoration(
+                                image: pw.DecorationImage(
+                                  image: pw.MemoryImage(
+                                    _selectedRegardsType ==
+                                            "Ar.Tushar Kachhadiya     "
+                                        ? tusharSignatureImage
+                                        : ronakSignatureImage,
+                                  ),
+                                  fit: pw.BoxFit.contain,
+                                ),
+                              ),
+                            ),
+                          ),
+                          pw.SizedBox(height: 20),
+                          pw.Align(
+                            alignment: pw.Alignment.center,
+                            child: pw.Text(
+                              "This is computer generated invoice doesn't required signature.",
+                              style: pw.TextStyle(
+                                  fontSize: 11,
+                                  color: PdfColor.fromHex("#949494")),
+                            ),
+                          ),
+                          pw.Divider(color: PdfColor.fromHex("#616161")),
+                          pw.Row(
+                            mainAxisAlignment:
+                                pw.MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: pw.CrossAxisAlignment.start,
+                            children: [
+                              pw.Column(
+                                  crossAxisAlignment:
+                                      pw.CrossAxisAlignment.start,
+                                  children: [
+                                    pw.Text("BANK DETAILS :"),
+                                    pw.Text("A/C NAME - ALEKHA ARCHITECTS"),
+                                    pw.Text(
+                                        "BANK NAME - SURAT NATIONAL CO. OP. BANK"),
+                                    pw.Text("A/C NO. - 008120100004535"),
+                                    pw.Text("IFS CODE - SUNB0000008"),
+                                  ]),
+                              if (_selectedOption == 'Fees Paid')
+                                pw.Container(
+                                  width: 120,
+                                  height: 60,
+                                  decoration: pw.BoxDecoration(
+                                    image: pw.DecorationImage(
+                                      image: pw.MemoryImage(feesPaidImage),
+                                      fit: pw.BoxFit.contain,
+                                    ),
+                                  ),
+                                )
+                              else
+                                pw.SizedBox(),
+                            ],
+                          ),
+                          pw.Divider(color: PdfColor.fromHex("#616161")),
+                          pw.Align(
+                            alignment: pw.Alignment.center,
+                            child: pw.Text(
+                              "G.F. Plot No.29, Hira Nagar, Bamroll Road, Nr.Saraswati Hindi Vidyalaya, Surat, Gujarat.",
+                              style: const pw.TextStyle(fontSize: 11),
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ],
                 ),
               ),
-            ],
+            ),
           );
         },
       ),
     );
+
+    // pdf.addPage(
+    //   pw.Page(
+    //     margin: const pw.EdgeInsets.all(20),
+    //     build: (pw.Context context) {
+    //       return pw.Column(
+    //         crossAxisAlignment: pw.CrossAxisAlignment.start,
+    //         children: [
+    //           pw.Row(
+    //             mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+    //             children: [
+    //               pw.Container(
+    //                 width: 170,
+    //                 height: 60,
+    //                 margin: const pw.EdgeInsets.only(bottom: 2),
+    //                 decoration: pw.BoxDecoration(
+    //                   image: pw.DecorationImage(
+    //                     image: pw.MemoryImage(imageData),
+    //                     fit: pw.BoxFit.fill,
+    //                   ),
+    //                 ),
+    //               ),
+    //               // pw.Expanded(
+    //               //   child:
+    //               pw.Container(
+    //                 width: 120,
+    //                 height: 60,
+    //                 decoration: pw.BoxDecoration(
+    //                   image: pw.DecorationImage(
+    //                     image: pw.MemoryImage(invoiceContactPdfLogo),
+    //                     fit: pw.BoxFit.contain,
+    //                   ),
+    //                 ),
+    //                 // ),
+    //               )
+    //             ],
+    //           ),
+    //           pw.SizedBox(height: 6),
+    //           pw.Divider(height: 3, color: PdfColor.fromHex("#616161")),
+    //           pw.Row(
+    //             mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+    //             children: [
+    //               pw.Text("INVOICE",
+    //                   style: pw.TextStyle(
+    //                       fontSize: 13, fontWeight: pw.FontWeight.bold)),
+    //               pw.Text("Date : ${dateController.text}",
+    //                   style: pw.TextStyle(
+    //                       fontSize: 13, color: PdfColor.fromHex("#616161"))),
+    //             ],
+    //           ),
+    //           pw.Divider(height: 3, color: PdfColor.fromHex("#BDBDBD")),
+    //           pw.SizedBox(height: 5),
+    //           pw.Text(
+    //               "Project No. : ${projectNoController.text} ${_selectedProjectCategory == 'Architecture - A' ? 'A' : _selectedProjectCategory == 'Interior - I' ? 'I' : _selectedProjectCategory == 'Architecture Interior - AI' ? 'AI' : ''}"
+    //               // $_selectedProjectCategory",
+    //               ),
+    //           pw.Text(
+    //               "Invoice No. : ${invoiceNoController.text.toUpperCase()}"),
+    //           pw.Text(
+    //               "Invoice Reference No. : ${invoiceReferenceNoController.text}"),
+    //           pw.Text("For : "),
+    //           pw.Text(
+    //             "${clientNameController.text.toUpperCase()} - ${contactNoController.text}",
+    //             style:
+    //                 pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold),
+    //           ),
+    //           pw.Text(
+    //             addressController.text,
+    //             style:
+    //                 pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold),
+    //           ),
+    //           pw.SizedBox(height: 20),
+    //           pw.Table(
+    //             border: pw.TableBorder.all(),
+    //             columnWidths: {
+    //               0: const pw.FlexColumnWidth(0.5),
+    //               1: const pw.FlexColumnWidth(3),
+    //               2: const pw.FlexColumnWidth(0.7),
+    //             },
+    //             children: [
+    //               // Header Row
+    //               pw.TableRow(
+    //                 decoration:
+    //                     const pw.BoxDecoration(color: PdfColors.grey300),
+    //                 children: [
+    //                   pw.Padding(
+    //                     padding: const pw.EdgeInsets.all(4),
+    //                     child: pw.Center(
+    //                       child: pw.Text('No.'.toUpperCase(),
+    //                           style:
+    //                               pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+    //                     ),
+    //                   ),
+    //                   pw.Padding(
+    //                     padding: const pw.EdgeInsets.all(4),
+    //                     child: pw.Text('Description'.toUpperCase(),
+    //                         style:
+    //                             pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+    //                   ),
+    //                   pw.Padding(
+    //                     padding: const pw.EdgeInsets.all(4),
+    //                     child: pw.Text('Amount'.toUpperCase(),
+    //                         style:
+    //                             pw.TextStyle(fontWeight: pw.FontWeight.bold)),
+    //                   ),
+    //                 ],
+    //               ),
+
+    //               // Data Rows
+    //               ...tableData.map(
+    //                 (row) {
+    //                   final isTotalRow = row[0].toUpperCase() == 'TOTAL';
+    //                   const defaultTextStyle = pw.TextStyle();
+    //                   final boldTextStyle = pw.TextStyle(
+    //                     fontWeight: pw.FontWeight.bold,
+    //                     fontSize: 12,
+    //                   );
+    //                   final totalAmountStyle = pw.TextStyle(
+    //                     fontWeight: pw.FontWeight.bold,
+    //                     fontSize: 12, // <- Increased font size for amount only
+    //                   );
+
+    //                   return pw.TableRow(
+    //                     children: [
+    //                       pw.Padding(
+    //                         padding: const pw.EdgeInsets.all(4),
+    //                         child: pw.Center(
+    //                           child: pw.Text(row[0],
+    //                               style: isTotalRow
+    //                                   ? boldTextStyle
+    //                                   : defaultTextStyle),
+    //                         ),
+    //                       ),
+    //                       pw.Padding(
+    //                         padding: const pw.EdgeInsets.all(4),
+    //                         child: pw.Align(
+    //                           alignment: pw.Alignment.centerLeft,
+    //                           child: pw.Text(row[1],
+    //                               style: isTotalRow
+    //                                   ? boldTextStyle
+    //                                   : defaultTextStyle),
+    //                         ),
+    //                       ),
+    //                       pw.Padding(
+    //                         padding: const pw.EdgeInsets.all(4),
+    //                         child: pw.Align(
+    //                           alignment: pw.Alignment.centerLeft,
+    //                           child: pw.Text(
+    //                             row[2],
+    //                             style: isTotalRow
+    //                                 ? totalAmountStyle
+    //                                 : defaultTextStyle,
+    //                           ),
+    //                         ),
+    //                       ),
+    //                     ],
+    //                   );
+    //                 },
+    //               ),
+    //             ],
+    //           ),
+    //           pw.Container(
+    //             padding: const pw.EdgeInsets.all(5.00),
+    //             width: double.infinity,
+    //             decoration: pw.BoxDecoration(
+    //               borderRadius: const pw.BorderRadius.only(
+    //                 bottomRight: pw.Radius.circular(0),
+    //                 bottomLeft: pw.Radius.circular(0),
+    //               ),
+    //               border: pw.Border.all(
+    //                 width: 1,
+    //               ),
+    //             ),
+    //             child: pw.Text(
+    //               amountController.text,
+    //               textAlign: pw.TextAlign.center,
+    //             ),
+    //           ),
+    //           pw.Spacer(),
+    //           pw.Container(
+    //             padding: const pw.EdgeInsets.all(5),
+    //             child: pw.Column(
+    //               crossAxisAlignment: pw.CrossAxisAlignment.start,
+    //               children: [
+    //                 pw.Align(
+    //                   alignment: pw.Alignment.topRight,
+    //                   child: pw.Text("ALEKHA ARCHITECTS",
+    //                       style: pw.TextStyle(
+    //                           fontSize: 12, fontWeight: pw.FontWeight.bold)),
+    //                 ),
+    //                 pw.SizedBox(height: 5),
+    //                 pw.Align(
+    //                   alignment: pw.Alignment.topRight,
+    //                   child: pw.Text(_selectedRegardsType.toString(),
+    //                       style: const pw.TextStyle(fontSize: 10)),
+    //                 ),
+    //                 pw.Align(
+    //                   alignment: pw.Alignment.topRight,
+    //                   child: pw.Container(
+    //                     width: 120,
+    //                     height: 60,
+    //                     decoration: pw.BoxDecoration(
+    //                       image: pw.DecorationImage(
+    //                         image: pw.MemoryImage(
+    //                           _selectedRegardsType ==
+    //                                   "Ar.Tushar Kachhadiya     "
+    //                               ? tusharSignatureImage
+    //                               : ronakSignatureImage,
+    //                         ),
+    //                         fit: pw.BoxFit.contain,
+    //                       ),
+    //                     ),
+    //                   ),
+    //                 ),
+    //                 pw.SizedBox(height: 20),
+    //                 pw.Align(
+    //                   alignment: pw.Alignment.center,
+    //                   child: pw.Text(
+    //                     "This is computer generated invoice doesn't required signature.",
+    //                     style: pw.TextStyle(
+    //                         fontSize: 11, color: PdfColor.fromHex("#949494")),
+    //                   ),
+    //                 ),
+    //                 pw.Divider(color: PdfColor.fromHex("#616161")),
+    //                 pw.Row(
+    //                   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+    //                   crossAxisAlignment: pw.CrossAxisAlignment.start,
+    //                   children: [
+    //                     pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start,
+    //                       children: [
+    //                       pw.Text("BANK DETAILS :"),
+    //                       pw.Text("A/C NAME - ALEKHA ARCHITECTS"),
+    //                       pw.Text("BANK NAME - SURAT NATIONAL CO. OP. BANK"),
+    //                       pw.Text("A/C NO. - 008120100004535"),
+    //                       pw.Text("IFS CODE - SUNB0000008"),
+    //                     ]),
+    //                     if (_selectedOption == 'Fees Paid')
+    //                       pw.Container(
+    //                         width: 120,
+    //                         height: 60,
+    //                         decoration: pw.BoxDecoration(
+    //                           image: pw.DecorationImage(
+    //                             image: pw.MemoryImage(feesPaidImage),
+    //                             fit: pw.BoxFit.contain,
+    //                           ),
+    //                         ),
+    //                       )
+    //                     else
+    //                       pw.SizedBox(),
+    //                   ],
+    //                 ),
+    //                 pw.Divider(color: PdfColor.fromHex("#616161")),
+    //                 pw.Align(
+    //                   alignment: pw.Alignment.center,
+    //                   child: pw.Text(
+    //                     "G.F. Plot No.29, Hira Nagar, Bamroll Road, Nr.Saraswati Hindi Vidyalaya, Surat, Gujarat.",
+    //                     style: const pw.TextStyle(fontSize: 11),
+    //                   ),
+    //                 ),
+    //               ],
+    //             ),
+    //           ),
+    //         ],
+    //       );
+    //     },
+    //   ),
+    // );
 
     await Printing.layoutPdf(
       name:
@@ -415,9 +729,10 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Consumer(builder: (context, GeneralHelper helper, snapshot) {
+    return Consumer(
+      builder: (context, GeneralHelper helper, snapshot) {
         return WillPopScope(
-        onWillPop: () => helper.onWillPop(context),
+          onWillPop: () => helper.onWillPop(context),
           child: Scaffold(
             backgroundColor: PickColors.whiteColor,
             appBar: AppBar(
@@ -471,7 +786,8 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
                         if (pickedDate != null) {
                           String formattedDate =
                               DateFormate.normalDateFormate.format(pickedDate);
-                          dateController.text = formattedDate; // Set the picked date
+                          dateController.text =
+                              formattedDate; // Set the picked date
                         }
                       },
                       borderRadius: BorderRadius.circular(10),
@@ -497,7 +813,8 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
                                 value: category,
                                 child: Text(
                                   category,
-                                  style: CommonTextStyle().textFieldTitleTextStyle,
+                                  style:
+                                      CommonTextStyle().textFieldTitleTextStyle,
                                 ),
                               ))
                           .toList(),
@@ -640,7 +957,6 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
                         ),
                       ],
                     ),
-          
                     const SizedBox(
                       height: 20,
                     ),
@@ -666,7 +982,6 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
                         ),
                       ],
                     ),
-          
                     const SizedBox(
                       height: 20,
                     ),
@@ -692,7 +1007,6 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
                         ),
                       ],
                     ),
-          
                     const SizedBox(
                       height: 20,
                     ),
@@ -718,7 +1032,6 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
                         ),
                       ],
                     ),
-          
                     const SizedBox(
                       height: 20,
                     ),
@@ -744,7 +1057,6 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
                         ),
                       ],
                     ),
-          
                     const SizedBox(
                       height: 20,
                     ),
@@ -770,7 +1082,6 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
                         ),
                       ],
                     ),
-          
                     const SizedBox(
                       height: 20,
                     ),
@@ -792,7 +1103,8 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
                                 value: category,
                                 child: Text(
                                   category,
-                                  style: CommonTextStyle().textFieldTitleTextStyle,
+                                  style:
+                                      CommonTextStyle().textFieldTitleTextStyle,
                                 ),
                               ))
                           .toList(),
@@ -808,17 +1120,42 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
                       },
                     ),
                     const SizedBox(height: 20),
-                    // Comm
+                    Row(
+                      children: GlobalList.feesStatusOptions.map((option) {
+                        return Row(
+                          children: [
+                            Radio<String>(
+                              value: option,
+                              groupValue: _selectedOption,
+                              onChanged: (String? value) {
+                                setState(() {
+                                  _selectedOption = value;
+                                });
+                              },
+                            ),
+                            Text(
+                              option,
+                              style: CommonTextStyle().textFieldTitleTextStyle,
+                            ),
+                            PickHeightAndWidth.width20,
+                          ],
+                        );
+                      }).toList(),
+                    ),
+                    PickHeightAndWidth.height20,
                     Container(
                       margin: const EdgeInsets.all(0),
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
-                        border: Border.all(color: PickColors.textfieldBorderColor),
+                        border:
+                            Border.all(color: PickColors.textfieldBorderColor),
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
                         "A/c Name : Alekha Architects\n Bank Name : Surat National Co.Op. Bank\n A/c No. : 008 1201 0000 4535\n IFS Code : SUNB0000008",
-                        style: CommonTextStyle().hintTextStyle.copyWith(fontSize: 8),
+                        style: CommonTextStyle()
+                            .hintTextStyle
+                            .copyWith(fontSize: 8),
                       ),
                     ),
                     const SizedBox(height: 20),
@@ -830,8 +1167,9 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
                             suffixIcon: PickImages.pdfIcon,
                             onPressed: () async {
                               await _createPdf();
-          
+
                               // Show snackbar after successful PDF generation
+                              // ignore: use_build_context_synchronously
                               ScaffoldMessenger.of(context).showSnackBar(
                                 const SnackBar(
                                   content: Text('PDF generated successfully!'),
@@ -860,7 +1198,7 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
             ),
           ),
         );
-      }
+      },
     );
   }
 }

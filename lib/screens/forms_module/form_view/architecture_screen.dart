@@ -134,12 +134,6 @@ class _CreatePdfFromDataState extends State<ArchitectureScreen> {
                 ),
               ),
               pw.SizedBox(height: 2),
-              // pw.Text(
-              //   requirementsText.isNotEmpty
-              //       ? requirementsText
-              //       : "No requirements provided.",
-              //   style: pw.TextStyle(fontSize: 12),
-              // ),
             ],
           );
         },

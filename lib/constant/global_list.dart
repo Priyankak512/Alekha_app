@@ -26,7 +26,7 @@ class GlobalList {
     "Interior - I",
     "Architecture Interior - AI"
   ];
-
+  static List<String> feesStatusOptions = ['Fees Paid', 'Fees Unpaid'];
   //Interior List
   static List<String> hiringInteriorDesignerList = [
     "Only Design",
@@ -68,7 +68,7 @@ class GlobalList {
       "title": "Mode",
     },
     {
-      "id": 4,
+      "id": 5,
       "icon": Icons.draw_outlined,
       "title": "Artoshophy",
     },

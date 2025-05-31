@@ -7,7 +7,13 @@ class PickImages {
   static const invoicePdfLogo = "assets/images/invoice_pdf_logo.png";
   static const tusharSignatureImage = "assets/images/tushar_signature.png";
   static const ronakSignatureImage = "assets/images/ronak_signature.png";
-  
+   static const pdfBgImage = "assets/images/pdf_bg_image.png";
+  static const paidFeesImage = "assets/images/paid_fees_image.png";
+  static const a4PdfBgImage = "assets/images/a4_pdf_bg_image.png";
+  static const pythagorasImage = "assets/images/pythagoras_image.png";
+  static const pythagorasDecimalTableImage = "assets/images/pythagoras_decimal_table.png";
+  static const updatePythagorasImage = "assets/images/pythagoras_image_update.png";
+  static const updatePythagorasDecimalTable = "assets/images/pythagoras_decimal_tabel_update.png";
 
 
   //Home screen
@@ -46,4 +52,5 @@ class PickImages {
   static const waterTankIcon = "assets/icons/water_tank_icon.svg";
   static const cameraIcon = "assets/icons/camera_icon.svg";
   static const areaLengthIcon = "assets/icons/area_length_icon.svg";
+ 
 }

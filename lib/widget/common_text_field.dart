@@ -319,3 +319,117 @@ class CommonTextFieldWithFocus extends StatelessWidget {
     );
   }
 }
+
+
+
+
+
+class CommonTextFieldWithBullets extends StatefulWidget {
+  final TextEditingController controller;
+  final String hintText;
+  final String labelText;
+  final int maxLines;
+  final TextInputAction? textInputAction;
+  final dynamic keyboardType;
+  final void Function(String)? onSubmitted;
+  final void Function(bool)? onFocusChange;
+  final List<TextInputFormatter>? inputFormatters;
+  final Widget? prefixIcon;
+  final Widget? suffixIcon;
+
+  const CommonTextFieldWithBullets({
+    Key? key,
+    required this.controller,
+    required this.hintText,
+    required this.labelText,
+    this.maxLines = 1,
+    this.onSubmitted,
+    this.textInputAction,
+    this.onFocusChange,
+    this.keyboardType,
+    this.inputFormatters,
+    this.prefixIcon,
+    this.suffixIcon,
+  }) : super(key: key);
+
+  @override
+  State<CommonTextFieldWithBullets> createState() =>
+      _CommonTextFieldWithBulletsState();
+}
+
+class _CommonTextFieldWithBulletsState extends State<CommonTextFieldWithBullets> {
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = widget.controller;
+
+    _controller.addListener(() {
+      final text = _controller.text;
+      final selection = _controller.selection;
+
+      // Detect if the last characters were `- ` (dash + space)
+      if (text.length >= 2 &&
+          text.endsWith('- ') &&
+          selection.baseOffset == text.length) {
+            //  final newText = text.substring(0, text.length - 2) + '- ';
+        final newText = text.substring(0, text.length - 2) + '• ';
+        _controller.value = TextEditingValue(
+          text: newText,
+          selection: TextSelection.collapsed(offset: newText.length),
+        );
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Focus(
+      onFocusChange: widget.onFocusChange,
+      child: TextField(
+        maxLines: widget.maxLines,
+        controller: _controller,
+        keyboardType: widget.keyboardType,
+        cursorColor: PickColors.questionTextColor,
+        style: CommonTextStyle().textFieldTitleTextStyle,
+        decoration: InputDecoration(
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+          hintText: widget.hintText,
+          hintStyle: CommonTextStyle().textFieldTitleTextStyle,
+          label: Text(
+            widget.labelText,
+            style: CommonTextStyle().textFieldTitleTextStyle,
+          ),
+          border: const OutlineInputBorder(),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: Colors.red),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: Colors.red),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: Colors.white),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: PickColors.textfieldBorderColor),
+          ),
+          disabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: PickColors.textfieldBorderColor),
+          ),
+          prefixIcon: widget.prefixIcon,
+          suffixIcon: widget.suffixIcon,
+        ),
+        onSubmitted: widget.onSubmitted,
+        textInputAction: widget.textInputAction,
+        inputFormatters: widget.inputFormatters,
+      ),
+    );
+  }
+}
