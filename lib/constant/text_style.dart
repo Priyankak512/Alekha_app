@@ -4,15 +4,16 @@ import 'package:flutter/material.dart';
 
 class CommonTextStyle {
   //greeting text style
-  TextStyle greetingTextStyle = TextStyle(
+  TextStyle offerLetterTopicNameTextStyle = TextStyle(
     color: PickColors.titleTextColor,
-    fontSize: SizeConfig.fontSize30,
+    fontSize: 15,
     fontWeight: FontWeight.w700,
+    decoration: TextDecoration.underline,
     fontFamily: 'GOTHICB',
   );
 
   //auth title text style
-  TextStyle authTitleTextStyle = TextStyle(
+  TextStyle mainHeadingTextStyle = TextStyle(
     color: PickColors.hintColor,
     fontSize: SizeConfig.fontSize28,
     fontWeight: FontWeight.w900,

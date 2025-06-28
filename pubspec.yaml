@@ -103,10 +103,14 @@ flutter:
   # list giving the asset and other descriptors for the font. For
   # example:
   fonts:
-    - family: GOTHICB 
+    - family: GOTHIC
       fonts:
         - asset: assets/fonts/GOTHICB.ttf
         - asset: assets/fonts/Century Gothic.ttf
+        - asset: assets/fonts/CenturyGothic.ttf
+        - asset: assets/fonts/GOTHICB0.ttf
+        - asset: assets/fonts/calibri-regular.ttf
+        - asset: assets/fonts/calibri-bold.ttf
         
 
   #         style: italic

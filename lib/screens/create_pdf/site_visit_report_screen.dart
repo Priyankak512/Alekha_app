@@ -43,6 +43,8 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
   TextEditingController changesOnSiteController = TextEditingController();
   TextEditingController nextOnSiteController = TextEditingController();
   TextEditingController addressController = TextEditingController();
+   TextEditingController dummy1Controller = TextEditingController();
+   TextEditingController dummy2Controller = TextEditingController();
 
   File? _image;
   List<File> _images = [];
@@ -442,6 +444,18 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
                     labelText: "Work Stage on Site",
                     hintText: "Work Stage on Site",
                     maxLines: 4,
+                  ),
+                  CommonTextFieldWitNumbers(
+                    controller: dummy1Controller,
+                    hintText: 'Points with Number',
+                    maxLines: 5,
+                    labelText: 'Points with Number',
+                  ),
+                   CommonTextFieldWithBullets(
+                    controller: dummy2Controller,
+                    hintText: 'Bullet Points',
+                    maxLines: 5,
+                    labelText: 'Bullet Points',
                   ),
                   // HtmlEditorWidget(
                   //     jdDescriptionController: workStageOnSiteController,

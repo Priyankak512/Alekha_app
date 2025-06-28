@@ -1,13 +1,37 @@
-
 import 'package:alekha/constant/colors.dart';
 import 'package:alekha/constant/share_pref_keys.dart';
 import 'package:alekha/constant/share_preference.dart';
 import 'package:alekha/logical_functions/debug_print.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart';
+import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart'
+    as ncp;
+
+final ncp.FlutterContactPicker _contactPicker = ncp.FlutterContactPicker();
 
 class GeneralHelper with ChangeNotifier {
   double textScaleFactor = 1.0;
+  Future<void> pickContact(TextEditingController controller) async {
+    try {
+      // Open the contact picker and get the selected contact
+      ncp.Contact? contact = await _contactPicker.selectContact();
+
+      // Ensure that the contact and phoneNumbers are not null or empty
+      if (contact != null &&
+          contact.phoneNumbers != null &&
+          contact.phoneNumbers!.isNotEmpty) {
+        // Directly access the first phone number (assuming it's a String, not PhoneNumber)
+        String contactNumber = contact.phoneNumbers!.first;
+
+        // Set the phone number to the controller's text field
+        controller.text = contactNumber.replaceAll(
+            RegExp(r'\s+|-'), ''); // Remove spaces or dashes
+      }
+    } catch (e) {
+      print("Error picking contact: $e");
+    }
+  }
 
   void updateTextFactor({required double factor}) async {
     textScaleFactor = factor;

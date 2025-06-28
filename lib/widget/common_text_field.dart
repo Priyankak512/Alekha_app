@@ -195,7 +195,8 @@ class _CommonTextFieldWithBorderState extends State<CommonTextFieldWithBorder> {
               ),
               enabledBorder: OutlineInputBorder(
                 borderRadius: widget.borderRadius ?? BorderRadius.circular(10),
-                borderSide:  BorderSide(color: PickColors.lightBlackColor, width: 0.1),
+                borderSide:
+                    BorderSide(color: PickColors.lightBlackColor, width: 0.1),
               ),
               disabledBorder: OutlineInputBorder(
                 borderRadius: widget.borderRadius ?? BorderRadius.circular(10),
@@ -248,6 +249,8 @@ class CommonTextFieldWithFocus extends StatelessWidget {
   final int maxLines;
   final TextInputAction? textInputAction;
   final dynamic keyboardType;
+  final TextStyle? labelTextStyle;
+  final bool? readOnly;
   final void Function(String)? onSubmitted;
   final void Function(bool)? onFocusChange;
   final List<TextInputFormatter>? inputFormatters;
@@ -262,11 +265,13 @@ class CommonTextFieldWithFocus extends StatelessWidget {
     this.maxLines = 1,
     this.onSubmitted,
     this.textInputAction,
+    this.readOnly,
     this.onFocusChange,
     this.keyboardType,
     this.inputFormatters,
     this.prefixIcon, // Initialize optional parameter
-    this.suffixIcon, // Initialize optional parameter
+    this.suffixIcon,
+    this.labelTextStyle, // Initialize optional parameter
   }) : super(key: key);
 
   @override
@@ -276,6 +281,7 @@ class CommonTextFieldWithFocus extends StatelessWidget {
       child: TextField(
         maxLines: maxLines,
         controller: controller,
+        readOnly: readOnly ?? false,
         keyboardType: keyboardType,
         cursorColor: PickColors.questionTextColor,
         style: CommonTextStyle().textFieldTitleTextStyle,
@@ -286,7 +292,7 @@ class CommonTextFieldWithFocus extends StatelessWidget {
           hintStyle: CommonTextStyle().textFieldTitleTextStyle,
           label: Text(
             labelText,
-            style: CommonTextStyle().textFieldTitleTextStyle,
+            style: labelTextStyle ?? CommonTextStyle().textFieldTitleTextStyle,
           ),
           border: const OutlineInputBorder(),
           errorBorder: OutlineInputBorder(
@@ -319,10 +325,6 @@ class CommonTextFieldWithFocus extends StatelessWidget {
     );
   }
 }
-
-
-
-
 
 class CommonTextFieldWithBullets extends StatefulWidget {
   final TextEditingController controller;
@@ -357,28 +359,40 @@ class CommonTextFieldWithBullets extends StatefulWidget {
       _CommonTextFieldWithBulletsState();
 }
 
-class _CommonTextFieldWithBulletsState extends State<CommonTextFieldWithBullets> {
+class _CommonTextFieldWithBulletsState
+    extends State<CommonTextFieldWithBullets> {
   late TextEditingController _controller;
 
   @override
   void initState() {
     super.initState();
     _controller = widget.controller;
-
     _controller.addListener(() {
       final text = _controller.text;
       final selection = _controller.selection;
 
-      // Detect if the last characters were `- ` (dash + space)
+      // Auto convert '- ' to '• '
       if (text.length >= 2 &&
           text.endsWith('- ') &&
           selection.baseOffset == text.length) {
-            //  final newText = text.substring(0, text.length - 2) + '- ';
         final newText = text.substring(0, text.length - 2) + '• ';
         _controller.value = TextEditingValue(
           text: newText,
           selection: TextSelection.collapsed(offset: newText.length),
         );
+      }
+
+      // Auto bullet on Enter key (newline)
+      else if (text.endsWith('\n') && selection.baseOffset == text.length) {
+        final lines = text.split('\n');
+        if (lines.length >= 2 &&
+            lines[lines.length - 2].trim().startsWith('•')) {
+          final newText = text + '• ';
+          _controller.value = TextEditingValue(
+            text: newText,
+            selection: TextSelection.collapsed(offset: newText.length),
+          );
+        }
       }
     });
   }
@@ -393,6 +407,135 @@ class _CommonTextFieldWithBulletsState extends State<CommonTextFieldWithBullets>
         keyboardType: widget.keyboardType,
         cursorColor: PickColors.questionTextColor,
         style: CommonTextStyle().textFieldTitleTextStyle,
+        decoration: InputDecoration(
+          contentPadding:
+              const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+          hintText: widget.hintText,
+          hintStyle: CommonTextStyle().textFieldTitleTextStyle,
+          label: Text(
+            widget.labelText,
+            style: CommonTextStyle().textFieldTitleTextStyle,
+          ),
+          border: const OutlineInputBorder(),
+          errorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: Colors.red),
+          ),
+          focusedErrorBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: Colors.red),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: const BorderSide(color: Colors.white),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: PickColors.textfieldBorderColor),
+          ),
+          disabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: PickColors.textfieldBorderColor),
+          ),
+          prefixIcon: widget.prefixIcon,
+          suffixIcon: widget.suffixIcon,
+        ),
+        onSubmitted: widget.onSubmitted,
+        textInputAction: widget.textInputAction,
+        inputFormatters: widget.inputFormatters,
+      ),
+    );
+  }
+}
+
+class CommonTextFieldWitNumbers extends StatefulWidget {
+  final TextEditingController controller;
+  final String hintText;
+  final String labelText;
+  final int maxLines;
+  final TextInputAction? textInputAction;
+  final dynamic keyboardType;
+  final void Function(String)? onSubmitted;
+  final void Function(bool)? onFocusChange;
+  final List<TextInputFormatter>? inputFormatters;
+  final Widget? prefixIcon;
+  final Widget? suffixIcon;
+
+  const CommonTextFieldWitNumbers({
+    Key? key,
+    required this.controller,
+    required this.hintText,
+    required this.labelText,
+    this.maxLines = 1,
+    this.onSubmitted,
+    this.textInputAction,
+    this.onFocusChange,
+    this.keyboardType,
+    this.inputFormatters,
+    this.prefixIcon,
+    this.suffixIcon,
+  }) : super(key: key);
+
+  @override
+  State<CommonTextFieldWitNumbers> createState() =>
+      _CommonTextFieldWitNumbersState();
+}
+
+class _CommonTextFieldWitNumbersState extends State<CommonTextFieldWitNumbers> {
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = widget.controller;
+
+    _controller.addListener(() {
+      final text = _controller.text;
+      final selection = _controller.selection;
+
+      // If user types "- ", replace with "1. "
+      if (text.endsWith('- ') && selection.baseOffset == text.length) {
+        final newText = text.substring(0, text.length - 2) + '1. ';
+        _controller.value = TextEditingValue(
+          text: newText,
+          selection: TextSelection.collapsed(offset: newText.length),
+        );
+        return;
+      }
+
+      // If user presses enter after a numbered line, add next number
+      if (text.endsWith('\n') && selection.baseOffset == text.length) {
+        final lines = text.split('\n');
+        final previousLine = lines.length >= 2 ? lines[lines.length - 2] : '';
+
+        final regExp = RegExp(r'^(\d+)\.\s'); // matches "1. ", "2. " etc.
+
+        final match = regExp.firstMatch(previousLine.trimLeft());
+
+        if (match != null) {
+          int previousNumber = int.tryParse(match.group(1)!) ?? 0;
+          int nextNumber = previousNumber + 1;
+
+          final newText = text + '$nextNumber. ';
+          _controller.value = TextEditingValue(
+            text: newText,
+            selection: TextSelection.collapsed(offset: newText.length),
+          );
+        }
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Focus(
+      onFocusChange: widget.onFocusChange,
+      child: TextField(
+        maxLines: widget.maxLines,
+        controller: _controller,
+        keyboardType: widget.keyboardType,
+        cursorColor: Colors.black,
+        style: const TextStyle(fontSize: 16),
         decoration: InputDecoration(
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 10, vertical: 20),

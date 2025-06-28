@@ -14,6 +14,10 @@ class PickImages {
   static const pythagorasDecimalTableImage = "assets/images/pythagoras_decimal_table.png";
   static const updatePythagorasImage = "assets/images/pythagoras_image_update.png";
   static const updatePythagorasDecimalTable = "assets/images/pythagoras_decimal_tabel_update.png";
+  static const offerLetterHeaderImage = "assets/images/offer_letter_header_image.png";
+  static const offerLaterProcessWorkImage = "assets/images/offer_later_process_work_image.png";
+  static const offerLaterScopOfWorkImage = "assets/images/offer_later_scop_of_work_image.png";
+  static const offerLaterFooterImage = "assets/images/offer_later_footer_image.png";
 
 
   //Home screen

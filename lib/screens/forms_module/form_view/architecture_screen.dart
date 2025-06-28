@@ -118,13 +118,17 @@ class _CreatePdfFromDataState extends State<ArchitectureScreen> {
               ),
               pw.Divider(height: 3, color: PdfColor.fromHex("#BDBDBD")),
               pw.SizedBox(height: 5),
-              _buildTextFieldRow('Client Name : ', clientNameController.text,pdf),
-              _buildTextFieldRow('Contact No. : ', contactNoController.text, pdf),
+              _buildTextFieldRow(
+                  'Client Name : ', clientNameController.text, pdf),
+              _buildTextFieldRow(
+                  'Contact No. : ', contactNoController.text, pdf),
               _buildTextFieldRow('Date :', dateController.text, pdf),
               _buildTextFieldRow('Address : ', addressController.text, pdf),
-              _buildTextFieldRow('Project Type : ', _selectedProjectType ?? "", pdf),
+              _buildTextFieldRow(
+                  'Project Type : ', _selectedProjectType ?? "", pdf),
               _buildTextFieldRow('Plot Size :', plotSizeController.text, pdf),
-              _buildTextFieldRow('Site Context : ', siteContextController.text, pdf),
+              _buildTextFieldRow(
+                  'Site Context : ', siteContextController.text, pdf),
               pw.SizedBox(height: 5),
               pw.Text(
                 "Requirements:",
@@ -339,200 +343,202 @@ class _CreatePdfFromDataState extends State<ArchitectureScreen> {
   @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, GeneralHelper helper, snapshot) {
-        return WillPopScope(
+      return WillPopScope(
         onWillPop: () => helper.onWillPop(context),
-          child: Scaffold(
+        child: Scaffold(
+          backgroundColor: PickColors.whiteColor,
+          appBar: AppBar(
             backgroundColor: PickColors.whiteColor,
-            appBar: AppBar(
-              backgroundColor: PickColors.whiteColor,
-              centerTitle: true,
-              leading: GestureDetector(
-                onTap: () {
-                  backToScreen(context: context);
-                },
-                child: Icon(
-                  Icons.arrow_left_outlined,size:35,
-                  color: PickColors.hintColor,
-                ),
-              ),
-              automaticallyImplyLeading: false,
-              title: Text(
-                'Architecture Form',
-                style: CommonTextStyle().appBarTextStyle,
+            centerTitle: true,
+            leading: GestureDetector(
+              onTap: () {
+                backToScreen(context: context);
+              },
+              child: Icon(
+                Icons.arrow_left_outlined,
+                size: 35,
+                color: PickColors.hintColor,
               ),
             ),
-            body: SingleChildScrollView(
-              child: Padding(
-                padding: const EdgeInsets.all(20.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  children: [
-                    CommonTextFieldWithFocus(
-                      controller: clientNameController,
-                      labelText: "Client Name",
-                      hintText: "Client Name",
-                      keyboardType: TextInputType.name,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    CommonTextFieldWithFocus(
-                      controller: contactNoController,
-                      labelText: "Contact No.",
-                      hintText: "Contact No.",
-                      keyboardType: TextInputType.number,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    CommonTextFieldWithBorder(
-                      fillColor: Colors.transparent,
-                      filled: true,
-                      prefix: const Padding(
-                        padding: EdgeInsets.symmetric(
-                          horizontal: 8.0,
-                        ),
-                        child: Icon(Icons.calendar_month_outlined,
-                            color: PickColors.primaryColor),
+            automaticallyImplyLeading: false,
+            title: Text(
+              'Architecture Form',
+              style: CommonTextStyle().appBarTextStyle,
+            ),
+          ),
+          body: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(20.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  CommonTextFieldWithFocus(
+                    controller: clientNameController,
+                    labelText: "Client Name",
+                    hintText: "Client Name",
+                    keyboardType: TextInputType.name,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  CommonTextFieldWithFocus(
+                    controller: contactNoController,
+                    labelText: "Contact No.",
+                    hintText: "Contact No.",
+                    keyboardType: TextInputType.number,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  CommonTextFieldWithBorder(
+                    fillColor: Colors.transparent,
+                    filled: true,
+                    prefix: const Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 8.0,
                       ),
-                      isRequired: true,
-                      readOnly: true,
-                      hint: "Date",
-                      controller: dateController,
-                      textInputAction: TextInputAction.none,
-                      keyboardType: TextInputType.none,
-                      validator: (value) {
-                        return null;
-                      },
-                      onTap: () async {
-                        DateTime? pickedDate = await getDateFunction(
-                          isOldDate: true,
-                          context: context,
-                        );
-                        if (pickedDate != null) {
-                          String formattedDate =
-                              DateFormate.normalDateFormate.format(pickedDate);
-                          dateController.text = formattedDate; // Set the picked date
-                        }
-                      },
-                      borderRadius: BorderRadius.circular(10),
+                      child: Icon(Icons.calendar_month_outlined,
+                          color: PickColors.primaryColor),
                     ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    CommonTextFieldWithFocus(
-                      controller: addressController,
-                      labelText: "Address",
-                      hintText: "Address",
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    CommonDropDownWithoutSearch(
-                      borderColor: PickColors.primaryColor,
-                      hintText: "Project Type",
-                      name: 'Project Type',
-                      items: GlobalList.projectCategory
-                          .map((category) => DropdownMenuItem<String>(
-                                value: category,
-                                child: Text(
-                                  category,
-                                  style: CommonTextStyle().textFieldTitleTextStyle,
+                    isRequired: true,
+                    readOnly: true,
+                    hint: "Date",
+                    controller: dateController,
+                    textInputAction: TextInputAction.none,
+                    keyboardType: TextInputType.none,
+                    validator: (value) {
+                      return null;
+                    },
+                    onTap: () async {
+                      DateTime? pickedDate = await getDateFunction(
+                        isOldDate: true,
+                        context: context,
+                      );
+                      if (pickedDate != null) {
+                        String formattedDate =
+                            DateFormate.normalDateFormate.format(pickedDate);
+                        dateController.text =
+                            formattedDate; // Set the picked date
+                      }
+                    },
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  CommonTextFieldWithFocus(
+                    controller: addressController,
+                    labelText: "Address",
+                    hintText: "Address",
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  CommonDropDownWithoutSearch(
+                    borderColor: PickColors.primaryColor,
+                    hintText: "Project Type",
+                    name: 'Project Type',
+                    items: GlobalList.projectCategory
+                        .map((category) => DropdownMenuItem<String>(
+                              value: category,
+                              child: Text(
+                                category,
+                                style:
+                                    CommonTextStyle().textFieldTitleTextStyle,
+                              ),
+                            ))
+                        .toList(),
+                    isExpanded: false,
+                    initialValue: _selectedProjectType,
+                    onChanged: (newValue) {
+                      setState(
+                        () {
+                          _selectedProjectType = newValue.toString();
+                        },
+                      );
+                      debugPrint("----------$_selectedProjectType");
+                    },
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  CommonTextFieldWithFocus(
+                    controller: plotSizeController,
+                    labelText: "Plot Size",
+                    hintText: "Plot Size",
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  // CommonTextFieldWithFocus(
+                  //   controller: requirementController,
+                  //   labelText: "Requirement",
+                  //   hintText: "Requirement",
+                  //   maxLines: 2,
+                  // ),
+                  // HtmlEditorWidget(
+                  //     jdDescriptionController: requirementController,
+                  //     initialText: "Initial Text",
+                  //     onValueChanged: (value) async {
+                  //       String? html = await requirementController.getText();
+                  //       String plainText =
+                  //           Bidi.stripHtmlIfNeeded(html ?? "").trim();
+                  //       print("Plain Text: $plainText");
+                  //     }),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  CommonTextFieldWithFocus(
+                    controller: siteContextController,
+                    labelText: "Site Context",
+                    hintText: "Site Context",
+                    maxLines: 3,
+                  ),
+                  const SizedBox(
+                    height: 20,
+                  ),
+                  const SizedBox(height: 10),
+                  _images.isNotEmpty
+                      ? SizedBox(
+                          height: 400,
+                          child: ListView.builder(
+                            itemCount: _images.length,
+                            itemBuilder: (context, index) {
+                              return Container(
+                                height: 400,
+                                width: double.infinity,
+                                margin: const EdgeInsets.all(8.00),
+                                child: Image.file(
+                                  _images[index],
+                                  fit: BoxFit.cover,
                                 ),
-                              ))
-                          .toList(),
-                      isExpanded: false,
-                      initialValue: _selectedProjectType,
-                      onChanged: (newValue) {
-                        setState(
-                          () {
-                            _selectedProjectType = newValue.toString();
-                          },
-                        );
-                        debugPrint("----------$_selectedProjectType");
-                      },
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    CommonTextFieldWithFocus(
-                      controller: plotSizeController,
-                      labelText: "Plot Size",
-                      hintText: "Plot Size",
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    // CommonTextFieldWithFocus(
-                    //   controller: requirementController,
-                    //   labelText: "Requirement",
-                    //   hintText: "Requirement",
-                    //   maxLines: 2,
-                    // ),
-                    // HtmlEditorWidget(
-                    //     jdDescriptionController: requirementController,
-                    //     initialText: "Initial Text",
-                    //     onValueChanged: (value) async {
-                    //       String? html = await requirementController.getText();
-                    //       String plainText =
-                    //           Bidi.stripHtmlIfNeeded(html ?? "").trim();
-                    //       print("Plain Text: $plainText");
-                    //     }),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    CommonTextFieldWithFocus(
-                      controller: siteContextController,
-                      labelText: "Site Context",
-                      hintText: "Site Context",
-                      maxLines: 3,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    const SizedBox(height: 10),
-                    _images.isNotEmpty
-                        ? SizedBox(
-                            height: 400,
-                            child: ListView.builder(
-                              itemCount: _images.length,
-                              itemBuilder: (context, index) {
-                                return Container(
-                                  height: 400,
-                                  width: double.infinity,
-                                  margin: const EdgeInsets.all(8.00),
-                                  child: Image.file(
-                                    _images[index],
-                                    fit: BoxFit.cover,
-                                  ),
-                                );
-                              },
-                            ),
-                          )
-                        : Container(),
-                    const SizedBox(height: 20),
-                    CommonMaterialButton(
-                        title: 'Add Image',
-                        onPressed: _getImage,
-                        style: CommonTextStyle().buttonTextStyle,
-                        prefixIcon: PickImages.cameraIcon,
-                        prefixIconColor: Colors.black,
-                        color: PickColors.primaryColor),
-                    const SizedBox(height: 20),
-                    CommonMaterialButton(
-                      title: 'Create PDF',
+                              );
+                            },
+                          ),
+                        )
+                      : Container(),
+                  const SizedBox(height: 20),
+                  CommonMaterialButton(
+                      title: 'Add Image',
+                      onPressed: _getImage,
                       style: CommonTextStyle().buttonTextStyle,
-                      onPressed: _generatePDF,
-                      color: PickColors.primaryColor,
-                      verticalPadding: 20,
-                    ),
-                  ],
-                ),
+                      prefixIcon: PickImages.cameraIcon,
+                      prefixIconColor: Colors.black,
+                      color: PickColors.primaryColor),
+                  const SizedBox(height: 20),
+                  CommonMaterialButton(
+                    title: 'Create PDF',
+                    style: CommonTextStyle().buttonTextStyle,
+                    onPressed: _generatePDF,
+                    color: PickColors.primaryColor,
+                    verticalPadding: 20,
+                  ),
+                ],
               ),
             ),
           ),
-        );
-      }
-    );
+        ),
+      );
+    });
   }
 }

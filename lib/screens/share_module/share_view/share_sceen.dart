@@ -28,6 +28,7 @@ class _ShareScreenState extends State<ShareScreen> {
             child: Icon(
               Icons.arrow_left_outlined,
               color: PickColors.hintColor,
+              size: 35,
             ),
           ),
           automaticallyImplyLeading: false,
@@ -55,7 +56,8 @@ class _ShareScreenState extends State<ShareScreen> {
                 },
                 child: IconTitleContainer(
                   mainIcon: GlobalList.shareList[index]["icon"],
-                  mainText: GlobalList.shareList[index]["title"].toString()
+                  mainText: GlobalList.shareList[index]["title"]
+                      .toString()
                       .toUpperCase(),
                   subText: "",
                   mainTextTextStyle: CommonTextStyle().sectionTextStyle,

@@ -42,7 +42,7 @@ class _HomeScreenState extends State<HomeScreen> {
               centerTitle: true,
               backgroundColor: PickColors.whiteColor,
               title: Text("âlekha architects",
-                  style: CommonTextStyle().authTitleTextStyle),
+                  style: CommonTextStyle().mainHeadingTextStyle),
             ),
             drawer: const DrawerWidget(),
             body: Padding(

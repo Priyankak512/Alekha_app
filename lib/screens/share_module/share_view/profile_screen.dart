@@ -38,6 +38,7 @@ Widget build(BuildContext context) {
               child: Icon(
                 Icons.arrow_left_outlined,
                 color: PickColors.hintColor,
+                size: 35, 
               ),
             ),
             automaticallyImplyLeading: false,

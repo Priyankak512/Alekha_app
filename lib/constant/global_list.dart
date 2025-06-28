@@ -12,6 +12,7 @@ import 'package:alekha/screens/forms_module/form_view/other_forn_screen.dart';
 import 'package:alekha/screens/invoice_generator/invoice_generator_view/invoice_generator_screen.dart';
 import 'package:alekha/screens/meeting_module/meeting_view/meeting_screen.dart';
 import 'package:alekha/screens/notes_module/notes_view/notes_screen.dart';
+import 'package:alekha/screens/offer_latter_module/offer_latter_view/offer_latter_screen.dart';
 import 'package:alekha/screens/project_files_module/project_file_view/project_files_screen.dart';
 import 'package:alekha/screens/selection_module/selection_screen.dart';
 import 'package:alekha/screens/share_module/share_view/location_screen.dart';
@@ -21,10 +22,80 @@ import 'package:alekha/screens/share_module/share_view/social_screen.dart';
 import 'package:flutter/material.dart';
 
 class GlobalList {
+  //Offer Letter List
+  static List<Map<String, dynamic>> scopOfWorksOfArchitectureOptions = [
+    {"id": 1, "title": "Floor Plans", "isChecked": false},
+    {"id": 2, "title": "3D Elevation", "isChecked": false},
+    {"id": 3, "title": "Structure", "isChecked": false},
+    {"id": 4, "title": "Plumbing", "isChecked": false},
+    {"id": 5, "title": "Electrical", "isChecked": false},
+    {"id": 6, "title": "Door-Window Detail", "isChecked": false},
+    {"id": 7, "title": "Toilet Detail", "isChecked": false},
+    {"id": 8, "title": "Kitchen Detail", "isChecked": false},
+    {"id": 9, "title": "Flooring Detail", "isChecked": false},
+    {"id": 10, "title": "Furniture Layout", "isChecked": false},
+    {"id": 11, "title": "Ceiling", "isChecked": false},
+    {"id": 12, "title": "Interior Electrical", "isChecked": false},
+    {"id": 13, "title": "HVAC", "isChecked": false},
+    {"id": 14, "title": "Wall Panelling", "isChecked": false},
+    {"id": 15, "title": "Color", "isChecked": false},
+    {"id": 16, "title": "Decor", "isChecked": false},
+    {"id": 17, "title": "Tile/Stone Work", "isChecked": false},
+    {"id": 18, "title": "Repair/ Renovate", "isChecked": false},
+  ];
+
+  // static List<Map<String, dynamic>> scopOfWorksOfInteriorOptions = [
+  //   {"id": 1, "title": "Furniture Layout", "isChecked": false},
+  //   {"id": 2, "title": "Ceiling", "isChecked": false},
+  //   {"id": 3, "title": "Electrical", "isChecked": false},
+  //   {"id": 4, "title": "HVAC", "isChecked": false},
+  //   {"id": 5, "title": "Wall Panelling", "isChecked": false},
+  //   {"id": 6, "title": "Color", "isChecked": false},
+  //   {"id": 7, "title": "Decor", "isChecked": false},
+  //   {"id": 8, "title": "Tile/Stone Work", "isChecked": false},
+  //   {"id": 9, "title": "Repair/ Renovate", "isChecked": false},
+  // ];
+
+  //Professional Fees List
+  static List<Map<String, dynamic>> basicOptions = [
+    {"id": 1, "title": "2D Layout", "isChecked": false},
+    {"id": 2, "title": "3D Elevation", "isChecked": false},
+    {"id": 3, "title": "Quotation", "isChecked": false},
+    {"id": 4, "title": "Furniture layout", "isChecked": false},
+  ];
+
+  static List<Map<String, dynamic>> standardOptions = [
+    {"id": 1, "title": "2D Layout", "isChecked": false},
+    {"id": 2, "title": "3D Elevation", "isChecked": false},
+    {"id": 3, "title": "Structure", "isChecked": false},
+    {"id": 4, "title": "Plumbing", "isChecked": false},
+    {"id": 5, "title": "Electrical", "isChecked": false},
+    {"id": 6, "title": "Site Visit", "isChecked": false},
+  ];
+  static List<Map<String, dynamic>> premiumOptions = [
+    {"id": 1, "title": "2D Layout", "isChecked": false},
+    {"id": 2, "title": "3D Elevation", "isChecked": false},
+    {"id": 3, "title": "3D Render", "isChecked": false},
+    {"id": 4, "title": "Structure", "isChecked": false},
+    {"id": 5, "title": "Plumbing", "isChecked": false},
+    {"id": 6, "title": "Electrical", "isChecked": false},
+    {"id": 7, "title": "All Details", "isChecked": false},
+    {"id": 8, "title": "Site & Selection", "isChecked": false},
+  ];
+
   static List<String> projectCategory = [
     "Architecture - A",
     "Interior - I",
     "Architecture Interior - AI"
+  ];
+
+  static List<String> scopOfWorkList = [
+    "Celling",
+    "Electrical",
+    "HVAC",
+    "Furniture",
+    "Wall Panelings",
+    "Color"
   ];
   static List<String> feesStatusOptions = ['Fees Paid', 'Fees Unpaid'];
   //Interior List
@@ -150,7 +221,12 @@ class GlobalList {
       "icon": PickImages.compassIcon,
       "screen": '',
     },
-    {"id": "12", "title": "Draw", "icon": PickImages.drawIcon, "screen": null}
+    {
+      "id": "12",
+      "title": "Draw",
+      "icon": PickImages.drawIcon,
+      "screen": const OfferLetterScreen(),
+    }
   ];
 
   //Forms List =======================
@@ -172,6 +248,12 @@ class GlobalList {
       "title": "Other",
       "icon": PickImages.otherIcon,
       "screen": const OtherFormsScreen(),
+    },
+    {
+      "id": "4",
+      "title": "Offer Letter",
+      "icon": PickImages.interiorIcon,
+      "screen": const OfferLetterScreen(),
     },
   ];
 

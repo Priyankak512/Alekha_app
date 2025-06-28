@@ -60,6 +60,7 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
   TextEditingController descriptionController8 = TextEditingController();
   TextEditingController priceController8 = TextEditingController();
   TextEditingController amountController = TextEditingController();
+  TextEditingController noteController = TextEditingController();
 
   final ncp.FlutterContactPicker _contactPicker = ncp.FlutterContactPicker();
 
@@ -103,7 +104,7 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
     Uint8List feesPaidImage =
         (await rootBundle.load(PickImages.paidFeesImage)).buffer.asUint8List();
 
-        Uint8List a4PdfBgImage =
+    Uint8List a4PdfBgImage =
         (await rootBundle.load(PickImages.a4PdfBgImage)).buffer.asUint8List();
 
     // Parse prices to double for calculations
@@ -233,8 +234,9 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
                         ),
                     pw.Text(
                         "Invoice No. : ${invoiceNoController.text.toUpperCase()}"),
-                    pw.Text(
-                        "Invoice Reference No. : ${invoiceReferenceNoController.text}"),
+                    if (invoiceReferenceNoController.text.trim().isNotEmpty)
+                      pw.Text(
+                          "Invoice Reference No. : ${invoiceReferenceNoController.text}"),
                     pw.Text("For : "),
                     pw.Text(
                       "${clientNameController.text.toUpperCase()} - ${contactNoController.text}",
@@ -354,6 +356,10 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
                         textAlign: pw.TextAlign.center,
                       ),
                     ),
+                    pw.SizedBox(height: 20),
+                    if (noteController.text.trim().isNotEmpty)
+                      pw.Text("Note : ${noteController.text}",
+                          style: const pw.TextStyle(fontSize: 10)),
                     pw.Spacer(),
                     pw.Container(
                       padding: const pw.EdgeInsets.all(5),
@@ -863,8 +869,7 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
                       hintText: "Contact No.",
                       suffixIcon: InkWell(
                         onTap: () {
-                          _pickContact(contactNoController);
-                          // openContactBook(context, contactNoController);
+                        helper.pickContact(contactNoController);
                         },
                         child: const Icon(Icons.person),
                       ),
@@ -1143,13 +1148,20 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
                       }).toList(),
                     ),
                     PickHeightAndWidth.height20,
+                    CommonTextFieldWithFocus(
+                      controller: noteController,
+                      labelText: "Note",
+                      hintText: "Note",
+                      maxLines: 2,
+                    ),
+                    PickHeightAndWidth.height20,
                     Container(
                       margin: const EdgeInsets.all(0),
                       padding: const EdgeInsets.all(10),
                       decoration: BoxDecoration(
                         border:
                             Border.all(color: PickColors.textfieldBorderColor),
-                        borderRadius: BorderRadius.circular(20),
+                        borderRadius: BorderRadius.circular(10),
                       ),
                       child: Text(
                         "A/c Name : Alekha Architects\n Bank Name : Surat National Co.Op. Bank\n A/c No. : 008 1201 0000 4535\n IFS Code : SUNB0000008",

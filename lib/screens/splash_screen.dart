@@ -21,7 +21,7 @@ class _SplashScreenState extends State<SplashScreen> {
 
   Future<void> initializeData() async {
     Timer(
-      const Duration(seconds: 3),
+      const Duration(seconds: 1),
       () => changeScreenWithClearStack(context: context, widget: HomeScreen()) 
       // Navigator.of(context).push(
       //   MaterialPageRoute(

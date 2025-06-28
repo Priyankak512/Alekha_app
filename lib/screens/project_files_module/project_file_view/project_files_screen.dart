@@ -26,6 +26,7 @@ class _ProjectFilesScreenState extends State<ProjectFilesScreen> {
             },
             child: Icon(
               Icons.arrow_left_outlined,
+              size: 35,
               color: PickColors.hintColor,
             ),
           ),
