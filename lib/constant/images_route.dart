@@ -18,6 +18,7 @@ class PickImages {
   static const offerLaterProcessWorkImage = "assets/images/offer_later_process_work_image.png";
   static const offerLaterScopOfWorkImage = "assets/images/offer_later_scop_of_work_image.png";
   static const offerLaterFooterImage = "assets/images/offer_later_footer_image.png";
+  static const offerLetterFeesImage = "assets/images/offer_letter_fees_image.png";
 
 
   //Home screen

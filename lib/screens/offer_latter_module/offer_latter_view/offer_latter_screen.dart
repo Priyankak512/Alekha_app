@@ -63,9 +63,18 @@ class _OfferLetterScreenState extends State<OfferLetterScreen> {
   TextEditingController clientRequirementsController = TextEditingController();
 
   final ncp.FlutterContactPicker _contactPicker = ncp.FlutterContactPicker();
+
+  List<Map<String, dynamic>> basicOptions = [];
+  List<Map<String, dynamic>> standardOptions = [];
+  List<Map<String, dynamic>> premiumOptions = [];
   @override
   void initState() {
     super.initState();
+
+    basicOptions = List<Map<String, dynamic>>.from(GlobalList.basicOptions);
+    standardOptions =
+        List<Map<String, dynamic>>.from(GlobalList.standardOptions);
+    premiumOptions = List<Map<String, dynamic>>.from(GlobalList.premiumOptions);
     aPremiumController.addListener(_calculatePremiumTotal);
     bPremiumController.addListener(_calculatePremiumTotal);
     cPremiumController.addListener(_calculatePremiumTotal);
@@ -187,13 +196,23 @@ class _OfferLetterScreenState extends State<OfferLetterScreen> {
 
   List<Map<String, dynamic>> selectedOptions = [];
 
-// Selected options
-  // final selectedOptions = GlobalList.scopOfWorksOfArchitectureOptions
-  //     .where((item) => item['isChecked'] == true)
-  //     .toList();
+  //Fees Lists
+  final selectedBasicOptions =
+      GlobalList.basicOptions.where((e) => e['isChecked'] == true).toList();
+  final selectedStandardOptions =
+      GlobalList.standardOptions.where((e) => e['isChecked'] == true).toList();
+  final selectedPremiumOptions =
+      GlobalList.premiumOptions.where((e) => e['isChecked'] == true).toList();
 //Create PDF :
 
   Future<void> _generatePDF() async {
+    final selectedBasicOptions =
+        basicOptions.where((e) => e['isChecked'] == true).toList();
+    final selectedStandardOptions =
+        standardOptions.where((e) => e['isChecked'] == true).toList();
+    final selectedPremiumOptions =
+        premiumOptions.where((e) => e['isChecked'] == true).toList();
+
     final calibriRegularFont =
         pw.Font.ttf(await rootBundle.load('assets/fonts/calibri-regular.ttf'));
     final calibriBoldFont =
@@ -215,6 +234,10 @@ class _OfferLetterScreenState extends State<OfferLetterScreen> {
             .asUint8List();
     Uint8List offerLaterScopOfWorkImage =
         (await rootBundle.load(PickImages.offerLaterScopOfWorkImage))
+            .buffer
+            .asUint8List();
+    Uint8List offerLetterFeesImage =
+        (await rootBundle.load(PickImages.offerLetterFeesImage))
             .buffer
             .asUint8List();
 
@@ -316,6 +339,7 @@ class _OfferLetterScreenState extends State<OfferLetterScreen> {
                   ],
                 ),
               ),
+
               pw.SizedBox(height: 10),
               pw.Text(
                 " 01. PROCESS OF WORK",
@@ -351,8 +375,11 @@ class _OfferLetterScreenState extends State<OfferLetterScreen> {
                 height: 5,
               ),
               pw.Container(
-                  padding:
-                      const pw.EdgeInsets.only(bottom: 10, left: 10, top: 10),
+                  padding: const pw.EdgeInsets.only(
+                    bottom: 10,
+                    left: 10,
+                    top: 10,
+                  ),
                   decoration: pw.BoxDecoration(
                     color: PdfColor.fromHex("#FFFFFF"),
                     borderRadius: pw.BorderRadius.circular(5),
@@ -390,8 +417,13 @@ class _OfferLetterScreenState extends State<OfferLetterScreen> {
                                 if (colIndex < chunk.length) {
                                   return pw.Expanded(
                                     child: pw.Container(
-                                        padding: const pw.EdgeInsets.all(6),
-                                        margin: const pw.EdgeInsets.all(4),
+                                        padding: const pw.EdgeInsets.only(
+                                            left: 20,
+                                            bottom: 6,
+                                            right: 6,
+                                            top: 6),
+                                        margin: const pw.EdgeInsets.only(
+                                            top: 4, bottom: 4, right: 12),
                                         decoration: pw.BoxDecoration(
                                           color: PdfColor.fromHex("#EBECEC"),
                                           borderRadius:
@@ -430,6 +462,27 @@ class _OfferLetterScreenState extends State<OfferLetterScreen> {
                   )),
               // pw.SizedBox(height: 30),
               pw.Spacer(),
+              pw.Text(
+                "Have a look on our Work Profile by clicking on : alekha architects",
+                textAlign: pw.TextAlign.center,
+                style: pw.TextStyle(
+                  fontSize: 15,
+                  font: calibriBoldFont,
+                  // color: PdfColor.fromHex("#000000"),
+                ),
+              ),
+              pw.Divider(
+                color: PdfColor.fromHex("#616161"),
+              ),
+              pw.Text(
+                "28-29, Hiranagar, G.H.B., Bamroli Rd., Pandesara, Surat - 394221",
+                textAlign: pw.TextAlign.center,
+                style: pw.TextStyle(
+                  fontSize: 8,
+                  font: calibriRegularFont,
+                  // color: PdfColor.fromHex("#000000"),
+                ),
+              ),
               // pw.Container(
               //   width: double.infinity,
               //   height: 25,
@@ -445,12 +498,399 @@ class _OfferLetterScreenState extends State<OfferLetterScreen> {
         },
       ),
     );
+    pdf.addPage(
+      pw.Page(
+        margin: const pw.EdgeInsets.all(20),
+        build: (pw.Context context) {
+          return pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: [
+              pw.Container(
+                width: double.infinity,
+                height: 100,
+                margin: const pw.EdgeInsets.only(bottom: 2),
+                decoration: pw.BoxDecoration(
+                  image: pw.DecorationImage(
+                    image: pw.MemoryImage(imageData),
+                    fit: pw.BoxFit.fitWidth,
+                  ),
+                ),
+              ),
+              pw.SizedBox(height: 5),
+              pw.Text(
+                "03. PROFESSIONAL FEES",
+                style: pw.TextStyle(
+                  decoration: pw.TextDecoration.underline,
+                  fontSize: 15,
+                  font: calibriBoldFont,
+                  // color: PdfColor.fromHex("#000000"),
+                ),
+              ),
+              pw.SizedBox(height: 5),
+              pw.Text(
+                " We are charging professional fee in the following stages consistent with the work done plus other charges and reimbursable expenses as agreed upon :",
+                style: pw.TextStyle(
+                  font: regularFont,
+                  fontSize: 11,
+                  fontWeight: pw.FontWeight.normal,
+                ),
+              ),
+              pw.SizedBox(height: 10),
+              pw.RichText(
+                text: pw.TextSpan(
+                  style: pw.TextStyle(
+                    font: regularFont,
+                    fontSize: 10,
+                    color: PdfColor.fromHex("#010101"),
+                  ),
+                  children: [
+                    pw.TextSpan(
+                      text: "All specified ",
+                      style: pw.TextStyle(
+                        font: regularFont,
+                        fontSize: 11,
+                        fontWeight: pw.FontWeight.normal,
+                      ),
+                    ),
+                    pw.TextSpan(
+                      text: "Scope of Work",
+                      style: pw.TextStyle(
+                        font: boldFont,
+                        fontSize: 11,
+                        fontWeight: pw.FontWeight.bold,
+                        color: PdfColor.fromHex("#000000"),
+                      ),
+                    ),
+                    pw.TextSpan(
+                      text: "our fees charges would be as follows",
+                      style: pw.TextStyle(
+                        font: regularFont,
+                        fontSize: 11,
+                        fontWeight: pw.FontWeight.normal,
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              // pw.Text("${basicOptions}"),
+              pw.SizedBox(
+                height: 5,
+              ),
+              pw.Container(
+                padding: const pw.EdgeInsets.all(12),
+                decoration: pw.BoxDecoration(
+                  // color: PdfColor.fromHex("#F5F5F5"),
+                  borderRadius: pw.BorderRadius.circular(8),
+                  border: pw.Border.all(
+                      color: PdfColor.fromHex("#BDBDBD"), width: 0.5),
+                ),
+                child: pw.Row(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: [
+                    /// 🔹 First Column - Icon + Title
+                    pw.Container(
+                      width: 120,
+                      height: 120,
+                      padding: const pw.EdgeInsets.all(8),
+                      decoration: pw.BoxDecoration(
+                        color: PdfColor.fromHex("#ECECEC"),
+                        borderRadius: pw.BorderRadius.circular(10),
+                      ),
+                      child: pw.Column(
+                        mainAxisAlignment: pw.MainAxisAlignment.center,
+                        children: [
+                          pw.Image(pw.MemoryImage(offerLetterFeesImage),
+                              height: 50),
+                          pw.SizedBox(height: 8),
+                          pw.Text("Professional\nServices",
+                              textAlign: pw.TextAlign.center,
+                              style: pw.TextStyle(
+                                font: calibriBoldFont,
+                                fontSize: 12,
+                              )),
+                        ],
+                      ),
+                    ),
+
+                    pw.SizedBox(width: 10),
+
+                    // Conditional Category Columns
+                    if (selectedBasicOptions.isNotEmpty)
+                      buildServiceColumn("BASIC", selectedBasicOptions,
+                          calibriBoldFont, calibriRegularFont),
+
+                    if (selectedStandardOptions.isNotEmpty)
+                      buildServiceColumn("STANDARD", selectedStandardOptions,
+                          calibriBoldFont, calibriRegularFont),
+
+                    if (selectedPremiumOptions.isNotEmpty)
+                      buildServiceColumn("PREMIUM", selectedPremiumOptions,
+                          calibriBoldFont, calibriRegularFont),
+                  ],
+                ),
+              ),
+              pw.SizedBox(height: 5),
+              pw.Container(
+                padding: const pw.EdgeInsets.all(12),
+                decoration: pw.BoxDecoration(
+                  // color: PdfColor.fromHex("#F5F5F5"),
+                  borderRadius: pw.BorderRadius.circular(8),
+                  border: pw.Border.all(
+                      color: PdfColor.fromHex("#BDBDBD"), width: 0.5),
+                ),
+                child: pw.Row(
+                  children: [
+                    pw.Expanded(
+                      child: pw.Container(),
+                    ),
+                    pw.Expanded(
+                      child: pw.RichText(
+                        text: pw.TextSpan(
+                          children: [
+                            pw.TextSpan(
+                              text: basicFeesController.text,
+                              style: pw.TextStyle(
+                                font: calibriRegularFont,
+                                fontSize: 15,
+                                color: PdfColor.fromHex("#000000"),
+                              ),
+                            ),
+                            pw.TextSpan(
+                              text: "+GST",
+                              style: pw.TextStyle(
+                                font: regularFont,
+                                fontSize: 11,
+                                fontWeight: pw.FontWeight.bold,
+                                color: PdfColor.fromHex("#000000"),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    pw.Expanded(
+                      child: pw.RichText(
+                        text: pw.TextSpan(
+                          children: [
+                            pw.TextSpan(
+                              text: standardFeesController.text,
+                              style: pw.TextStyle(
+                                font: calibriRegularFont,
+                                fontSize: 15,
+                                color: PdfColor.fromHex("#000000"),
+                              ),
+                            ),
+                            pw.TextSpan(
+                              text: "+GST",
+                              style: pw.TextStyle(
+                                font: regularFont,
+                                fontSize: 11,
+                                fontWeight: pw.FontWeight.bold,
+                                color: PdfColor.fromHex("#000000"),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    pw.Expanded(
+                      child: pw.RichText(
+                        text: pw.TextSpan(
+                          children: [
+                            pw.TextSpan(
+                              text: premiumFeesController.text,
+                              style: pw.TextStyle(
+                                font: calibriRegularFont,
+                                fontSize: 15,
+                                color: PdfColor.fromHex("#000000"),
+                              ),
+                            ),
+                            pw.TextSpan(
+                              text: "+GST",
+                              style: pw.TextStyle(
+                                font: regularFont,
+                                fontSize: 11,
+                                fontWeight: pw.FontWeight.bold,
+                                color: PdfColor.fromHex("#000000"),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              pw.SizedBox(height: 10),
+              pw.Text(
+                "     Charges are only as per your scope/area of design provided by client.\n     Charges may differ if any space is deducted/added from/to designing scope.\n     3D Rendering of Final 3D Designs - Includes 03 Views/space  (only for PREMIUM category)\n     (additional view charges - Rs.1,200/view)\n     Site Visits -  Includes 12 Visits + 03 Selection Visits (PREMIUM category)(additional visit charges - Rs.2,200/visit)\n     2D Layout - Includes 2 Options & 2 Revisions\n     (additional 2D Layout & Revision charges - Rs.6,000/layout & Rs.3,500/revision)\n     3D Design - Includes 2 Revisions\n     (additional 3D Elevation & Revision charges - Rs.14,500/space & Rs.5,500/revision)\n     This quote is applicable only for 8 month from the commencement of work on site.))",
+                style: pw.TextStyle(
+                  font: regularFont,
+                  fontSize: 9,
+                  fontWeight: pw.FontWeight.normal,
+                ),
+              ),
+
+              pw.SizedBox(height: 15),
+              pw.Text(
+                "04. SCHEDULE OF PAYMENT :",
+                style: pw.TextStyle(
+                  decoration: pw.TextDecoration.underline,
+                  fontSize: 15,
+                  font: calibriBoldFont,
+                  // color: PdfColor.fromHex("#000000"),
+                ),
+              ),
+              pw.SizedBox(height: 5),
+              pw.Text(
+                "We are charging professional fee in the following stages consistent with the work done plus other charges and reimbursable expenses as agreed upon : STANDARD & PREMIUM",
+                style: pw.TextStyle(
+                  font: regularFont,
+                  fontSize: 11,
+                  fontWeight: pw.FontWeight.normal,
+                ),
+              ),
+              pw.SizedBox(height: 5),
+              pw.Container(
+                padding: const pw.EdgeInsets.all(12),
+                decoration: pw.BoxDecoration(
+                  // color: PdfColor.fromHex("#F5F5F5"),
+                  borderRadius: pw.BorderRadius.circular(8),
+                  border: pw.Border.all(
+                      color: PdfColor.fromHex("#BDBDBD"), width: 0.5),
+                ),
+                child: pw.Row(
+                  children: [],
+                ),
+              ),
+
+              pw.SizedBox(height: 15),
+              pw.Text(
+                "05. SCOPE DESCRIBED BY CLIENT : ",
+                style: pw.TextStyle(
+                  decoration: pw.TextDecoration.underline,
+                  fontSize: 15,
+                  font: calibriBoldFont,
+                  // color: PdfColor.fromHex("#000000"),
+                ),
+              ),
+              pw.SizedBox(height: 5),
+              pw.Text(
+                "Spaces : Residential Bungalow | G+1 Built-up | 48'-0' X 34'-0' | Interiors of all spaces includes : Foyer, Temple, Kitchen, Double height Living Room, Staircase, Bedrooms 01, 02, 03., Study, 2 Balconies.",
+                style: pw.TextStyle(
+                  font: regularFont,
+                  fontSize: 11,
+                  fontWeight: pw.FontWeight.normal,
+                ),
+              ),
+              pw.SizedBox(height: 15),
+              pw.Text(
+                "Thank You.",
+                style: pw.TextStyle(
+                  decoration: pw.TextDecoration.underline,
+                  fontSize: 12,
+                  font: calibriBoldFont,
+                ),
+              ),
+              pw.Text(
+                " Note : Additional GST would be applicable on professional fees on all categories. | Advance payment is non refundable in any case. | Design quote is totally upon requirement/scope described by client, quote may differ as requirements/scope changes. | Quote given are subjected to change without prior information. |CAD or SKP file of final designs additional charges are applicable.",
+                style: pw.TextStyle(
+                  fontSize: 9,
+                  font: calibriRegularFont,
+                ),
+              ),
+            ],
+          );
+        },
+      ),
+    );
+
+//////#rd Page
+    pdf.addPage(
+      pw.Page(
+        margin: const pw.EdgeInsets.all(20),
+        build: (pw.Context context) {
+          return pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                pw.Container(
+                  width: double.infinity,
+                  height: 100,
+                  margin: const pw.EdgeInsets.only(bottom: 2),
+                  decoration: pw.BoxDecoration(
+                    image: pw.DecorationImage(
+                      image: pw.MemoryImage(imageData),
+                      fit: pw.BoxFit.fitWidth,
+                    ),
+                  ),
+                ),
+                pw.SizedBox(height: 5),
+                pw.Text(
+                  "INTERIOR DESIGNING SERVICES & DRAWINGS - PREMIUM",
+                  style: pw.TextStyle(
+                    decoration: pw.TextDecoration.underline,
+                    fontSize: 15,
+                    font: calibriBoldFont,
+                    // color: PdfColor.fromHex("#000000"),
+                  ),
+                ),
+                pw.SizedBox(height: 5),
+                pw.Text(
+                  "01. Presenta on Floor Plan with Furniture layout (Conceptual)\n02. Presenta on Floor Plan (Civil Changes)*\n 03. Vastu Zoning\n04. Master Layout - Furniture & Civil Work.\n05. 3D Model Design - Each Space\n06. Civil Changes Working Drawing\n          a. Any civil changes\n,          b. Kitchen Pla orm Work\n          c. Tiling Work (Floor & Wall) \n07. False Ceiling Working\n08. Electrical layout & Schedule\n09. Wardrobe Segment & Presenta on drawing\n10. Master Bedroom/s working drawing\n",
+                  style: pw.TextStyle(
+                    font: regularFont,
+                    fontSize: 11,
+                    fontWeight: pw.FontWeight.normal,
+                  ),
+                ),
+              ]);
+        },
+      ),
+    );
 
     // Save and share the generated PDF
     await Printing.layoutPdf(
       name:
           'OFFER LATTER ${dateController.text.replaceAll('_', '/')} ${clientNameController.text.toUpperCase()}',
       onLayout: (PdfPageFormat format) async => pdf.save(),
+    );
+  }
+
+//Fees option
+
+// Widget to build PDF service section
+  pw.Widget buildServiceColumn(String title, List<Map<String, dynamic>> items,
+      pw.Font titleFont, pw.Font itemFont) {
+    return pw.Expanded(
+      child: pw.Column(
+        crossAxisAlignment: pw.CrossAxisAlignment.start,
+        children: [
+          pw.Container(
+            margin: pw.EdgeInsets.only(right: 10),
+            padding: const pw.EdgeInsets.symmetric(vertical: 4),
+            decoration: pw.BoxDecoration(
+              color: PdfColor.fromHex("#ECECEC"),
+              borderRadius: pw.BorderRadius.circular(6),
+            ),
+            child: pw.Center(
+              child: pw.Text(title,
+                  style: pw.TextStyle(font: titleFont, fontSize: 12)),
+            ),
+          ),
+          pw.SizedBox(height: 5),
+          ...items.asMap().entries.map((entry) {
+            final index = entry.key;
+            final text = entry.value['title'] ?? '';
+            return pw.Text(
+              "${String.fromCharCode(65 + index)}. $text",
+              style: pw.TextStyle(
+                  font: itemFont,
+                  fontSize: 10,
+                  color: PdfColor.fromHex("#424242")),
+            );
+          }).toList(),
+        ],
+      ),
     );
   }
 
@@ -664,13 +1104,11 @@ class _OfferLetterScreenState extends State<OfferLetterScreen> {
                             decoration: TextDecoration.none,
                           )),
                   Wrap(
-                    spacing: 10.0, // Horizontal spacing
-                    runSpacing:
-                        -8.0, // Vertical spacing between rows (optional)
-                    children: GlobalList.basicOptions.map((option) {
+                    spacing: 10.0,
+                    runSpacing: -8.0,
+                    children: basicOptions.map((option) {
                       return SizedBox(
-                        width: MediaQuery.of(context).size.width / 2 -
-                            16, // 2 columns
+                        width: MediaQuery.of(context).size.width / 2 - 16,
                         child: CheckboxListTile(
                           visualDensity:
                               const VisualDensity(horizontal: -4, vertical: -4),
@@ -679,16 +1117,13 @@ class _OfferLetterScreenState extends State<OfferLetterScreen> {
                             option['title'],
                             style: CommonTextStyle()
                                 .fillableTextFieldTextStyle
-                                .copyWith(
-                                  fontSize: SizeConfig.fontSize12,
-                                ),
+                                .copyWith(fontSize: SizeConfig.fontSize12),
                           ),
                           value: option['isChecked'],
                           onChanged: (val) {
                             setState(() {
                               option['isChecked'] = val!;
                             });
-                            print("======selected value : ---------${val}");
                           },
                           controlAffinity: ListTileControlAffinity.leading,
                         ),
@@ -709,13 +1144,11 @@ class _OfferLetterScreenState extends State<OfferLetterScreen> {
                             decoration: TextDecoration.none,
                           )),
                   Wrap(
-                    spacing: 10.0, // Horizontal spacing
-                    runSpacing:
-                        -8.0, // Vertical spacing between rows (optional)
-                    children: GlobalList.standardOptions.map((option) {
+                    spacing: 10.0,
+                    runSpacing: -8.0,
+                    children: standardOptions.map((option) {
                       return SizedBox(
-                        width: MediaQuery.of(context).size.width / 2 -
-                            16, // 2 columns
+                        width: MediaQuery.of(context).size.width / 2 - 16,
                         child: CheckboxListTile(
                           visualDensity:
                               const VisualDensity(horizontal: -4, vertical: -4),
@@ -724,16 +1157,13 @@ class _OfferLetterScreenState extends State<OfferLetterScreen> {
                             option['title'],
                             style: CommonTextStyle()
                                 .fillableTextFieldTextStyle
-                                .copyWith(
-                                  fontSize: SizeConfig.fontSize12,
-                                ),
+                                .copyWith(fontSize: SizeConfig.fontSize12),
                           ),
                           value: option['isChecked'],
                           onChanged: (val) {
                             setState(() {
                               option['isChecked'] = val!;
                             });
-                            print("======selected value : ---------${val}");
                           },
                           controlAffinity: ListTileControlAffinity.leading,
                         ),
@@ -754,13 +1184,11 @@ class _OfferLetterScreenState extends State<OfferLetterScreen> {
                             decoration: TextDecoration.none,
                           )),
                   Wrap(
-                    spacing: 10.0, // Horizontal spacing
-                    runSpacing:
-                        -8.0, // Vertical spacing between rows (optional)
-                    children: GlobalList.premiumOptions.map((option) {
+                    spacing: 10.0,
+                    runSpacing: -8.0,
+                    children: premiumOptions.map((option) {
                       return SizedBox(
-                        width: MediaQuery.of(context).size.width / 2 -
-                            16, // 2 columns
+                        width: MediaQuery.of(context).size.width / 2 - 16,
                         child: CheckboxListTile(
                           visualDensity:
                               const VisualDensity(horizontal: -4, vertical: -4),
@@ -769,16 +1197,13 @@ class _OfferLetterScreenState extends State<OfferLetterScreen> {
                             option['title'],
                             style: CommonTextStyle()
                                 .fillableTextFieldTextStyle
-                                .copyWith(
-                                  fontSize: SizeConfig.fontSize12,
-                                ),
+                                .copyWith(fontSize: SizeConfig.fontSize12),
                           ),
                           value: option['isChecked'],
                           onChanged: (val) {
                             setState(() {
                               option['isChecked'] = val!;
                             });
-                            print("======selected value : ---------${val}");
                           },
                           controlAffinity: ListTileControlAffinity.leading,
                         ),
