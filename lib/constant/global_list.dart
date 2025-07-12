@@ -89,6 +89,21 @@ class GlobalList {
     "Architecture Interior - AI"
   ];
 
+  static List<String> feesStage = [
+    "Advance",
+    "Final 2D & 3D Designs",
+    "Stage 1 Working drgs.",
+    "Stage 2 Working drgs.",
+    "Stage 3 Working drgs.",
+    "Final Completion."
+  ];
+
+  static List<String> standardFeesStage = [
+    "Advance",
+    "Final Designs",
+    "All Working drgs.",
+  ];
+
   static List<String> scopOfWorkList = [
     "Celling",
     "Electrical",
