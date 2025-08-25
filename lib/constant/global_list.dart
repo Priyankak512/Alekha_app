@@ -12,10 +12,13 @@ import 'package:alekha/screens/forms_module/form_view/other_forn_screen.dart';
 import 'package:alekha/screens/invoice_generator/invoice_generator_view/invoice_generator_screen.dart';
 import 'package:alekha/screens/meeting_module/meeting_view/meeting_screen.dart';
 import 'package:alekha/screens/notes_module/notes_view/notes_screen.dart';
-import 'package:alekha/screens/offer_latter_module/offer_latter_view/offer_latter_screen.dart';
+import 'package:alekha/screens/offer_latter_module/offer_latter_view/architecture_offer_latter_screen.dart';
+import 'package:alekha/screens/offer_latter_module/offer_latter_view/interior_offer_latter_screen.dart';
 import 'package:alekha/screens/project_files_module/project_file_view/project_files_screen.dart';
 import 'package:alekha/screens/selection_module/selection_screen.dart';
+import 'package:alekha/screens/share_module/message_screen.dart';
 import 'package:alekha/screens/share_module/share_view/location_screen.dart';
+import 'package:alekha/screens/share_module/share_view/mail_screen.dart';
 import 'package:alekha/screens/share_module/share_view/profile_screen.dart';
 import 'package:alekha/screens/share_module/share_view/share_sceen.dart';
 import 'package:alekha/screens/share_module/share_view/social_screen.dart';
@@ -56,6 +59,7 @@ class GlobalList {
   //   {"id": 9, "title": "Repair/ Renovate", "isChecked": false},
   // ];
 
+//-=================Architecture Offer Letter
   //Professional Fees List
   static List<Map<String, dynamic>> basicOptions = [
     {"id": 1, "title": "2D Layout", "isChecked": false},
@@ -81,6 +85,31 @@ class GlobalList {
     {"id": 6, "title": "Electrical", "isChecked": false},
     {"id": 7, "title": "All Details", "isChecked": false},
     {"id": 8, "title": "Site & Selection", "isChecked": false},
+  ];
+
+//========Interior Offer Letter
+  static List<Map<String, dynamic>> interiorPremiumOptions = [
+    {"id": 1, "title": "2D Layout", "isChecked": false},
+    {"id": 2, "title": "3D Designs", "isChecked": false},
+    {"id": 3, "title": "3D Render", "isChecked": false},
+    {"id": 4, "title": "Carpentry Details", "isChecked": false},
+    {"id": 5, "title": "Ceiling & Electrical", "isChecked": false},
+    {"id": 6, "title": "All Details", "isChecked": false},
+    {"id": 7, "title": "Site & Selection", "isChecked": false},
+  ];
+
+  static List<Map<String, dynamic>> interiorStandardOptions = [
+    {"id": 1, "title": "2D Layout", "isChecked": false},
+    {"id": 2, "title": "Quotation", "isChecked": false},
+    {"id": 3, "title": "3D Designs", "isChecked": false},
+    {"id": 4, "title": "3D Render", "isChecked": false},
+    {"id": 5, "title": "Plan Detail Dim.", "isChecked": false},
+  ];
+
+   static List<Map<String, dynamic>> interiorBasicOptions = [
+    {"id": 1, "title": "2D Existing Layout", "isChecked": false},
+    {"id": 2, "title": "2D Furniture Plan", "isChecked": false},
+    {"id": 3, "title": "Quotation", "isChecked": false},
   ];
 
   static List<String> projectCategory = [
@@ -240,7 +269,7 @@ class GlobalList {
       "id": "12",
       "title": "Draw",
       "icon": PickImages.drawIcon,
-      "screen": const OfferLetterScreen(),
+      "screen": null,
     }
   ];
 
@@ -267,8 +296,14 @@ class GlobalList {
     {
       "id": "4",
       "title": "Offer Letter",
-      "icon": PickImages.interiorIcon,
-      "screen": const OfferLetterScreen(),
+      "icon": PickImages.architectureOfferLetterIcon,
+      "screen": const ArchitectureOfferLetterScreen(),
+    },
+    {
+      "id": "5",
+      "title": "Offer Letter",
+      "icon": PickImages.interiorOfferLetterIcon,
+      "screen": const InteriorOfferLetterScreen(),
     },
   ];
 
@@ -291,6 +326,18 @@ class GlobalList {
       "title": "Social",
       "icon": PickImages.socialIcon,
       "screen": const SocialScreen(),
+    },
+    {
+      "id": "4",
+      "title": "Message",
+      "icon": PickImages.messageReplyIcon,
+      "screen": const MessageScreen(),
+    },
+    {
+      "id": "5",
+      "title": "Mail",
+      "icon": PickImages.mailReplyIcon,
+      "screen": const MailScreen(),
     },
   ];
 

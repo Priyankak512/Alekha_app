@@ -15,9 +15,11 @@ class PickImages {
   static const updatePythagorasImage = "assets/images/pythagoras_image_update.png";
   static const updatePythagorasDecimalTable = "assets/images/pythagoras_decimal_tabel_update.png";
   static const offerLetterHeaderImage = "assets/images/offer_letter_header_image.png";
+  static const offerLetterInteriorHeaderImage = "assets/images/offer_letter_interior_header.png";
   static const offerLaterProcessWorkImage = "assets/images/offer_later_process_work_image.png";
   static const offerLaterScopOfWorkImage = "assets/images/offer_later_scop_of_work_image.png";
   static const offerLaterFooterImage = "assets/images/offer_later_footer_image.png";
+  static const offerLetterFooterProfileLinkImage = "assets/images/offer_letter_footer_profile_link.png";
   static const offerLetterFeesImage = "assets/images/offer_letter_fees_image.png";
 
 
@@ -27,6 +29,8 @@ class PickImages {
   static const pdfIcon = "assets/icons/pdf_icon.svg";
   static const architectureIcon = "assets/icons/architecture_icon.svg";
   static const interiorIcon = "assets/icons/interior_icon.svg";
+  static const architectureOfferLetterIcon = "assets/icons/architecture_offer_letter_icon.svg";
+  static const interiorOfferLetterIcon = "assets/icons/interior_offer_letter_icon.svg";
   static const otherIcon = "assets/icons/other_icon.svg";
   static const calculatorIcon = "assets/icons/calculator_icon.svg";
   static const siteVisitIcon = "assets/icons/site_visit_icon.svg";
@@ -57,5 +61,7 @@ class PickImages {
   static const waterTankIcon = "assets/icons/water_tank_icon.svg";
   static const cameraIcon = "assets/icons/camera_icon.svg";
   static const areaLengthIcon = "assets/icons/area_length_icon.svg";
+  static const mailReplyIcon = "assets/icons/mail_reply_icon.svg";
+  static const messageReplyIcon = "assets/icons/message_reply_icon.svg";
  
 }

@@ -475,7 +475,7 @@ class _LocationScreenState extends State<LocationScreen> {
                         children: [
                           TextSpan(text: "Hi,\n${nameController.text}\n\n"),
                           TextSpan(
-                            text: "alekha architects,\n\n",
+                            text: "âlekha architects,\n\n",
                             style: CommonTextStyle().authSubTitleTextStyle.copyWith(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black,
@@ -503,7 +503,7 @@ class _LocationScreenState extends State<LocationScreen> {
                           TextSpan(
                               text: "Regards\n${_selectedRegardsType.toString()}\n"),
                           TextSpan(
-                            text: "alekha architects",
+                            text: "âlekha architects",
                             style: CommonTextStyle().authSubTitleTextStyle.copyWith(
                                   fontWeight: FontWeight.bold,
                                   color: Colors.black,
@@ -534,7 +534,7 @@ class _LocationScreenState extends State<LocationScreen> {
                           color: PickColors.transparentColor,
                           onPressed: () {
                             String message =
-                                "Hi,\n${nameController.text}\n\nalekha architects,\n\nShop no. 28-29, Hiranagar, nr. old vijay cinema, Bamroli road, Pandesara, Surat\n\nFor exact location please click on the link below:\nhttps://maps.app.goo.gl/yyvjEDHmwLHJmLor8\n\n\nRegards\n${_selectedRegardsType.toString()}\nalekha architects";
+                                "Hi,\n${nameController.text}\n\nâlekha architects,\n\nShop no. 28-29, Hiranagar, nr. old vijay cinema, Bamroli road, Pandesara, Surat\n\nFor exact location please click on the link below:\nhttps://maps.app.goo.gl/yyvjEDHmwLHJmLor8\n\n\nRegards\n${_selectedRegardsType.toString()}\nâlekha architects";
                             Clipboard.setData(ClipboardData(text: message));
                             ScaffoldMessenger.of(context).showSnackBar(
                               const SnackBar(
