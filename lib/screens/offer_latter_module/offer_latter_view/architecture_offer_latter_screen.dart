@@ -310,316 +310,352 @@ This quote is applicable only for ${monthController.text} month from the commenc
         (await rootBundle.load(PickImages.offerLetterFooterProfileLinkImage))
             .buffer
             .asUint8List();
-
     Uint8List a4PdfBgImage =
         (await rootBundle.load(PickImages.a4PdfBgImage)).buffer.asUint8List();
-
     pdf.addPage(
       pw.Page(
         margin: const pw.EdgeInsets.all(20),
         build: (pw.Context context) {
-          return pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              pw.Container(
-                width: double.infinity,
-                height: 100,
-                margin: const pw.EdgeInsets.only(bottom: 2),
-                decoration: pw.BoxDecoration(
-                  image: pw.DecorationImage(
-                    image: pw.MemoryImage(imageData),
-                    fit: pw.BoxFit.fitWidth,
-                  ),
-                ),
-              ),
-              pw.SizedBox(height: 5),
-              pw.Row(
-                children: [
-                  pw.Spacer(),
-                  pw.Text(
-                    "Date : ${dateController.text}",
-                    style: pw.TextStyle(
-                        font: regularFont,
-                        fontSize: 15,
-                        fontWeight: pw.FontWeight.normal,
-                        color: PdfColor.fromHex("#616161")),
-                  ),
-                ],
-              ),
-              pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: pw.CrossAxisAlignment.start,
-                children: [
-                  pw.Expanded(
-                    // flex: 2,
-                    child: buildInlineTextFieldRow(
-                        'CLIENT : ',
-                        "${clientNameController.text}\n${contactNoController.text}",
-                        calibriBoldFont,
-                        calibriRegularFont),
-                  ),
-                  pw.Expanded(
-                    child: buildInlineTextFieldRow(
-                      'LOCATION : ',
-                      locationController.text,
-                      calibriBoldFont,
-                      calibriRegularFont,
-                    ),
-                  ),
-                ],
-              ),
-              pw.SizedBox(height: 5),
-              pw.RichText(
-                text: pw.TextSpan(
-                  style: pw.TextStyle(
-                    font: regularFont,
-                    fontSize: 10,
-                    color: PdfColor.fromHex("#010101"),
-                  ),
-                  children: [
-                    pw.TextSpan(
-                      text:
-                          "Dear Sir,\nWe are pleased to submit herewith proposal cum contract mentioning detailed scope of work and commercial terms & conditions for your kind perusal & action for your upcoming project. \nWe at ",
-                      style: pw.TextStyle(
-                        font: regularFont,
-                        fontSize: 11,
-                        fontWeight: pw.FontWeight.normal,
-                      ),
-                    ),
-                    pw.TextSpan(
-                      text: "âlekha architects",
-                      style: pw.TextStyle(
-                        font: boldFont,
-                        fontSize: 11,
-                        fontWeight: pw.FontWeight.bold,
-                        color: PdfColor.fromHex("#000000"),
-                      ),
-                    ),
-                    pw.TextSpan(
-                      text:
-                          ", are an efficient professional Architectural & Interior Designing firm providing all Architectural, Interior Design, Structural & Civil Services under single roof, with an experienced, qualified & trained team we can assure you best of our services.",
-                      style: pw.TextStyle(
-                        font: regularFont,
-                        fontSize: 11,
-                        fontWeight: pw.FontWeight.normal,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-
-              pw.SizedBox(height: 10),
-              pw.Text(
-                " 01. PROCESS OF WORK",
-                style: pw.TextStyle(
-                  decoration: pw.TextDecoration.underline,
-                  fontSize: 15,
-                  font: calibriBoldFont,
-                  // color: PdfColor.fromHex("#000000"),
-                ),
-              ),
-              pw.Container(
-                width: double.infinity,
-                height: 300,
-                // margin: const pw.EdgeInsets.only(bottom: 2),
-                decoration: pw.BoxDecoration(
-                  image: pw.DecorationImage(
-                    image: pw.MemoryImage(offerLaterProcessWorkImage),
-                    fit: pw.BoxFit.fitWidth,
-                  ),
-                ),
-              ),
-              pw.SizedBox(height: 5),
-              pw.Text(
-                "02. SCOPE OF WORK - PREMIUM",
-                style: pw.TextStyle(
-                  decoration: pw.TextDecoration.underline,
-                  fontSize: 15,
-                  font: calibriBoldFont,
-                  // color: PdfColor.fromHex("#000000"),
-                ),
-              ),
-              pw.SizedBox(
-                height: 5,
-              ),
-              pw.Container(
-                  padding: const pw.EdgeInsets.only(
-                    bottom: 10,
-                    left: 10,
-                    top: 10,
-                  ),
-                  decoration: pw.BoxDecoration(
-                    color: PdfColor.fromHex("#FFFFFF"),
-                    borderRadius: pw.BorderRadius.circular(5),
-                    border: pw.Border.all(
-                        color: PdfColor.fromHex("#BDBDBD"), width: 0.2),
-                  ),
-                  child: pw.Row(
-                    crossAxisAlignment: pw.CrossAxisAlignment.start,
-                    children: [
-                      pw.Container(
-                        // padding: const pw.EdgeInsets.all(5),
-                        width: 120, // Adjust image width as per your design
-                        height: 120,
-
-                        child: pw.Image(
-                          pw.MemoryImage(offerLaterScopOfWorkImage),
-                          fit: pw.BoxFit.contain,
-                        ),
-                      ),
-
-                      pw.SizedBox(width: 12), // Spacing between image and grid
-
-                      /// 🔹 RIGHT SIDE GRID CONTAINER
-                      pw.Expanded(
-                        child: pw.Column(
-                          crossAxisAlignment: pw.CrossAxisAlignment.start,
-                          children: List.generate(
-                              (selectedOptions.length / 3).ceil(), (rowIndex) {
-                            final chunk = selectedOptions
-                                .skip(rowIndex * 3)
-                                .take(3)
-                                .toList();
-                            return pw.Row(
-                              crossAxisAlignment: pw.CrossAxisAlignment.center,
-                              mainAxisAlignment: pw.MainAxisAlignment.center,
-                              children: List.generate(3, (colIndex) {
-                                if (colIndex < chunk.length) {
-                                  return pw.Expanded(
-                                    child: pw.Container(
-                                        padding: const pw.EdgeInsets.only(
-                                            left: 6,
-                                            bottom: 6,
-                                            right: 6,
-                                            top: 6),
-                                        margin: const pw.EdgeInsets.only(
-                                            top: 4, bottom: 4, right: 12),
-                                        decoration: pw.BoxDecoration(
-                                          color: PdfColor.fromHex("#EBECEC"),
-                                          borderRadius:
-                                              pw.BorderRadius.circular(5),
-                                        ),
-                                        alignment: pw.Alignment.center,
-                                        // child: pw.Text(
-                                        //   chunk[colIndex]['title'],
-                                        //   style: pw.TextStyle(
-                                        //     font: calibriBoldFont,
-                                        //     fontSize: 15,
-                                        //   ),
-                                        // ),
-                                        child: pw.FittedBox(
-                                            fit: pw.BoxFit.scaleDown,
-                                            // alignment: pw.Alignment.centerLeft,
-                                            child: pw.Center(
-                                              child: pw.Text(
-                                                chunk[colIndex]['title'],
-                                                style: pw.TextStyle(
-                                                  font: calibriBoldFont,
-                                                  fontSize:
-                                                      15, // Starting font size, will scale down
-                                                ),
-                                              ),
-                                            ))),
-                                  );
-                                } else {
-                                  return pw.Expanded(child: pw.Container());
-                                }
-                              }),
-                            );
-                          }),
-                        ),
-                      ),
-                    ],
-                  )),
-              // pw.SizedBox(height: 30),
-              pw.Spacer(),
-              // pw.Column(
-              //   crossAxisAlignment: pw.CrossAxisAlignment.stretch, // full width
-              //   children: [
-              /// Top line in full width, centered
-              // pw.Container(
-              //   width: double.infinity,
-              //   child: pw.RichText(
-              //     textAlign:
-              //         pw.TextAlign.center, // 👈 center within full width
-              //     text: pw.TextSpan(
-              //       children: [
-              //         pw.TextSpan(
-              //           text:
-              //               "Have a look on our Work Profile by clicking on : ",
-              //           style: pw.TextStyle(
-              //             fontSize: 12,
-              //             fontWeight: pw.FontWeight.bold,
-              //             font: boldFont,
-              //           ),
-              //         ),
-              //         pw.TextSpan(
-              //           text: "âlekha architects",
-              //           style: pw.TextStyle(
-              //             fontSize: 12,
-              //             fontWeight: pw.FontWeight.bold,
-              //             font: boldFont,
-              //           ),
-              //         ),
-              //       ],
-              //     ),
-              //   ),
-              // ),
-
-              pw.UrlLink(
-                destination:
-                    "https://drive.google.com/file/d/1P_2TqdiB-DCNpGdnzNHFniVyr3EPv0J5/view?usp=sharing",
-                child: pw.Container(
-                  width: double.infinity,
-                  height: 15,
+          return pw.FullPage(
+              ignoreMargins: true, // Ignore margins for full control
+              child: pw.Container(
+                  width: 60,
+                  height: 60,
                   decoration: pw.BoxDecoration(
                     image: pw.DecorationImage(
-                      image: pw.MemoryImage(offerLetterFooterProfileLinkImage),
-                      fit: pw.BoxFit.fitWidth,
+                      image: pw.MemoryImage(
+                          a4PdfBgImage), // This will be your background
+                      fit: pw.BoxFit.contain,
                     ),
                   ),
-                ),
-              ),
+                  child: pw.Padding(
+                      padding: const pw.EdgeInsets.all(20),
+                      child: pw.Column(
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: [
+                          pw.Container(
+                            width: double.infinity,
+                            height: 100,
+                            margin: const pw.EdgeInsets.only(bottom: 2),
+                            decoration: pw.BoxDecoration(
+                              image: pw.DecorationImage(
+                                image: pw.MemoryImage(imageData),
+                                fit: pw.BoxFit.fitWidth,
+                              ),
+                            ),
+                          ),
+                          pw.SizedBox(height: 5),
+                          pw.Row(
+                            children: [
+                              pw.Spacer(),
+                              pw.Text(
+                                "Date : ${dateController.text}",
+                                style: pw.TextStyle(
+                                    font: regularFont,
+                                    fontSize: 15,
+                                    fontWeight: pw.FontWeight.normal,
+                                    color: PdfColor.fromHex("#616161")),
+                              ),
+                            ],
+                          ),
+                          pw.Row(
+                            mainAxisAlignment:
+                                pw.MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: pw.CrossAxisAlignment.start,
+                            children: [
+                              pw.Expanded(
+                                // flex: 2,
+                                child: buildInlineTextFieldRow(
+                                    'CLIENT : ',
+                                    "${clientNameController.text}\n${contactNoController.text}",
+                                    calibriBoldFont,
+                                    calibriRegularFont),
+                              ),
+                              pw.Expanded(
+                                child: buildInlineTextFieldRow(
+                                  'LOCATION : ',
+                                  locationController.text,
+                                  calibriBoldFont,
+                                  calibriRegularFont,
+                                ),
+                              ),
+                            ],
+                          ),
+                          pw.SizedBox(height: 5),
+                          pw.RichText(
+                            text: pw.TextSpan(
+                              style: pw.TextStyle(
+                                font: regularFont,
+                                fontSize: 10,
+                                color: PdfColor.fromHex("#010101"),
+                              ),
+                              children: [
+                                pw.TextSpan(
+                                  text:
+                                      "Dear Sir,\nWe are pleased to submit herewith proposal cum contract mentioning detailed scope of work and commercial terms & conditions for your kind perusal & action for your upcoming project. \nWe at ",
+                                  style: pw.TextStyle(
+                                    font: regularFont,
+                                    fontSize: 11,
+                                    fontWeight: pw.FontWeight.normal,
+                                  ),
+                                ),
+                                pw.TextSpan(
+                                  text: "âlekha architects",
+                                  style: pw.TextStyle(
+                                    font: boldFont,
+                                    fontSize: 11,
+                                    fontWeight: pw.FontWeight.bold,
+                                    color: PdfColor.fromHex("#000000"),
+                                  ),
+                                ),
+                                pw.TextSpan(
+                                  text:
+                                      ", are an efficient professional Architectural & Interior Designing firm providing all Architectural, Interior Design, Structural & Civil Services under single roof, with an experienced, qualified & trained team we can assure you best of our services.",
+                                  style: pw.TextStyle(
+                                    font: regularFont,
+                                    fontSize: 11,
+                                    fontWeight: pw.FontWeight.normal,
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
 
-              // pw.SizedBox(height: 5),
+                          pw.SizedBox(height: 10),
+                          pw.Text(
+                            " 01. PROCESS OF WORK",
+                            style: pw.TextStyle(
+                              decoration: pw.TextDecoration.underline,
+                              fontSize: 15,
+                              font: calibriBoldFont,
+                              // color: PdfColor.fromHex("#000000"),
+                            ),
+                          ),
+                          pw.Container(
+                            width: double.infinity,
+                            height: 300,
+                            // margin: const pw.EdgeInsets.only(bottom: 2),
+                            decoration: pw.BoxDecoration(
+                              image: pw.DecorationImage(
+                                image:
+                                    pw.MemoryImage(offerLaterProcessWorkImage),
+                                fit: pw.BoxFit.fitWidth,
+                              ),
+                            ),
+                          ),
+                          pw.SizedBox(height: 5),
+                          pw.Text(
+                            "02. SCOPE OF WORK - PREMIUM",
+                            style: pw.TextStyle(
+                              decoration: pw.TextDecoration.underline,
+                              fontSize: 15,
+                              font: calibriBoldFont,
+                              // color: PdfColor.fromHex("#000000"),
+                            ),
+                          ),
+                          pw.SizedBox(
+                            height: 5,
+                          ),
+                          pw.Container(
+                              padding: const pw.EdgeInsets.only(
+                                bottom: 10,
+                                left: 10,
+                                top: 10,
+                              ),
+                              decoration: pw.BoxDecoration(
+                                color: PdfColor.fromHex("#FFFFFF"),
+                                borderRadius: pw.BorderRadius.circular(5),
+                                border: pw.Border.all(
+                                    color: PdfColor.fromHex("#BDBDBD"),
+                                    width: 0.2),
+                              ),
+                              child: pw.Row(
+                                crossAxisAlignment: pw.CrossAxisAlignment.start,
+                                children: [
+                                  pw.Container(
+                                    // padding: const pw.EdgeInsets.all(5),
+                                    width:
+                                        120, // Adjust image width as per your design
+                                    height: 120,
 
-              /// Full width divider
-              pw.Divider(
-                thickness: 0.5,
-                color: PdfColors.grey600,
-              ),
+                                    child: pw.Image(
+                                      pw.MemoryImage(offerLaterScopOfWorkImage),
+                                      fit: pw.BoxFit.contain,
+                                    ),
+                                  ),
 
-              // pw.SizedBox(height: 4),
+                                  pw.SizedBox(
+                                      width:
+                                          12), // Spacing between image and grid
 
-              /// Address text in full width, centered
-              //     pw.Container(
-              //       width: double.infinity,
-              //       child: pw.Text(
-              //         "28-29, Hiranagar, G.H.B., Bamroli Rd., Pandesara, Surat - 394221",
-              //         textAlign: pw.TextAlign.center, // 👈 centered
-              //         style: pw.TextStyle(
-              //           fontSize: 8,
-              //           letterSpacing: 1.2,
-              //           font: regularFont,
-              //           color: PdfColors.grey800,
-              //         ),
-              //       ),
-              //     ),
-              //   ],
-              // ),
+                                  /// 🔹 RIGHT SIDE GRID CONTAINER
+                                  pw.Expanded(
+                                    child: pw.Column(
+                                      crossAxisAlignment:
+                                          pw.CrossAxisAlignment.start,
+                                      children: List.generate(
+                                          (selectedOptions.length / 3).ceil(),
+                                          (rowIndex) {
+                                        final chunk = selectedOptions
+                                            .skip(rowIndex * 3)
+                                            .take(3)
+                                            .toList();
+                                        return pw.Row(
+                                          crossAxisAlignment:
+                                              pw.CrossAxisAlignment.center,
+                                          mainAxisAlignment:
+                                              pw.MainAxisAlignment.center,
+                                          children:
+                                              List.generate(3, (colIndex) {
+                                            if (colIndex < chunk.length) {
+                                              return pw.Expanded(
+                                                child: pw.Container(
+                                                    padding: const pw
+                                                        .EdgeInsets.only(
+                                                        left: 6,
+                                                        bottom: 6,
+                                                        right: 6,
+                                                        top: 6),
+                                                    margin: const pw
+                                                        .EdgeInsets.only(
+                                                        top: 4,
+                                                        bottom: 4,
+                                                        right: 12),
+                                                    decoration:
+                                                        pw.BoxDecoration(
+                                                      color: PdfColor.fromHex(
+                                                          "#EBECEC"),
+                                                      borderRadius:
+                                                          pw.BorderRadius
+                                                              .circular(5),
+                                                    ),
+                                                    alignment:
+                                                        pw.Alignment.center,
+                                                    // child: pw.Text(
+                                                    //   chunk[colIndex]['title'],
+                                                    //   style: pw.TextStyle(
+                                                    //     font: calibriBoldFont,
+                                                    //     fontSize: 15,
+                                                    //   ),
+                                                    // ),
+                                                    child: pw.FittedBox(
+                                                        fit:
+                                                            pw.BoxFit.scaleDown,
+                                                        // alignment: pw.Alignment.centerLeft,
+                                                        child: pw.Center(
+                                                          child: pw.Text(
+                                                            chunk[colIndex]
+                                                                ['title'],
+                                                            style: pw.TextStyle(
+                                                              font:
+                                                                  calibriBoldFont,
+                                                              fontSize:
+                                                                  15, // Starting font size, will scale down
+                                                            ),
+                                                          ),
+                                                        ))),
+                                              );
+                                            } else {
+                                              return pw.Expanded(
+                                                  child: pw.Container());
+                                            }
+                                          }),
+                                        );
+                                      }),
+                                    ),
+                                  ),
+                                ],
+                              )),
+                          // pw.SizedBox(height: 30),
+                          pw.Spacer(),
+                          // pw.Column(
+                          //   crossAxisAlignment: pw.CrossAxisAlignment.stretch, // full width
+                          //   children: [
+                          /// Top line in full width, centered
+                          // pw.Container(
+                          //   width: double.infinity,
+                          //   child: pw.RichText(
+                          //     textAlign:
+                          //         pw.TextAlign.center, // 👈 center within full width
+                          //     text: pw.TextSpan(
+                          //       children: [
+                          //         pw.TextSpan(
+                          //           text:
+                          //               "Have a look on our Work Profile by clicking on : ",
+                          //           style: pw.TextStyle(
+                          //             fontSize: 12,
+                          //             fontWeight: pw.FontWeight.bold,
+                          //             font: boldFont,
+                          //           ),
+                          //         ),
+                          //         pw.TextSpan(
+                          //           text: "âlekha architects",
+                          //           style: pw.TextStyle(
+                          //             fontSize: 12,
+                          //             fontWeight: pw.FontWeight.bold,
+                          //             font: boldFont,
+                          //           ),
+                          //         ),
+                          //       ],
+                          //     ),
+                          //   ),
+                          // ),
 
-              pw.Container(
-                width: double.infinity,
-                height: 25,
-                decoration: pw.BoxDecoration(
-                  image: pw.DecorationImage(
-                    image: pw.MemoryImage(offerLaterFooterImage),
-                    fit: pw.BoxFit.fitWidth,
-                  ),
-                ),
-              ),
-            ],
-          );
+                          pw.UrlLink(
+                            destination:
+                                "https://drive.google.com/file/d/1P_2TqdiB-DCNpGdnzNHFniVyr3EPv0J5/view?usp=sharing",
+                            child: pw.Container(
+                              width: double.infinity,
+                              height: 15,
+                              decoration: pw.BoxDecoration(
+                                image: pw.DecorationImage(
+                                  image: pw.MemoryImage(
+                                      offerLetterFooterProfileLinkImage),
+                                  fit: pw.BoxFit.fitWidth,
+                                ),
+                              ),
+                            ),
+                          ),
+
+                          // pw.SizedBox(height: 5),
+
+                          /// Full width divider
+                          pw.Divider(
+                            thickness: 0.5,
+                            color: PdfColors.grey600,
+                          ),
+
+                          // pw.SizedBox(height: 4),
+
+                          /// Address text in full width, centered
+                          //     pw.Container(
+                          //       width: double.infinity,
+                          //       child: pw.Text(
+                          //         "28-29, Hiranagar, G.H.B., Bamroli Rd., Pandesara, Surat - 394221",
+                          //         textAlign: pw.TextAlign.center, // 👈 centered
+                          //         style: pw.TextStyle(
+                          //           fontSize: 8,
+                          //           letterSpacing: 1.2,
+                          //           font: regularFont,
+                          //           color: PdfColors.grey800,
+                          //         ),
+                          //       ),
+                          //     ),
+                          //   ],
+                          // ),
+
+                          pw.Container(
+                            width: double.infinity,
+                            height: 25,
+                            decoration: pw.BoxDecoration(
+                              image: pw.DecorationImage(
+                                image: pw.MemoryImage(offerLaterFooterImage),
+                                fit: pw.BoxFit.fitWidth,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ))));
         },
       ),
     );
@@ -649,233 +685,248 @@ This quote is applicable only for ${monthController.text} month from the commenc
       pw.Page(
         margin: const pw.EdgeInsets.all(20),
         build: (pw.Context context) {
-          return pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              pw.Container(
-                width: double.infinity,
-                height: 100,
-                margin: const pw.EdgeInsets.only(bottom: 2),
-                decoration: pw.BoxDecoration(
-                  image: pw.DecorationImage(
-                    image: pw.MemoryImage(imageData),
-                    fit: pw.BoxFit.fitWidth,
+          return pw.FullPage(
+              ignoreMargins: true, // Ignore margins for full control
+              child: pw.Container(
+                  width: 60,
+                  height: 60,
+                  decoration: pw.BoxDecoration(
+                    image: pw.DecorationImage(
+                      image: pw.MemoryImage(
+                          a4PdfBgImage), // This will be your background
+                      fit: pw.BoxFit.contain,
+                    ),
                   ),
-                ),
-              ),
-              pw.SizedBox(height: 5),
-              pw.Text(
-                "03. PROFESSIONAL FEES",
-                style: pw.TextStyle(
-                  decoration: pw.TextDecoration.underline,
-                  fontSize: 15,
-                  font: calibriBoldFont,
-                  // color: PdfColor.fromHex("#000000"),
-                ),
-              ),
-              pw.SizedBox(height: 5),
-              pw.Text(
-                " We are charging professional fee in the following stages consistent with the work done plus other charges and reimbursable expenses as agreed upon :",
-                style: pw.TextStyle(
-                  font: regularFont,
-                  fontSize: 11,
-                  fontWeight: pw.FontWeight.normal,
-                ),
-              ),
-              pw.SizedBox(height: 10),
-              pw.RichText(
-                text: pw.TextSpan(
-                  style: pw.TextStyle(
-                    font: regularFont,
-                    fontSize: 10,
-                    color: PdfColor.fromHex("#010101"),
-                  ),
-                  children: [
-                    pw.TextSpan(
-                      text: "All specified ",
-                      style: pw.TextStyle(
-                        font: regularFont,
-                        fontSize: 11,
-                        fontWeight: pw.FontWeight.normal,
-                      ),
-                    ),
-                    pw.TextSpan(
-                      text: "Scope of Work ",
-                      style: pw.TextStyle(
-                        font: boldFont,
-                        fontSize: 11,
-                        fontWeight: pw.FontWeight.bold,
-                        color: PdfColor.fromHex("#000000"),
-                      ),
-                    ),
-                    pw.TextSpan(
-                      text: "our fees charges would be as follows",
-                      style: pw.TextStyle(
-                        font: regularFont,
-                        fontSize: 11,
-                        fontWeight: pw.FontWeight.normal,
-                      ),
-                    ),
-                  ],
-                ),
-              ),
-              // pw.Text("${basicOptions}"),
-              pw.SizedBox(
-                height: 5,
-              ),
-              pw.Container(
-                // padding: const pw.EdgeInsets.all(12),
-                // padding:pw. EdgeInsets.only(top: 10,bottom: 10,left: 10),
-                decoration: pw.BoxDecoration(
-                  // color: PdfColor.fromHex("#F5F5F5"),
-                  borderRadius: pw.BorderRadius.circular(8),
-                  border: pw.Border.all(
-                      color: PdfColor.fromHex("#BDBDBD"), width: 0.5),
-                ),
-                child: pw.Row(
-                  crossAxisAlignment: pw.CrossAxisAlignment.start,
-                  children: [
-                    /// 🔹 First Column - Icon + Title
-                    pw.Container(
-                      width: 120,
-                      height: 120,
-                      padding: const pw.EdgeInsets.all(8),
-                      margin: pw.EdgeInsets.only(left: 10, top: 10, bottom: 10),
-                      decoration: pw.BoxDecoration(
-                        color: PdfColor.fromHex("#ECECEC"),
-                        borderRadius: pw.BorderRadius.circular(10),
-                      ),
-                      child: pw.Image(
-                        pw.MemoryImage(offerLetterFeesImage),
-                      ),
-                    ),
+                  child: pw.Padding(
+                    padding: const pw.EdgeInsets.all(20),
+                    child: pw.Column(
+                      crossAxisAlignment: pw.CrossAxisAlignment.start,
+                      children: [
+                        pw.Container(
+                          width: double.infinity,
+                          height: 100,
+                          margin: const pw.EdgeInsets.only(bottom: 2),
+                          decoration: pw.BoxDecoration(
+                            image: pw.DecorationImage(
+                              image: pw.MemoryImage(imageData),
+                              fit: pw.BoxFit.fitWidth,
+                            ),
+                          ),
+                        ),
+                        pw.SizedBox(height: 5),
+                        pw.Text(
+                          "03. PROFESSIONAL FEES",
+                          style: pw.TextStyle(
+                            decoration: pw.TextDecoration.underline,
+                            fontSize: 15,
+                            font: calibriBoldFont,
+                            // color: PdfColor.fromHex("#000000"),
+                          ),
+                        ),
+                        pw.SizedBox(height: 5),
+                        pw.Text(
+                          " We are charging professional fee in the following stages consistent with the work done plus other charges and reimbursable expenses as agreed upon :",
+                          style: pw.TextStyle(
+                            font: regularFont,
+                            fontSize: 11,
+                            fontWeight: pw.FontWeight.normal,
+                          ),
+                        ),
+                        pw.SizedBox(height: 10),
+                        pw.RichText(
+                          text: pw.TextSpan(
+                            style: pw.TextStyle(
+                              font: regularFont,
+                              fontSize: 10,
+                              color: PdfColor.fromHex("#010101"),
+                            ),
+                            children: [
+                              pw.TextSpan(
+                                text: "All specified ",
+                                style: pw.TextStyle(
+                                  font: regularFont,
+                                  fontSize: 11,
+                                  fontWeight: pw.FontWeight.normal,
+                                ),
+                              ),
+                              pw.TextSpan(
+                                text: "Scope of Work ",
+                                style: pw.TextStyle(
+                                  font: boldFont,
+                                  fontSize: 11,
+                                  fontWeight: pw.FontWeight.bold,
+                                  color: PdfColor.fromHex("#000000"),
+                                ),
+                              ),
+                              pw.TextSpan(
+                                text: "our fees charges would be as follows",
+                                style: pw.TextStyle(
+                                  font: regularFont,
+                                  fontSize: 11,
+                                  fontWeight: pw.FontWeight.normal,
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        // pw.Text("${basicOptions}"),
+                        pw.SizedBox(
+                          height: 5,
+                        ),
+                        pw.Container(
+                          // padding: const pw.EdgeInsets.all(12),
+                          // padding:pw. EdgeInsets.only(top: 10,bottom: 10,left: 10),
+                          decoration: pw.BoxDecoration(
+                            // color: PdfColor.fromHex("#F5F5F5"),
+                            borderRadius: pw.BorderRadius.circular(8),
+                            border: pw.Border.all(
+                                color: PdfColor.fromHex("#BDBDBD"), width: 0.5),
+                          ),
+                          child: pw.Row(
+                            crossAxisAlignment: pw.CrossAxisAlignment.start,
+                            children: [
+                              /// 🔹 First Column - Icon + Title
+                              pw.Container(
+                                width: 120,
+                                height: 120,
+                                padding: const pw.EdgeInsets.all(8),
+                                margin: pw.EdgeInsets.only(
+                                    left: 10, top: 10, bottom: 10),
+                                decoration: pw.BoxDecoration(
+                                  color: PdfColor.fromHex("#ECECEC"),
+                                  borderRadius: pw.BorderRadius.circular(10),
+                                ),
+                                child: pw.Image(
+                                  pw.MemoryImage(offerLetterFeesImage),
+                                ),
+                              ),
 
-                    pw.SizedBox(width: 10),
+                              pw.SizedBox(width: 10),
 
-                    // Conditional Category Columns
-                    if (selectedBasicOptions.isNotEmpty)
-                      buildServiceColumn(
-                          "BASIC",
-                          selectedBasicOptions,
-                          calibriBoldFont,
-                          calibriRegularFont,
-                          basicFeesController.text),
+                              // Conditional Category Columns
+                              if (selectedBasicOptions.isNotEmpty)
+                                buildServiceColumn(
+                                    "BASIC",
+                                    selectedBasicOptions,
+                                    calibriBoldFont,
+                                    calibriRegularFont,
+                                    basicFeesController.text),
 
-                    if (selectedStandardOptions.isNotEmpty)
-                      buildServiceColumn(
-                          "STANDARD",
-                          selectedStandardOptions,
-                          calibriBoldFont,
-                          calibriRegularFont,
-                          standardFeesController.text),
+                              if (selectedStandardOptions.isNotEmpty)
+                                buildServiceColumn(
+                                    "STANDARD",
+                                    selectedStandardOptions,
+                                    calibriBoldFont,
+                                    calibriRegularFont,
+                                    standardFeesController.text),
 
-                    if (selectedPremiumOptions.isNotEmpty)
-                      buildServiceColumn(
-                          "PREMIUM",
-                          selectedPremiumOptions,
-                          calibriBoldFont,
-                          calibriRegularFont,
-                          premiumFeesController.text),
-                  ],
-                ),
-              ),
-              pw.SizedBox(height: 5),
-              // pw.Container(
-              //   padding: const pw.EdgeInsets.all(12),
-              //   decoration: pw.BoxDecoration(
-              //     // color: PdfColor.fromHex("#F5F5F5"),
-              //     borderRadius: pw.BorderRadius.circular(8),
-              //     border: pw.Border.all(
-              //         color: PdfColor.fromHex("#BDBDBD"), width: 0.5),
-              //   ),
-              //   child: pw.Row(
-              //     children: [
-              //       pw.Expanded(
-              //         child: pw.Container(),
-              //       ),
-              //       pw.Expanded(
-              //         child: pw.RichText(
-              //           text: pw.TextSpan(
-              //             children: [
-              //               pw.TextSpan(
-              //                 text: basicFeesController.text,
-              //                 style: pw.TextStyle(
-              //                   font: calibriRegularFont,
-              //                   fontSize: 15,
-              //                   color: PdfColor.fromHex("#000000"),
-              //                 ),
-              //               ),
-              //               if (basicFeesController.text.isNotEmpty)
-              //                 pw.TextSpan(
-              //                   text: "+GST",
-              //                   style: pw.TextStyle(
-              //                     font: regularFont,
-              //                     fontSize: 11,
-              //                     fontWeight: pw.FontWeight.bold,
-              //                     color: PdfColor.fromHex("#000000"),
-              //                   ),
-              //                 ),
-              //             ],
-              //           ),
-              //         ),
-              //       ),
-              //       pw.Expanded(
-              //         child: pw.RichText(
-              //           text: pw.TextSpan(
-              //             children: [
-              //               pw.TextSpan(
-              //                 text: standardFeesController.text,
-              //                 style: pw.TextStyle(
-              //                   font: calibriRegularFont,
-              //                   fontSize: 15,
-              //                   color: PdfColor.fromHex("#000000"),
-              //                 ),
-              //               ),
-              //               if (standardFeesController.text.isNotEmpty)
-              //                 pw.TextSpan(
-              //                   text: "+GST",
-              //                   style: pw.TextStyle(
-              //                     font: regularFont,
-              //                     fontSize: 11,
-              //                     fontWeight: pw.FontWeight.bold,
-              //                     color: PdfColor.fromHex("#000000"),
-              //                   ),
-              //                 ),
-              //             ],
-              //           ),
-              //         ),
-              //       ),
-              //       pw.Expanded(
-              //         child: pw.RichText(
-              //           text: pw.TextSpan(
-              //             children: [
-              //               pw.TextSpan(
-              //                 text: premiumFeesController.text,
-              //                 style: pw.TextStyle(
-              //                   font: calibriRegularFont,
-              //                   fontSize: 15,
-              //                   color: PdfColor.fromHex("#000000"),
-              //                 ),
-              //               ),
-              //               if (premiumFeesController.text.isNotEmpty)
-              //                 pw.TextSpan(
-              //                   text: "+GST",
-              //                   style: pw.TextStyle(
-              //                     font: regularFont,
-              //                     fontSize: 11,
-              //                     fontWeight: pw.FontWeight.bold,
-              //                     color: PdfColor.fromHex("#000000"),
-              //                   ),
-              //                 )
-              //             ],
-              //           ),
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // ),
+                              if (selectedPremiumOptions.isNotEmpty)
+                                buildServiceColumn(
+                                    "PREMIUM",
+                                    selectedPremiumOptions,
+                                    calibriBoldFont,
+                                    calibriRegularFont,
+                                    premiumFeesController.text),
+                            ],
+                          ),
+                        ),
+                        pw.SizedBox(height: 5),
+                        // pw.Container(
+                        //   padding: const pw.EdgeInsets.all(12),
+                        //   decoration: pw.BoxDecoration(
+                        //     // color: PdfColor.fromHex("#F5F5F5"),
+                        //     borderRadius: pw.BorderRadius.circular(8),
+                        //     border: pw.Border.all(
+                        //         color: PdfColor.fromHex("#BDBDBD"), width: 0.5),
+                        //   ),
+                        //   child: pw.Row(
+                        //     children: [
+                        //       pw.Expanded(
+                        //         child: pw.Container(),
+                        //       ),
+                        //       pw.Expanded(
+                        //         child: pw.RichText(
+                        //           text: pw.TextSpan(
+                        //             children: [
+                        //               pw.TextSpan(
+                        //                 text: basicFeesController.text,
+                        //                 style: pw.TextStyle(
+                        //                   font: calibriRegularFont,
+                        //                   fontSize: 15,
+                        //                   color: PdfColor.fromHex("#000000"),
+                        //                 ),
+                        //               ),
+                        //               if (basicFeesController.text.isNotEmpty)
+                        //                 pw.TextSpan(
+                        //                   text: "+GST",
+                        //                   style: pw.TextStyle(
+                        //                     font: regularFont,
+                        //                     fontSize: 11,
+                        //                     fontWeight: pw.FontWeight.bold,
+                        //                     color: PdfColor.fromHex("#000000"),
+                        //                   ),
+                        //                 ),
+                        //             ],
+                        //           ),
+                        //         ),
+                        //       ),
+                        //       pw.Expanded(
+                        //         child: pw.RichText(
+                        //           text: pw.TextSpan(
+                        //             children: [
+                        //               pw.TextSpan(
+                        //                 text: standardFeesController.text,
+                        //                 style: pw.TextStyle(
+                        //                   font: calibriRegularFont,
+                        //                   fontSize: 15,
+                        //                   color: PdfColor.fromHex("#000000"),
+                        //                 ),
+                        //               ),
+                        //               if (standardFeesController.text.isNotEmpty)
+                        //                 pw.TextSpan(
+                        //                   text: "+GST",
+                        //                   style: pw.TextStyle(
+                        //                     font: regularFont,
+                        //                     fontSize: 11,
+                        //                     fontWeight: pw.FontWeight.bold,
+                        //                     color: PdfColor.fromHex("#000000"),
+                        //                   ),
+                        //                 ),
+                        //             ],
+                        //           ),
+                        //         ),
+                        //       ),
+                        //       pw.Expanded(
+                        //         child: pw.RichText(
+                        //           text: pw.TextSpan(
+                        //             children: [
+                        //               pw.TextSpan(
+                        //                 text: premiumFeesController.text,
+                        //                 style: pw.TextStyle(
+                        //                   font: calibriRegularFont,
+                        //                   fontSize: 15,
+                        //                   color: PdfColor.fromHex("#000000"),
+                        //                 ),
+                        //               ),
+                        //               if (premiumFeesController.text.isNotEmpty)
+                        //                 pw.TextSpan(
+                        //                   text: "+GST",
+                        //                   style: pw.TextStyle(
+                        //                     font: regularFont,
+                        //                     fontSize: 11,
+                        //                     fontWeight: pw.FontWeight.bold,
+                        //                     color: PdfColor.fromHex("#000000"),
+                        //                   ),
+                        //                 )
+                        //             ],
+                        //           ),
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
 
-              pw.SizedBox(height: 10),
+                        pw.SizedBox(height: 10),
 //               pw.Text(
 //                 """
 //      Charges are only as per scope/area describe by client.
@@ -898,201 +949,205 @@ This quote is applicable only for ${monthController.text} month from the commenc
 //                   fontWeight: pw.FontWeight.normal,
 //                 ),
 //               ),
-              pw.Text(
-                buildScopeText(),
-                style: pw.TextStyle(
-                  font: regularFont,
-                  fontSize: 9,
-                  fontWeight: pw.FontWeight.normal,
-                ),
-              ),
+                        pw.Text(
+                          buildScopeText(),
+                          style: pw.TextStyle(
+                            font: regularFont,
+                            fontSize: 9,
+                            fontWeight: pw.FontWeight.normal,
+                          ),
+                        ),
 
-              pw.SizedBox(height: 15),
-              pw.Text(
-                "04. SCHEDULE OF PAYMENT :",
-                style: pw.TextStyle(
-                  decoration: pw.TextDecoration.underline,
-                  fontSize: 15,
-                  font: calibriBoldFont,
-                  // color: PdfColor.fromHex("#000000"),
-                ),
-              ),
-              pw.SizedBox(height: 5),
-              // pw.Text(
-              //   "We are charging professional fee in the following stages consistent with the work done plus other charges and reimbursable expenses as agreed upon : PREMIUM",
-              //   style: pw.TextStyle(
-              //     font: regularFont,
-              //     fontSize: 11,
-              //     fontWeight: pw.FontWeight.normal,
-              //   ),
-              // ),
-              // pw.SizedBox(height: 5),
-              // pw.Container(
-              //   width: double.infinity,
-              //   padding:
-              //       pw.EdgeInsets.only(right: 5, bottom: 8, left: 8, top: 8),
-              //   // padding: const pw.EdgeInsets.all(8),
-              //   decoration: pw.BoxDecoration(
-              //     borderRadius: pw.BorderRadius.circular(8),
-              //     border: pw.Border.all(
-              //         color: PdfColor.fromHex("#BDBDBD"), width: 0.5),
-              //   ),
-              //   child: pw.Wrap(
-              //     spacing: 2,
-              //     runSpacing: 2,
-              //     children: _buildPaymentScheduleStages(
-              //         calibriBoldFont, calibriRegularFont,
-              //         isPremium: true),
-              //   ),
-              // ),
-              // pw.SizedBox(height: 5),
-              // pw.Container(
-              //   width: double.infinity,
-              //   padding:
-              //       pw.EdgeInsets.only(right: 5, bottom: 8, left: 8, top: 8),
-              //   decoration: pw.BoxDecoration(
-              //     borderRadius: pw.BorderRadius.circular(8),
-              //     border: pw.Border.all(
-              //         color: PdfColor.fromHex("#BDBDBD"), width: 0.5),
-              //   ),
-              //   child: pw.Row(
-              //     children: [
-              //       pw.Text(
-              //         "Standard".toUpperCase(),
-              //         style: pw.TextStyle(
-              //           font: regularFont,
-              //           fontSize: 11,
-              //           fontWeight: pw.FontWeight.normal,
-              //         ),
-              //       ),
-              //       pw.SizedBox(width: 15),
-              //       pw.Wrap(
-              //         spacing: 2,
-              //         runSpacing: 2,
-              //         children: _buildPaymentScheduleStages(
-              //           calibriBoldFont,
-              //           calibriRegularFont,
-              //           isPremium: false,
-              //         ),
-              //       ),
-              //     ],
-              //   ),
-              // ),
-              pw.Column(
-                crossAxisAlignment: pw.CrossAxisAlignment.start,
-                children: [
-                  pw.Text(
-                    "We are charging professional fee in the following stages consistent with the work done plus other charges and reimbursable expenses as agreed upon : ${labelText.isNotEmpty ? labelText : ""}",
-                    style: pw.TextStyle(
-                      font: regularFont,
-                      fontSize: 11,
-                      fontWeight: pw.FontWeight.normal,
+                        pw.SizedBox(height: 15),
+                        pw.Text(
+                          "04. SCHEDULE OF PAYMENT :",
+                          style: pw.TextStyle(
+                            decoration: pw.TextDecoration.underline,
+                            fontSize: 15,
+                            font: calibriBoldFont,
+                            // color: PdfColor.fromHex("#000000"),
+                          ),
+                        ),
+                        pw.SizedBox(height: 5),
+                        // pw.Text(
+                        //   "We are charging professional fee in the following stages consistent with the work done plus other charges and reimbursable expenses as agreed upon : PREMIUM",
+                        //   style: pw.TextStyle(
+                        //     font: regularFont,
+                        //     fontSize: 11,
+                        //     fontWeight: pw.FontWeight.normal,
+                        //   ),
+                        // ),
+                        // pw.SizedBox(height: 5),
+                        // pw.Container(
+                        //   width: double.infinity,
+                        //   padding:
+                        //       pw.EdgeInsets.only(right: 5, bottom: 8, left: 8, top: 8),
+                        //   // padding: const pw.EdgeInsets.all(8),
+                        //   decoration: pw.BoxDecoration(
+                        //     borderRadius: pw.BorderRadius.circular(8),
+                        //     border: pw.Border.all(
+                        //         color: PdfColor.fromHex("#BDBDBD"), width: 0.5),
+                        //   ),
+                        //   child: pw.Wrap(
+                        //     spacing: 2,
+                        //     runSpacing: 2,
+                        //     children: _buildPaymentScheduleStages(
+                        //         calibriBoldFont, calibriRegularFont,
+                        //         isPremium: true),
+                        //   ),
+                        // ),
+                        // pw.SizedBox(height: 5),
+                        // pw.Container(
+                        //   width: double.infinity,
+                        //   padding:
+                        //       pw.EdgeInsets.only(right: 5, bottom: 8, left: 8, top: 8),
+                        //   decoration: pw.BoxDecoration(
+                        //     borderRadius: pw.BorderRadius.circular(8),
+                        //     border: pw.Border.all(
+                        //         color: PdfColor.fromHex("#BDBDBD"), width: 0.5),
+                        //   ),
+                        //   child: pw.Row(
+                        //     children: [
+                        //       pw.Text(
+                        //         "Standard".toUpperCase(),
+                        //         style: pw.TextStyle(
+                        //           font: regularFont,
+                        //           fontSize: 11,
+                        //           fontWeight: pw.FontWeight.normal,
+                        //         ),
+                        //       ),
+                        //       pw.SizedBox(width: 15),
+                        //       pw.Wrap(
+                        //         spacing: 2,
+                        //         runSpacing: 2,
+                        //         children: _buildPaymentScheduleStages(
+                        //           calibriBoldFont,
+                        //           calibriRegularFont,
+                        //           isPremium: false,
+                        //         ),
+                        //       ),
+                        //     ],
+                        //   ),
+                        // ),
+                        pw.Column(
+                          crossAxisAlignment: pw.CrossAxisAlignment.start,
+                          children: [
+                            pw.Text(
+                              "We are charging professional fee in the following stages consistent with the work done plus other charges and reimbursable expenses as agreed upon : ${labelText.isNotEmpty ? labelText : ""}",
+                              style: pw.TextStyle(
+                                font: regularFont,
+                                fontSize: 11,
+                                fontWeight: pw.FontWeight.normal,
+                              ),
+                            ),
+                            pw.SizedBox(height: 5),
+
+                            // PREMIUM container only if stages exist
+                            if (premiumStages.isNotEmpty)
+                              pw.Container(
+                                width: double.infinity,
+                                padding: pw.EdgeInsets.all(8),
+                                decoration: pw.BoxDecoration(
+                                  borderRadius: pw.BorderRadius.circular(8),
+                                  border: pw.Border.all(
+                                      color: PdfColor.fromHex("#BDBDBD"),
+                                      width: 0.5),
+                                ),
+                                child: pw.Wrap(
+                                  spacing: 2,
+                                  runSpacing: 2,
+                                  children: premiumStages,
+                                ),
+                              ),
+
+                            pw.SizedBox(height: 5),
+
+                            // STANDARD container only if stages exist
+                            if (standardStages.isNotEmpty)
+                              pw.Container(
+                                width: double.infinity,
+                                padding: pw.EdgeInsets.all(8),
+                                decoration: pw.BoxDecoration(
+                                  borderRadius: pw.BorderRadius.circular(8),
+                                  border: pw.Border.all(
+                                      color: PdfColor.fromHex("#BDBDBD"),
+                                      width: 0.5),
+                                ),
+                                child: pw.Wrap(
+                                  spacing: 2,
+                                  runSpacing: 2,
+                                  children: standardStages,
+                                ),
+                              ),
+                          ],
+                        ),
+
+                        pw.SizedBox(height: 15),
+                        pw.Text(
+                          "05. SCOPE DESCRIBED BY CLIENT : ",
+                          style: pw.TextStyle(
+                            decoration: pw.TextDecoration.underline,
+                            fontSize: 15,
+                            font: calibriBoldFont,
+                            // color: PdfColor.fromHex("#000000"),
+                          ),
+                        ),
+                        pw.SizedBox(height: 5),
+                        pw.Text(
+                          clientRequirementsController.text.length > 300
+                              ? clientRequirementsController.text
+                                  .substring(0, 300)
+                              : clientRequirementsController.text,
+                          style: pw.TextStyle(
+                            font: regularFont,
+                            fontSize: 11,
+                            fontWeight: pw.FontWeight.normal,
+                          ),
+                        ),
+
+                        // pw.Text(
+                        //   clientRequirementsController.text,
+                        //   style: pw.TextStyle(
+                        //     font: regularFont,
+                        //     fontSize: 11,
+                        //     fontWeight: pw.FontWeight.normal,
+                        //   ),
+                        // ),
+                        pw.SizedBox(height: 15),
+
+                        pw.Text(
+                          "Thank You.",
+                          style: pw.TextStyle(
+                            decoration: pw.TextDecoration.underline,
+                            fontSize: 12,
+                            font: calibriBoldFont,
+                          ),
+                        ),
+                        pw.Text(
+                          "Note : Additional GST would be applicable on professional fees on all categories. | Advance payment is non refundable in any case. | Design quote is totally upon requirement/scope described by client, quote may differ as requirements/scope changes. | Quote given are subjected to change without prior information. |CAD or SKP file of final designs additional charges are applicable.",
+                          style: pw.TextStyle(
+                            fontSize: 7,
+                            font: calibriRegularFont,
+                          ),
+                        ),
+                        pw.Spacer(),
+                        pw.Divider(
+                          thickness: 0.5,
+                          color: PdfColors.grey600,
+                        ),
+                        pw.Container(
+                          width: double.infinity,
+                          height: 25,
+                          decoration: pw.BoxDecoration(
+                            image: pw.DecorationImage(
+                              image: pw.MemoryImage(offerLaterFooterImage),
+                              fit: pw.BoxFit.fitWidth,
+                            ),
+                          ),
+                        ),
+                      ],
                     ),
-                  ),
-                  pw.SizedBox(height: 5),
-
-                  // PREMIUM container only if stages exist
-                  if (premiumStages.isNotEmpty)
-                    pw.Container(
-                      width: double.infinity,
-                      padding: pw.EdgeInsets.all(8),
-                      decoration: pw.BoxDecoration(
-                        borderRadius: pw.BorderRadius.circular(8),
-                        border: pw.Border.all(
-                            color: PdfColor.fromHex("#BDBDBD"), width: 0.5),
-                      ),
-                      child: pw.Wrap(
-                        spacing: 2,
-                        runSpacing: 2,
-                        children: premiumStages,
-                      ),
-                    ),
-
-                  pw.SizedBox(height: 5),
-
-                  // STANDARD container only if stages exist
-                  if (standardStages.isNotEmpty)
-                    pw.Container(
-                      width: double.infinity,
-                      padding: pw.EdgeInsets.all(8),
-                      decoration: pw.BoxDecoration(
-                        borderRadius: pw.BorderRadius.circular(8),
-                        border: pw.Border.all(
-                            color: PdfColor.fromHex("#BDBDBD"), width: 0.5),
-                      ),
-                      child: pw.Wrap(
-                        spacing: 2,
-                        runSpacing: 2,
-                        children: standardStages,
-                      ),
-                    ),
-                ],
-              ),
-
-              pw.SizedBox(height: 15),
-              pw.Text(
-                "05. SCOPE DESCRIBED BY CLIENT : ",
-                style: pw.TextStyle(
-                  decoration: pw.TextDecoration.underline,
-                  fontSize: 15,
-                  font: calibriBoldFont,
-                  // color: PdfColor.fromHex("#000000"),
-                ),
-              ),
-              pw.SizedBox(height: 5),
-              pw.Text(
-                clientRequirementsController.text.length > 300
-                    ? clientRequirementsController.text.substring(0, 300)
-                    : clientRequirementsController.text,
-                style: pw.TextStyle(
-                  font: regularFont,
-                  fontSize: 11,
-                  fontWeight: pw.FontWeight.normal,
-                ),
-              ),
-
-              // pw.Text(
-              //   clientRequirementsController.text,
-              //   style: pw.TextStyle(
-              //     font: regularFont,
-              //     fontSize: 11,
-              //     fontWeight: pw.FontWeight.normal,
-              //   ),
-              // ),
-              pw.SizedBox(height: 15),
-
-              pw.Text(
-                "Thank You.",
-                style: pw.TextStyle(
-                  decoration: pw.TextDecoration.underline,
-                  fontSize: 12,
-                  font: calibriBoldFont,
-                ),
-              ),
-              pw.Text(
-                "Note : Additional GST would be applicable on professional fees on all categories. | Advance payment is non refundable in any case. | Design quote is totally upon requirement/scope described by client, quote may differ as requirements/scope changes. | Quote given are subjected to change without prior information. |CAD or SKP file of final designs additional charges are applicable.",
-                style: pw.TextStyle(
-                  fontSize: 7,
-                  font: calibriRegularFont,
-                ),
-              ),
-              pw.Spacer(),
-              pw.Divider(
-                thickness: 0.5,
-                color: PdfColors.grey600,
-              ),
-              pw.Container(
-                width: double.infinity,
-                height: 25,
-                decoration: pw.BoxDecoration(
-                  image: pw.DecorationImage(
-                    image: pw.MemoryImage(offerLaterFooterImage),
-                    fit: pw.BoxFit.fitWidth,
-                  ),
-                ),
-              ),
-            ],
-          );
+                  )));
         },
       ),
     );

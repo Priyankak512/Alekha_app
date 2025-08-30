@@ -60,6 +60,9 @@ class _CreatePdfFromDataState extends State<ArchitectureScreen> {
             .buffer
             .asUint8List();
 
+    Uint8List a4PdfBgImage =
+        (await rootBundle.load(PickImages.a4PdfBgImage)).buffer.asUint8List();
+
     // Retrieve the plain text content from the HtmlEditorWidget
     // String htmlContent = await requirementController.getText();
     // String requirementsText = Bidi.stripHtmlIfNeeded(htmlContent).trim();
@@ -68,78 +71,101 @@ class _CreatePdfFromDataState extends State<ArchitectureScreen> {
       pw.Page(
         margin: const pw.EdgeInsets.all(20),
         build: (pw.Context context) {
-          return pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                children: [
-                  pw.Container(
-                    width: 170,
-                    height: 60,
-                    margin: const pw.EdgeInsets.only(bottom: 2),
-                    decoration: pw.BoxDecoration(
-                      image: pw.DecorationImage(
-                        image: pw.MemoryImage(imageData),
-                        fit: pw.BoxFit.fill,
-                      ),
+          return pw.FullPage(
+              ignoreMargins: true, // Ignore margins for full control
+              child: pw.Container(
+                  width: 60,
+                  height: 60,
+                  decoration: pw.BoxDecoration(
+                    image: pw.DecorationImage(
+                      image: pw.MemoryImage(
+                          a4PdfBgImage), // This will be your background
+                      fit: pw.BoxFit.contain,
                     ),
                   ),
-                  pw.Container(
-                    width: 120,
-                    height: 60,
-                    decoration: pw.BoxDecoration(
-                      image: pw.DecorationImage(
-                        image: pw.MemoryImage(invoiceContactPdfLogo),
-                        fit: pw.BoxFit.contain,
-                      ),
-                    ),
-                  )
-                ],
-              ),
-              pw.SizedBox(height: 6),
-              pw.Divider(height: 3, color: PdfColor.fromHex("#616161")),
-              pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                children: [
-                  pw.Text(
-                    "Architecture Form",
-                    style: pw.TextStyle(
-                        fontSize: 13, fontWeight: pw.FontWeight.normal),
-                  ),
-                  pw.Text(
-                    DateFormat('dd/MM/yyyy').format(DateTime.now()),
-                    style: pw.TextStyle(
-                        fontSize: 13,
-                        fontWeight: pw.FontWeight.normal,
-                        color: PdfColor.fromHex("#616161")),
-                  ),
-                ],
-              ),
-              pw.Divider(height: 3, color: PdfColor.fromHex("#BDBDBD")),
-              pw.SizedBox(height: 5),
-              _buildTextFieldRow(
-                  'Client Name : ', clientNameController.text, pdf),
-              _buildTextFieldRow(
-                  'Contact No. : ', contactNoController.text, pdf),
-              _buildTextFieldRow('Date :', dateController.text, pdf),
-              _buildTextFieldRow('Address : ', addressController.text, pdf),
-              _buildTextFieldRow(
-                  'Project Type : ', _selectedProjectType ?? "", pdf),
-              _buildTextFieldRow('Plot Size :', plotSizeController.text, pdf),
-              _buildTextFieldRow(
-                  'Site Context : ', siteContextController.text, pdf),
-              pw.SizedBox(height: 5),
-              pw.Text(
-                "Requirements:",
-                style: pw.TextStyle(
-                  fontSize: 13,
-                  fontWeight: pw.FontWeight.bold,
-                ),
-              ),
-              pw.SizedBox(height: 2),
-            ],
-          );
+                  child: pw.Padding(
+                      padding: const pw.EdgeInsets.all(20),
+                      child: pw.Column(
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: [
+                          pw.Row(
+                            mainAxisAlignment:
+                                pw.MainAxisAlignment.spaceBetween,
+                            children: [
+                              pw.Container(
+                                width: 170,
+                                height: 60,
+                                margin: const pw.EdgeInsets.only(bottom: 2),
+                                decoration: pw.BoxDecoration(
+                                  image: pw.DecorationImage(
+                                    image: pw.MemoryImage(imageData),
+                                    fit: pw.BoxFit.fill,
+                                  ),
+                                ),
+                              ),
+                              pw.Container(
+                                width: 120,
+                                height: 60,
+                                decoration: pw.BoxDecoration(
+                                  image: pw.DecorationImage(
+                                    image:
+                                        pw.MemoryImage(invoiceContactPdfLogo),
+                                    fit: pw.BoxFit.contain,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                          pw.SizedBox(height: 6),
+                          pw.Divider(
+                              height: 3, color: PdfColor.fromHex("#616161")),
+                          pw.Row(
+                            mainAxisAlignment:
+                                pw.MainAxisAlignment.spaceBetween,
+                            children: [
+                              pw.Text(
+                                "Architecture Form",
+                                style: pw.TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: pw.FontWeight.normal),
+                              ),
+                              pw.Text(
+                                DateFormat('dd/MM/yyyy').format(DateTime.now()),
+                                style: pw.TextStyle(
+                                    fontSize: 13,
+                                    fontWeight: pw.FontWeight.normal,
+                                    color: PdfColor.fromHex("#616161")),
+                              ),
+                            ],
+                          ),
+                          pw.Divider(
+                              height: 3, color: PdfColor.fromHex("#BDBDBD")),
+                          pw.SizedBox(height: 5),
+                          _buildTextFieldRow(
+                              'Client Name : ', clientNameController.text, pdf),
+                          _buildTextFieldRow(
+                              'Contact No. : ', contactNoController.text, pdf),
+                          _buildTextFieldRow(
+                              'Date :', dateController.text, pdf),
+                          _buildTextFieldRow(
+                              'Address : ', addressController.text, pdf),
+                          _buildTextFieldRow('Project Type : ',
+                              _selectedProjectType ?? "", pdf),
+                          _buildTextFieldRow(
+                              'Plot Size :', plotSizeController.text, pdf),
+                          _buildTextFieldRow('Site Context : ',
+                              siteContextController.text, pdf),
+                          pw.SizedBox(height: 5),
+                          pw.Text(
+                            "Requirements:",
+                            style: pw.TextStyle(
+                              fontSize: 13,
+                              fontWeight: pw.FontWeight.bold,
+                            ),
+                          ),
+                          pw.SizedBox(height: 2),
+                        ],
+                      ))));
         },
       ),
     );

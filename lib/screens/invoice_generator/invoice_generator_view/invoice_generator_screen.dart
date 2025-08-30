@@ -104,7 +104,7 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
     Uint8List feesPaidImage =
         (await rootBundle.load(PickImages.paidFeesImage)).buffer.asUint8List();
 
-    Uint8List a4PdfBgImage =
+   
     Uint8List a4PdfBgImage =
         (await rootBundle.load(PickImages.a4PdfBgImage)).buffer.asUint8List();
 

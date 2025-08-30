@@ -21,6 +21,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:provider/provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class SiteVisitReportScreen extends StatefulWidget {
   const SiteVisitReportScreen({Key? key}) : super(key: key);
@@ -43,8 +44,8 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
   TextEditingController changesOnSiteController = TextEditingController();
   TextEditingController nextOnSiteController = TextEditingController();
   TextEditingController addressController = TextEditingController();
-   TextEditingController dummy1Controller = TextEditingController();
-   TextEditingController dummy2Controller = TextEditingController();
+  TextEditingController dummy1Controller = TextEditingController();
+  TextEditingController dummy2Controller = TextEditingController();
 
   File? _image;
   List<File> _images = [];
@@ -61,6 +62,9 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
             .buffer
             .asUint8List();
 
+    Uint8List a4PdfBgImage =
+        (await rootBundle.load(PickImages.a4PdfBgImage)).buffer.asUint8List();
+
     // Concatenate selected project category and project number
     String formattedProject =
         "${projectNumberController.text} ${_selectedProjectCategory == 'Architecture - A' ? 'A' : _selectedProjectCategory == 'Interior - I' ? 'I' : _selectedProjectCategory == 'Architecture Interior - AI' ? 'AI' : ''}";
@@ -70,139 +74,161 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
       pw.Page(
         margin: const pw.EdgeInsets.all(20),
         build: (pw.Context context) {
-          return pw.Column(
-            crossAxisAlignment: pw.CrossAxisAlignment.start,
-            children: [
-              pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                children: [
-                  pw.Container(
-                    width: 170,
-                    height: 60,
-                    margin: const pw.EdgeInsets.only(bottom: 2),
-                    decoration: pw.BoxDecoration(
-                      image: pw.DecorationImage(
-                        image: pw.MemoryImage(imageData),
-                        fit: pw.BoxFit.fill,
-                      ),
+          return pw.FullPage(
+              ignoreMargins: true, // Ignore margins for full control
+              child: pw.Container(
+                  width: 60,
+                  height: 60,
+                  decoration: pw.BoxDecoration(
+                    image: pw.DecorationImage(
+                      image: pw.MemoryImage(
+                          a4PdfBgImage), // This will be your background
+                      fit: pw.BoxFit.contain,
                     ),
                   ),
-                  // pw.Expanded(
-                  //   child:
-                  pw.Container(
-                    width: 120,
-                    height: 60,
-                    decoration: pw.BoxDecoration(
-                      image: pw.DecorationImage(
-                        image: pw.MemoryImage(invoiceContactPdfLogo),
-                        fit: pw.BoxFit.contain,
-                      ),
-                    ),
-                    // ),
-                  )
-                ],
-              ),
-              pw.SizedBox(height: 6),
-              // pw.Divider(color: PdfColor.fromHex("#616161"), height: 5),
-              pw.Divider(height: 3, color: PdfColor.fromHex("#616161")),
-              pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                children: [
-                  pw.Text(
-                    "SITE VISIT",
-                    style: pw.TextStyle(
-                        fontSize: 15, fontWeight: pw.FontWeight.bold),
-                  ),
-                  pw.Text(
-                    dateController.text,
-                    style: pw.TextStyle(
-                        fontSize: 15,
-                        fontWeight: pw.FontWeight.normal,
-                        color: PdfColor.fromHex("#616161")),
-                  ),
-                ],
-              ),
-              pw.Divider(height: 3, color: PdfColor.fromHex("#BDBDBD")),
-              pw.SizedBox(height: 5),
+                  child: pw.Padding(
+                      padding: const pw.EdgeInsets.all(20),
+                      child: pw.Column(
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: [
+                          pw.Row(
+                            mainAxisAlignment:
+                                pw.MainAxisAlignment.spaceBetween,
+                            children: [
+                              pw.Container(
+                                width: 170,
+                                height: 60,
+                                margin: const pw.EdgeInsets.only(bottom: 2),
+                                decoration: pw.BoxDecoration(
+                                  image: pw.DecorationImage(
+                                    image: pw.MemoryImage(imageData),
+                                    fit: pw.BoxFit.fill,
+                                  ),
+                                ),
+                              ),
+                              // pw.Expanded(
+                              //   child:
+                              pw.Container(
+                                width: 120,
+                                height: 60,
+                                decoration: pw.BoxDecoration(
+                                  image: pw.DecorationImage(
+                                    image:
+                                        pw.MemoryImage(invoiceContactPdfLogo),
+                                    fit: pw.BoxFit.contain,
+                                  ),
+                                ),
+                                // ),
+                              )
+                            ],
+                          ),
+                          pw.SizedBox(height: 6),
+                          // pw.Divider(color: PdfColor.fromHex("#616161"), height: 5),
+                          pw.Divider(
+                              height: 3, color: PdfColor.fromHex("#616161")),
+                          pw.Row(
+                            mainAxisAlignment:
+                                pw.MainAxisAlignment.spaceBetween,
+                            children: [
+                              pw.Text(
+                                "SITE VISIT",
+                                style: pw.TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: pw.FontWeight.bold),
+                              ),
+                              pw.Text(
+                                dateController.text,
+                                style: pw.TextStyle(
+                                    fontSize: 15,
+                                    fontWeight: pw.FontWeight.normal,
+                                    color: PdfColor.fromHex("#616161")),
+                              ),
+                            ],
+                          ),
+                          pw.Divider(
+                              height: 3, color: PdfColor.fromHex("#BDBDBD")),
+                          pw.SizedBox(height: 5),
 
-              pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: pw.CrossAxisAlignment.start,
-                children: [
-                  pw.Expanded(
-                    flex: 2,
-                    child: buildInlineTextFieldRow(
-                      'Client Name : ',
-                      clientNameController.text,
-                    ),
-                  ),
-                  pw.Expanded(
-                    child: buildInlineTextFieldRow(
-                      'Project No. : ',
-                      formattedProject,
-                    ),
-                  ),
-                ],
-              ),
-              pw.Row(
-                mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: pw.CrossAxisAlignment.start,
-                children: [
-                  pw.Expanded(
-                    flex: 2,
-                    child: buildInlineTextFieldRow(
-                      'Address : ',
-                      addressController.text,
-                    ),
-                  ),
-                  pw.Expanded(
-                    child: buildInlineTextFieldRow(
-                      'Site Visit No. : ',
-                      siteVisitNumber.text,
-                    ),
-                  ),
-                ],
-              ),
+                          pw.Row(
+                            mainAxisAlignment:
+                                pw.MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: pw.CrossAxisAlignment.start,
+                            children: [
+                              pw.Expanded(
+                                flex: 2,
+                                child: buildInlineTextFieldRow(
+                                  'Client Name : ',
+                                  clientNameController.text,
+                                ),
+                              ),
+                              pw.Expanded(
+                                child: buildInlineTextFieldRow(
+                                  'Project No. : ',
+                                  formattedProject,
+                                ),
+                              ),
+                            ],
+                          ),
+                          pw.Row(
+                            mainAxisAlignment:
+                                pw.MainAxisAlignment.spaceBetween,
+                            crossAxisAlignment: pw.CrossAxisAlignment.start,
+                            children: [
+                              pw.Expanded(
+                                flex: 2,
+                                child: buildInlineTextFieldRow(
+                                  'Address : ',
+                                  addressController.text,
+                                ),
+                              ),
+                              pw.Expanded(
+                                child: buildInlineTextFieldRow(
+                                  'Site Visit No. : ',
+                                  siteVisitNumber.text,
+                                ),
+                              ),
+                            ],
+                          ),
 
-              // Work Stage On Site
-              buildMultilineField(
-                  label: "Work Stage On Site :",
-                  value: workStageOnSiteController.text),
+                          // Work Stage On Site
+                          buildMultilineField(
+                              label: "Work Stage On Site :",
+                              value: workStageOnSiteController.text),
 
-              // Decision
-              buildMultilineField(
-                label: 'Decision :',
-                value: decisionController.text,
-              ),
+                          // Decision
+                          buildMultilineField(
+                            label: 'Decision :',
+                            value: decisionController.text,
+                          ),
 
-              // Changes On Site
-              buildMultilineField(
-                label: 'Decision Pending :',
-                value: decisionPendingController.text,
-              ),
+                          // Changes On Site
+                          buildMultilineField(
+                            label: 'Decision Pending :',
+                            value: decisionPendingController.text,
+                          ),
 
-              // Decision Pending
-              buildMultilineField(
-                label: 'Changes On Site : ',
-                value: changesOnSiteController.text,
-              ),
+                          // Decision Pending
+                          buildMultilineField(
+                            label: 'Changes On Site : ',
+                            value: changesOnSiteController.text,
+                          ),
 
-              // Next On Site
-              buildMultilineField(
-                label: 'Next On Site : ',
-                value: nextOnSiteController.text,
-              ),
-              pw.Spacer(),
-              pw.Divider(color: PdfColor.fromHex("#616161")),
-              pw.Align(
-                alignment: pw.Alignment.center,
-                child: pw.Text(
-                  "G.F. Plot No.29, Hira Nagar, Bamroll Road, Nr.Saraswati Hindi Vidyalaya, Surat, Gujarat.",
-                  style: const pw.TextStyle(fontSize: 11),
-                ),
-              ),
-            ],
-          );
+                          // Next On Site
+                          buildMultilineField(
+                            label: 'Next On Site : ',
+                            value: nextOnSiteController.text,
+                          ),
+                          pw.Spacer(),
+                          pw.Divider(color: PdfColor.fromHex("#616161")),
+                          pw.Align(
+                            alignment: pw.Alignment.center,
+                            child: pw.Text(
+                              "G.F. Plot No.29, Hira Nagar, Bamroll Road, Nr.Saraswati Hindi Vidyalaya, Surat, Gujarat.",
+                              style: const pw.TextStyle(fontSize: 11),
+                            ),
+                          ),
+                        ],
+                      ))));
         },
       ),
     );
@@ -226,56 +252,77 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
           pageFormat: PdfPageFormat.a4,
           margin: const pw.EdgeInsets.all(20), // optional: page margin
           build: (pw.Context context) {
-            return pw.Column(
-              children: [
-                // Top Row
-                pw.Expanded(
-                  child: pw.Row(
-                    children: [
-                      pw.Expanded(
-                        child: pw.Image(
-                          pw.MemoryImage(_images[i].readAsBytesSync()),
-                          // fit: pw.BoxFit.cover,
-                        ),
+            return pw.FullPage(
+                ignoreMargins: true, // Ignore margins for full control
+                child: pw.Container(
+                    width: 60,
+                    height: 60,
+                    decoration: pw.BoxDecoration(
+                      image: pw.DecorationImage(
+                        image: pw.MemoryImage(
+                            a4PdfBgImage), // This will be your background
+                        fit: pw.BoxFit.contain,
                       ),
-                      if (i + 1 < _images.length) ...[
-                        pw.SizedBox(width: 20), // space between top images
-                        pw.Expanded(
-                          child: pw.Image(
-                            pw.MemoryImage(_images[i + 1].readAsBytesSync()),
-                            // fit: pw.BoxFit.cover,
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-                pw.SizedBox(height: 20), // space between rows
-                // Bottom Row
-                pw.Expanded(
-                  child: pw.Row(
-                    children: [
-                      if (i + 2 < _images.length)
-                        pw.Expanded(
-                          child: pw.Image(
-                            pw.MemoryImage(_images[i + 2].readAsBytesSync()),
-                            // fit: pw.BoxFit.cover,
-                          ),
-                        ),
-                      if (i + 3 < _images.length) ...[
-                        pw.SizedBox(width: 20), // space between bottom images
-                        pw.Expanded(
-                          child: pw.Image(
-                            pw.MemoryImage(_images[i + 3].readAsBytesSync()),
-                            // fit: pw.BoxFit.cover,
-                          ),
-                        ),
-                      ],
-                    ],
-                  ),
-                ),
-              ],
-            );
+                    ),
+                    child: pw.Padding(
+                        padding: const pw.EdgeInsets.all(20),
+                        child: pw.Column(
+                          children: [
+                            // Top Row
+                            pw.Expanded(
+                              child: pw.Row(
+                                children: [
+                                  pw.Expanded(
+                                    child: pw.Image(
+                                      pw.MemoryImage(
+                                          _images[i].readAsBytesSync()),
+                                      // fit: pw.BoxFit.cover,
+                                    ),
+                                  ),
+                                  if (i + 1 < _images.length) ...[
+                                    pw.SizedBox(
+                                        width: 20), // space between top images
+                                    pw.Expanded(
+                                      child: pw.Image(
+                                        pw.MemoryImage(
+                                            _images[i + 1].readAsBytesSync()),
+                                        // fit: pw.BoxFit.cover,
+                                      ),
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ),
+                            pw.SizedBox(height: 20), // space between rows
+                            // Bottom Row
+                            pw.Expanded(
+                              child: pw.Row(
+                                children: [
+                                  if (i + 2 < _images.length)
+                                    pw.Expanded(
+                                      child: pw.Image(
+                                        pw.MemoryImage(
+                                            _images[i + 2].readAsBytesSync()),
+                                        // fit: pw.BoxFit.cover,
+                                      ),
+                                    ),
+                                  if (i + 3 < _images.length) ...[
+                                    pw.SizedBox(
+                                        width:
+                                            20), // space between bottom images
+                                    pw.Expanded(
+                                      child: pw.Image(
+                                        pw.MemoryImage(
+                                            _images[i + 3].readAsBytesSync()),
+                                        // fit: pw.BoxFit.cover,
+                                      ),
+                                    ),
+                                  ],
+                                ],
+                              ),
+                            ),
+                          ],
+                        ))));
           },
         ),
       );
@@ -451,7 +498,7 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
                     maxLines: 5,
                     labelText: 'Points with Number',
                   ),
-                   CommonTextFieldWithBullets(
+                  CommonTextFieldWithBullets(
                     controller: dummy2Controller,
                     hintText: 'Bullet Points',
                     maxLines: 5,
@@ -603,7 +650,24 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
                     color: PickColors.successColor,
                     title: "Share On Whatsapp",
                     suffixIcon: PickImages.whatsAppIcon,
-                    onPressed: () {},
+                    // onPressed: () {},
+
+                    onPressed: () async {
+                      // WhatsApp ko open karne ke liye URL scheme
+                      var whatsappUrl = Uri.parse("whatsapp://app");
+
+                      if (await canLaunchUrl(whatsappUrl)) {
+                        await launchUrl(
+                          whatsappUrl,
+                          mode: LaunchMode.externalApplication,
+                        );
+                      } else {
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(
+                              content: Text("WhatsApp is not installed")),
+                        );
+                      }
+                    },
                   ),
                 ],
               ),
