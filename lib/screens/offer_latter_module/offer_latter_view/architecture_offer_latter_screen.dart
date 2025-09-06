@@ -3,6 +3,7 @@
 import 'dart:io';
 import 'package:alekha/widget/common_dropdown.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
 import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:alekha/constant/colors.dart';
@@ -87,6 +88,9 @@ class _ArchitectureOfferLetterScreenState
   List<Map<String, dynamic>> basicOptions = [];
   List<Map<String, dynamic>> standardOptions = [];
   List<Map<String, dynamic>> premiumOptions = [];
+
+  File? _image;
+  List<File> _images = [];
 
   String buildScopeText() {
     // always required lines
@@ -1115,14 +1119,15 @@ This quote is applicable only for ${monthController.text} month from the commenc
                         // ),
                         pw.SizedBox(height: 15),
 
-                        pw.Text(
-                          "Thank You.",
-                          style: pw.TextStyle(
-                            decoration: pw.TextDecoration.underline,
-                            fontSize: 12,
-                            font: calibriBoldFont,
+                        if (_images.isEmpty)
+                          pw.Text(
+                            "Thank You.",
+                            style: pw.TextStyle(
+                              decoration: pw.TextDecoration.underline,
+                              fontSize: 12,
+                              font: calibriBoldFont,
+                            ),
                           ),
-                        ),
                         pw.Text(
                           "Note : Additional GST would be applicable on professional fees on all categories. | Advance payment is non refundable in any case. | Design quote is totally upon requirement/scope described by client, quote may differ as requirements/scope changes. | Quote given are subjected to change without prior information. |CAD or SKP file of final designs additional charges are applicable.",
                           style: pw.TextStyle(
@@ -1195,6 +1200,98 @@ This quote is applicable only for ${monthController.text} month from the commenc
     //   ),
     // );
 
+    for (int i = 0; i < _images.length; i += 4) {
+      pdf.addPage(
+        pw.Page(
+          pageFormat: PdfPageFormat.a4,
+          margin: const pw.EdgeInsets.all(20),
+          build: (pw.Context context) {
+            return pw.Column(
+              crossAxisAlignment: pw.CrossAxisAlignment.start,
+              children: [
+                pw.Container(
+                  width: double.infinity,
+                  height: 100,
+                  margin: const pw.EdgeInsets.only(bottom: 2),
+                  decoration: pw.BoxDecoration(
+                    image: pw.DecorationImage(
+                      image: pw.MemoryImage(imageData),
+                      fit: pw.BoxFit.fitWidth,
+                    ),
+                  ),
+                ),
+                pw.SizedBox(height: 5),
+                pw.Text(
+                  "06. SITE PICTURES/LAYOUT",
+                  style: pw.TextStyle(
+                    decoration: pw.TextDecoration.underline,
+                    fontSize: 15,
+                    font: calibriBoldFont,
+                    // color: PdfColor.fromHex("#000000"),
+                  ),
+                ),
+
+                // 📌 Image Grid Full Height
+                pw.Expanded(
+                  child: pw.Column(
+                    children: [
+                      // Top Row
+                      pw.Expanded(
+                        child: pw.Row(
+                          children: [
+                            _buildImageBox(_images, i),
+                            _buildImageBox(_images, i + 1),
+                          ],
+                        ),
+                      ),
+                      // Bottom Row
+                      pw.Expanded(
+                        child: pw.Row(
+                          children: [
+                            _buildImageBox(_images, i + 2),
+                            _buildImageBox(_images, i + 3),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                pw.Text(
+                  "Thank You.",
+                  style: pw.TextStyle(
+                    decoration: pw.TextDecoration.underline,
+                    fontSize: 12,
+                    font: calibriBoldFont,
+                  ),
+                ),
+                pw.Text(
+                  "Note : Additional GST would be applicable on professional fees on all categories. | Advance payment is non refundable in any case. | Design quote is totally upon requirement/scope described by client, quote may differ as requirements/scope changes. | Quote given are subjected to change without prior information. |CAD or SKP file of final designs additional charges are applicable.",
+                  style: pw.TextStyle(
+                    fontSize: 7,
+                    font: calibriRegularFont,
+                  ),
+                ),
+                pw.Divider(
+                  thickness: 0.5,
+                  color: PdfColors.grey600,
+                ),
+                pw.Container(
+                  width: double.infinity,
+                  height: 25,
+                  decoration: pw.BoxDecoration(
+                    image: pw.DecorationImage(
+                      image: pw.MemoryImage(offerLaterFooterImage),
+                      fit: pw.BoxFit.fitWidth,
+                    ),
+                  ),
+                ),
+              ],
+            );
+          },
+        ),
+      );
+    }
+
     // Save and share the generated PDF
     await Printing.layoutPdf(
       name:
@@ -1203,6 +1300,30 @@ This quote is applicable only for ${monthController.text} month from the commenc
     );
   }
 
+  /// Helper widget for image box with border + radius
+  pw.Widget _buildImageBox(List<File> images, int index) {
+    if (index >= images.length) {
+      return pw.SizedBox(); // agar image hi nahi hai to kuch bhi na dikhao
+    }
+
+    return pw.Expanded(
+      child: pw.Container(
+        margin: const pw.EdgeInsets.all(8),
+        decoration: pw.BoxDecoration(
+          border: pw.Border.all(color: PdfColors.grey),
+          borderRadius: pw.BorderRadius.circular(12),
+        ),
+        child: pw.ClipRRect(
+          horizontalRadius: 12,
+          verticalRadius: 12,
+          child: pw.Image(
+            pw.MemoryImage(images[index].readAsBytesSync()),
+            fit: pw.BoxFit.contain,
+          ),
+        ),
+      ),
+    );
+  }
   // List<pw.Widget> _buildPaymentScheduleStages(
   //     pw.Font boldFont, pw.Font regularFont) {
   //   List<pw.Widget> stageWidgets = [];
@@ -1512,6 +1633,25 @@ This quote is applicable only for ${monthController.text} month from the commenc
       );
     } else {
       return pw.SizedBox();
+    }
+  }
+
+  Future<void> _getImage() async {
+    final pickedFile =
+        await ImagePicker().pickImage(source: ImageSource.gallery);
+    setState(
+      () {
+        if (pickedFile != null) {
+          _images.add(File(pickedFile.path));
+        } else {
+          debugPrint("No Image selected");
+        }
+      },
+    );
+    if (pickedFile != null) {
+      setState(() {
+        _image = File(pickedFile.path);
+      });
     }
   }
 
@@ -2544,60 +2684,6 @@ This quote is applicable only for ${monthController.text} month from the commenc
                         ),
                       ],
                     ),
-                    // Row(
-                    //   children: [
-                    //     Flexible(
-                    //       child: CommonTextFieldWithFocus(
-                    //         controller: aStandardPremiumController,
-                    //         labelText: "Stage 01",
-                    //         hintText: 'Stage 01',
-                    //         inputFormatters: [
-                    //           FilteringTextInputFormatter.allow(
-                    //               RegExp(r'^\d+\.?\d{0,2}')),
-                    //           limitInputBasedOnTotal(aStandardPremiumController,
-                    //               () => _getStandardTotal()),
-                    //         ],
-                    //         labelTextStyle: CommonTextStyle()
-                    //             .fillableTextFieldTextStyle
-                    //             .copyWith(fontSize: SizeConfig.fontSize12),
-                    //       ),
-                    //     ),
-                    //     PickHeightAndWidth.width5,
-                    //     Flexible(
-                    //       child: CommonTextFieldWithFocus(
-                    //         controller: bStandardPremiumController,
-                    //         labelText: "Stage 02",
-                    //         hintText: 'Stage 02',
-                    //         inputFormatters: [
-                    //           FilteringTextInputFormatter.allow(
-                    //               RegExp(r'^\d+\.?\d{0,2}')),
-                    //           limitInputBasedOnTotal(bStandardPremiumController,
-                    //               () => _getStandardTotal()),
-                    //         ],
-                    //         labelTextStyle: CommonTextStyle()
-                    //             .fillableTextFieldTextStyle
-                    //             .copyWith(fontSize: SizeConfig.fontSize12),
-                    //       ),
-                    //     ),
-                    //     PickHeightAndWidth.width5,
-                    //     Flexible(
-                    //       child: CommonTextFieldWithFocus(
-                    //         controller: cStandardPremiumController,
-                    //         labelText: "Stage 03",
-                    //         hintText: 'Stage 03',
-                    //         inputFormatters: [
-                    //           FilteringTextInputFormatter.allow(
-                    //               RegExp(r'^\d+\.?\d{0,2}')),
-                    //           limitInputBasedOnTotal(cStandardPremiumController,
-                    //               () => _getStandardTotal()),
-                    //         ],
-                    //         labelTextStyle: CommonTextStyle()
-                    //             .fillableTextFieldTextStyle
-                    //             .copyWith(fontSize: SizeConfig.fontSize12),
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
                     PickHeightAndWidth.height20,
                     Text("SCOPE DESCRIBED BY CLIENT",
                         style: CommonTextStyle().offerLetterTopicNameTextStyle),
@@ -2610,12 +2696,81 @@ This quote is applicable only for ${monthController.text} month from the commenc
                       keyboardType: TextInputType.name,
                     ),
                     PickHeightAndWidth.height20,
-                    CommonMaterialButton(
-                      title: 'Create PDF',
-                      style: CommonTextStyle().buttonTextStyle,
-                      onPressed: _generatePDF,
-                      color: PickColors.primaryColor,
-                      verticalPadding: 20,
+                    _images.isNotEmpty
+                        ? SizedBox(
+                            height: 400,
+                            child: ListView.builder(
+                              itemCount: _images.length,
+                              itemBuilder: (context, index) {
+                                return Stack(
+                                  children: [
+                                    Container(
+                                      height: 200,
+                                      width: double.infinity,
+                                      margin: const EdgeInsets.all(8.0),
+                                      child: Image.file(
+                                        _images[index],
+                                        fit: BoxFit.cover,
+                                        width: double.infinity,
+                                      ),
+                                    ),
+                                    Positioned(
+                                      top: 16,
+                                      right: 16,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          setState(() {
+                                            _images.removeAt(index);
+                                          });
+                                        },
+                                        child: Container(
+                                          decoration: const BoxDecoration(
+                                            color: Colors.black54,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          padding: const EdgeInsets.all(4),
+                                          child: const Icon(
+                                            Icons.close,
+                                            color: Colors.white,
+                                            size: 24,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ],
+                                );
+                              },
+                            ),
+                          )
+                        : Container(),
+
+                    const SizedBox(height: 20),
+                    Row(
+                      children: [
+                        Expanded(
+                          child: CommonMaterialButton(
+                            title: "Add Pictures",
+                            suffixIcon: PickImages.cameraIcon,
+                            style: CommonTextStyle().buttonTextStyle,
+                            verticalPadding: 20,
+                            color: PickColors.primaryColor,
+                            onPressed: () {
+                              _getImage();
+                            },
+                          ),
+                        ),
+                        PickHeightAndWidth.width10,
+                        Expanded(
+                          child: CommonMaterialButton(
+                         title: "Export As Pdf",
+                            suffixIcon: PickImages.pdfIcon,
+                            style: CommonTextStyle().buttonTextStyle,
+                            onPressed: _generatePDF,
+                            color: PickColors.primaryColor,
+                            verticalPadding: 20,
+                          ),
+                        ),
+                      ],
                     ),
                   ],
                 ),

@@ -35,7 +35,7 @@ class _FormsScreenState extends State<FormsScreen> {
           ),
           automaticallyImplyLeading: false,
           title: Text(
-            'FORMS',
+            'Forms',
             style: CommonTextStyle().appBarTextStyle,
           ),
         ),

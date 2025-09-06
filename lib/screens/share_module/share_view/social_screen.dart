@@ -71,7 +71,7 @@ class _SocialScreenState extends State<SocialScreen> {
                               'https://www.linkedin.com/in/alekha-architects-74a456178?trk=feed-detail_main-feed-card_feed-actor-name';
                         } else if (GlobalList.socialList[index]["id"] == "5") {
                           url =
-                              'https://youtube.com/@alekhaarchitects3717?si=Viob3RsCbJpdf1mh';
+                              'https://www.youtube.com/@alekhaarchitects';
                         } else if (GlobalList.socialList[index]["id"] == "7") {
                           url =
                               'https://g.page/r/CW_ASWsGtudcEA0'; // Google ka URL

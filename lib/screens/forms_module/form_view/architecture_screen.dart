@@ -124,10 +124,11 @@ class _CreatePdfFromDataState extends State<ArchitectureScreen> {
                                 pw.MainAxisAlignment.spaceBetween,
                             children: [
                               pw.Text(
-                                "Architecture Form",
+                                "Architecture Form".toUpperCase(),
                                 style: pw.TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: pw.FontWeight.normal),
+                                  fontSize: 15,
+                                  fontWeight: pw.FontWeight.bold,
+                                ),
                               ),
                               pw.Text(
                                 DateFormat('dd/MM/yyyy').format(DateTime.now()),
@@ -547,13 +548,13 @@ class _CreatePdfFromDataState extends State<ArchitectureScreen> {
                   CommonMaterialButton(
                       title: 'Add Image',
                       onPressed: _getImage,
-                      style: CommonTextStyle().buttonTextStyle,
                       prefixIcon: PickImages.cameraIcon,
                       prefixIconColor: Colors.black,
                       color: PickColors.primaryColor),
                   const SizedBox(height: 20),
                   CommonMaterialButton(
-                    title: 'Create PDF',
+                   title: "Export As Pdf",
+                    suffixIcon: PickImages.pdfIcon,
                     style: CommonTextStyle().buttonTextStyle,
                     onPressed: _generatePDF,
                     color: PickColors.primaryColor,

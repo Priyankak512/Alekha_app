@@ -42,7 +42,7 @@ class _LocationScreenState extends State<MessageScreen> {
           text:
               "Hi,\n$name\nThanks for sharing your service/product content.\n\n"),
       TextSpan(
-        text: "âlekha architects,",
+        text: "âlekha architects, ",
         style: CommonTextStyle().authSubTitleTextStyle.copyWith(
               fontWeight: FontWeight.bold,
               color: Colors.black,

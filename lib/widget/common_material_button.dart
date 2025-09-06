@@ -16,7 +16,7 @@ class CommonMaterialButton extends StatefulWidget {
     this.suffixIconColor,
     this.isButtonDisable = false,
     this.borderRadius = 10,
-    this.verticalPadding = 10,
+    this.verticalPadding = 20,
     this.prefixIcon,
     this.suffixIcon,
   }) : style = style ?? CommonTextStyle().buttonTextStyle;

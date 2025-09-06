@@ -60,7 +60,7 @@ class _CreatePdfFromDataState extends State<InteriorScreen> {
         (await rootBundle.load(PickImages.siteVisitContactsPdfImage))
             .buffer
             .asUint8List();
-            Uint8List a4PdfBgImage =
+    Uint8List a4PdfBgImage =
         (await rootBundle.load(PickImages.a4PdfBgImage)).buffer.asUint8List();
 
     // Retrieve selected project category and project number
@@ -176,10 +176,11 @@ class _CreatePdfFromDataState extends State<InteriorScreen> {
                                 pw.MainAxisAlignment.spaceBetween,
                             children: [
                               pw.Text(
-                                "Interior Form",
+                                "Interior Form".toUpperCase(),
                                 style: pw.TextStyle(
-                                    fontSize: 13,
-                                    fontWeight: pw.FontWeight.normal),
+                                  fontSize: 15,
+                                  fontWeight: pw.FontWeight.bold,
+                                ),
                               ),
                               pw.Text(
                                 DateFormat('dd/MM/yyyy').format(DateTime.now()),
@@ -566,7 +567,8 @@ class _CreatePdfFromDataState extends State<InteriorScreen> {
                       color: PickColors.primaryColor),
                   const SizedBox(height: 20),
                   CommonMaterialButton(
-                    title: 'Create PDF',
+                   title: "Export As Pdf",
+                    suffixIcon: PickImages.pdfIcon,
                     style: CommonTextStyle().buttonTextStyle,
                     onPressed: _generatePDF,
                     color: PickColors.primaryColor,

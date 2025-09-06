@@ -17,7 +17,7 @@ class CommonTextStyle {
     color: PickColors.hintColor,
     fontSize: SizeConfig.fontSize28,
     fontWeight: FontWeight.w900,
-    fontFamily: 'GOTHICB',
+    fontFamily: 'Century Gothic',
   );
 
   //auth sub title text style

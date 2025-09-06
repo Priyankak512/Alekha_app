@@ -385,7 +385,7 @@ class GlobalList {
       "title": "Youtube",
       "icon": PickImages.youtubeIcon,
       "screen": const LocationScreen(),
-      'link': 'https://youtube.com/@alekhaarchitects3717?si=Viob3RsCbJpdf1mh',
+      'link': 'https://www.youtube.com/@alekhaarchitects',
     },
     {
       "id": "6",

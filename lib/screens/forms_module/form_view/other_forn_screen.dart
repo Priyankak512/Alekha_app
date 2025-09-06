@@ -509,7 +509,8 @@ class _CreatePdfFromDataState extends State<OtherFormsScreen> {
                       color: PickColors.primaryColor),
                   const SizedBox(height: 20),
                   CommonMaterialButton(
-                    title: 'Create PDF',
+                   title: "Export As Pdf",
+                    suffixIcon: PickImages.pdfIcon,
                     style: CommonTextStyle().buttonTextStyle,
                     onPressed: _generatePDF,
                     color: PickColors.primaryColor,
