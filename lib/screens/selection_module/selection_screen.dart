@@ -569,6 +569,217 @@ class _SelectionScreenState extends State<SelectionScreen> {
   //     return pw.SizedBox(); // Return an empty SizedBox if value is empty
   //   }
   // }
+  // Future<void> _generatePDF() async {
+  //   final pdf = pw.Document();
+
+  //   Uint8List imageData =
+  //       (await rootBundle.load(PickImages.alekhaArchitectsIcon))
+  //           .buffer
+  //           .asUint8List();
+  //   Uint8List invoiceContactPdfLogo =
+  //       (await rootBundle.load(PickImages.siteVisitContactsPdfImage))
+  //           .buffer
+  //           .asUint8List();
+
+  //   // Concatenate selected project category and project number
+  //   String formattedProject =
+  //       "${projectNumberController.text} ${_selectedProjectType == 'Architecture - A' ? 'A' : _selectedProjectType == 'Interior - I' ? 'I' : _selectedProjectType == 'Architecture Interior - AI' ? 'AI' : ''}";
+
+  //   // सभी descriptions एक list में
+  //   final descriptions = [
+  //     description1Controller.text,
+  //     description2Controller.text,
+  //     description3Controller.text,
+  //     description4Controller.text,
+  //     description5Controller.text,
+  //     description6Controller.text,
+  //     description7Controller.text,
+  //     description8Controller.text,
+  //   ];
+
+  //   // --- Header Widget
+  //   pw.Widget _buildHeader() {
+  //     return pw.Column(
+  //       children: [
+  //         pw.Row(
+  //           mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+  //           children: [
+  //             pw.Container(
+  //               width: 170,
+  //               height: 60,
+  //               margin: const pw.EdgeInsets.only(bottom: 2),
+  //               decoration: pw.BoxDecoration(
+  //                 image: pw.DecorationImage(
+  //                   image: pw.MemoryImage(imageData),
+  //                   fit: pw.BoxFit.fill,
+  //                 ),
+  //               ),
+  //             ),
+  //             pw.Container(
+  //               width: 120,
+  //               height: 60,
+  //               decoration: pw.BoxDecoration(
+  //                 image: pw.DecorationImage(
+  //                   image: pw.MemoryImage(invoiceContactPdfLogo),
+  //                   fit: pw.BoxFit.contain,
+  //                 ),
+  //               ),
+  //             )
+  //           ],
+  //         ),
+  //         pw.SizedBox(height: 6),
+  //         pw.Divider(height: 3, color: PdfColor.fromHex("#616161")),
+  //         pw.Row(
+  //           mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+  //           children: [
+  //             pw.Text(
+  //               "SELECTION",
+  //               style: pw.TextStyle(
+  //                 fontSize: 15,
+  //                 fontWeight: pw.FontWeight.bold,
+  //               ),
+  //             ),
+  //             pw.Text(
+  //               "${DateFormat('dd/MM/yyyy').format(DateTime.now())} - ${selectionTimeController.text + _selectedTimeStatus.toString()}",
+  //               style: pw.TextStyle(
+  //                   fontSize: 13,
+  //                   fontWeight: pw.FontWeight.normal,
+  //                   color: PdfColor.fromHex("#616161")),
+  //             ),
+  //           ],
+  //         ),
+  //         pw.Divider(height: 3, color: PdfColor.fromHex("#BDBDBD")),
+  //         pw.SizedBox(height: 5),
+  //         pw.Row(
+  //           mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+  //           crossAxisAlignment: pw.CrossAxisAlignment.start,
+  //           children: [
+  //             pw.Expanded(
+  //               flex: 2,
+  //               child: buildInlineTextFieldRow(
+  //                 'Client Name : ',
+  //                 clientNameController.text,
+  //               ),
+  //             ),
+  //             pw.Expanded(
+  //               child: buildInlineTextFieldRow(
+  //                 'Project No. : ',
+  //                 formattedProject,
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //         pw.Row(
+  //           mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+  //           crossAxisAlignment: pw.CrossAxisAlignment.start,
+  //           children: [
+  //             pw.Expanded(
+  //               flex: 2,
+  //               child: buildInlineTextFieldRow(
+  //                 'Address : ',
+  //                 addressController.text,
+  //               ),
+  //             ),
+  //             pw.Expanded(
+  //               child: buildInlineTextFieldRow(
+  //                 'Selection Visit No. : ',
+  //                 selectionVisitNumber.text,
+  //               ),
+  //             ),
+  //           ],
+  //         ),
+  //         pw.SizedBox(height: 10),
+  //       ],
+  //     );
+  //   }
+
+  //   // --- Image + Description (single box)
+  //   pw.Widget _buildImageWithDescription(int index) {
+  //     if (index >= _images.length && index >= descriptions.length) {
+  //       return pw.SizedBox();
+  //     }
+
+  //     final File? imageFile = index < _images.length ? _images[index] : null;
+  //     final String description =
+  //         index < descriptions.length ? descriptions[index] : "";
+
+  //     return pw.Expanded(
+  //       child: pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start,
+  //         children: [
+  //           if (imageFile != null)
+  //             pw.ClipRRect(
+  //               horizontalRadius: 12,
+  //               verticalRadius: 12,
+  //               child: pw.Image(
+  //                 pw.MemoryImage(imageFile.readAsBytesSync()),
+  //                 fit: pw.BoxFit.contain,
+  //                 height: 200, // same height
+  //               ),
+  //             ),
+  //           if (description.isNotEmpty) ...[
+  //             pw.SizedBox(height: 6),
+  //             pw.Padding(
+  //               padding: const pw.EdgeInsets.all(4),
+  //               child: pw.Text(
+  //                 description,
+  //                 style: const pw.TextStyle(fontSize: 10),
+  //                 textAlign: pw.TextAlign.center,
+  //               ),
+  //             ),
+  //           ]
+  //         ],
+  //       ),
+  //     );
+  //   }
+
+  //   // ✅ pages बनाना (हर page में 4 images + description)
+  //   for (int i = 0; i < descriptions.length || i < _images.length; i += 4) {
+  //     pdf.addPage(
+  //       pw.Page(
+  //         margin: const pw.EdgeInsets.all(20),
+  //         pageFormat: PdfPageFormat.a4,
+  //         build: (pw.Context context) {
+  //           return pw.Column(
+  //             crossAxisAlignment: pw.CrossAxisAlignment.start,
+  //             children: [
+  //               _buildHeader(),
+  //               pw.Expanded(
+  //                 child: pw.Column(
+  //                   children: [
+  //                     pw.Expanded(
+  //                       child: pw.Row(
+  //                         children: [
+  //                           _buildImageWithDescription(i),
+  //                           _buildImageWithDescription(i + 1),
+  //                         ],
+  //                       ),
+  //                     ),
+  //                     pw.Expanded(
+  //                       child: pw.Row(
+  //                         children: [
+  //                           _buildImageWithDescription(i + 2),
+  //                           _buildImageWithDescription(i + 3),
+  //                         ],
+  //                       ),
+  //                     ),
+  //                   ],
+  //                 ),
+  //               ),
+  //             ],
+  //           );
+  //         },
+  //       ),
+  //     );
+  //   }
+
+  //   // Print the PDF
+  //   await Printing.layoutPdf(
+  //     name:
+  //         '${projectNumberController.text} SELECTION ${dateMeetingController.text.replaceAll('_', '/')} ${clientNameController.text.toUpperCase()}',
+  //     onLayout: (PdfPageFormat format) async => pdf.save(),
+  //   );
+  // }
+
   Future<void> _generatePDF() async {
     final pdf = pw.Document();
 
@@ -581,11 +792,21 @@ class _SelectionScreenState extends State<SelectionScreen> {
             .buffer
             .asUint8List();
 
-    // Concatenate selected project category and project number
+    Uint8List offerLetterFooterProfileLinkImage =
+        (await rootBundle.load(PickImages.offerLetterFooterProfileLinkImage))
+            .buffer
+            .asUint8List();
+
+    Uint8List offerLaterFooterImage =
+        (await rootBundle.load(PickImages.offerLaterFooterImage))
+            .buffer
+            .asUint8List();
+
+    // Project No formatting
     String formattedProject =
         "${projectNumberController.text} ${_selectedProjectType == 'Architecture - A' ? 'A' : _selectedProjectType == 'Interior - I' ? 'I' : _selectedProjectType == 'Architecture Interior - AI' ? 'AI' : ''}";
 
-    // सभी descriptions एक list में
+    // Descriptions list
     final descriptions = [
       description1Controller.text,
       description2Controller.text,
@@ -597,8 +818,104 @@ class _SelectionScreenState extends State<SelectionScreen> {
       description8Controller.text,
     ];
 
-    // --- Header Widget
-    pw.Widget _buildHeader() {
+    // // --- Header Widget
+    // pw.Widget _buildHeader() {
+    //   return pw.Column(
+    //     children: [
+    //       pw.Row(
+    //         mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+    //         children: [
+    //           pw.Container(
+    //             width: 170,
+    //             height: 60,
+    //             margin: const pw.EdgeInsets.only(bottom: 2),
+    //             decoration: pw.BoxDecoration(
+    //               image: pw.DecorationImage(
+    //                 image: pw.MemoryImage(imageData),
+    //                 fit: pw.BoxFit.fill,
+    //               ),
+    //             ),
+    //           ),
+    //           pw.Container(
+    //             width: 120,
+    //             height: 60,
+    //             decoration: pw.BoxDecoration(
+    //               image: pw.DecorationImage(
+    //                 image: pw.MemoryImage(invoiceContactPdfLogo),
+    //                 fit: pw.BoxFit.contain,
+    //               ),
+    //             ),
+    //           )
+    //         ],
+    //       ),
+    //       pw.SizedBox(height: 6),
+    //       pw.Divider(height: 3, color: PdfColor.fromHex("#616161")),
+    //       pw.Row(
+    //         mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+    //         children: [
+    //           pw.Text(
+    //             "SELECTION",
+    //             style: pw.TextStyle(
+    //               fontSize: 15,
+    //               fontWeight: pw.FontWeight.bold,
+    //             ),
+    //           ),
+    //           pw.Text(
+    //             "${DateFormat('dd/MM/yyyy').format(DateTime.now())} - ${selectionTimeController.text + _selectedTimeStatus.toString()}",
+    //             style: pw.TextStyle(
+    //                 fontSize: 13,
+    //                 fontWeight: pw.FontWeight.normal,
+    //                 color: PdfColor.fromHex("#616161")),
+    //           ),
+    //         ],
+    //       ),
+    //       pw.Divider(height: 3, color: PdfColor.fromHex("#BDBDBD")),
+    //       pw.SizedBox(height: 5),
+    //       pw.Row(
+    //         mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+    //         crossAxisAlignment: pw.CrossAxisAlignment.start,
+    //         children: [
+    //           pw.Expanded(
+    //             flex: 2,
+    //             child: buildInlineTextFieldRow(
+    //               'Client Name : ',
+    //               clientNameController.text,
+    //             ),
+    //           ),
+    //           pw.Expanded(
+    //             child: buildInlineTextFieldRow(
+    //               'Project No. : ',
+    //               formattedProject,
+    //             ),
+    //           ),
+    //         ],
+    //       ),
+    //       pw.Row(
+    //         mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+    //         crossAxisAlignment: pw.CrossAxisAlignment.start,
+    //         children: [
+    //           pw.Expanded(
+    //             flex: 2,
+    //             child: buildInlineTextFieldRow(
+    //               'Address : ',
+    //               addressController.text,
+    //             ),
+    //           ),
+    //           pw.Expanded(
+    //             child: buildInlineTextFieldRow(
+    //               'Selection Visit No. : ',
+    //               selectionVisitNumber.text,
+    //             ),
+    //           ),
+    //         ],
+    //       ),
+    //       pw.SizedBox(height: 10),
+    //     ],
+    //   );
+    // }
+
+// --- Full Header (Page 1 only)
+    pw.Widget _buildFullHeader() {
       return pw.Column(
         children: [
           pw.Row(
@@ -693,6 +1010,63 @@ class _SelectionScreenState extends State<SelectionScreen> {
       );
     }
 
+// --- Short Header (Page 2+)
+    pw.Widget _buildShortHeader() {
+      return pw.Column(
+        children: [
+          pw.Row(
+            mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+            children: [
+              pw.Container(
+                width: 170,
+                height: 60,
+                margin: const pw.EdgeInsets.only(bottom: 2),
+                decoration: pw.BoxDecoration(
+                  image: pw.DecorationImage(
+                    image: pw.MemoryImage(imageData),
+                    fit: pw.BoxFit.fill,
+                  ),
+                ),
+              ),
+              pw.Container(
+                width: 120,
+                height: 60,
+                decoration: pw.BoxDecoration(
+                  image: pw.DecorationImage(
+                    image: pw.MemoryImage(invoiceContactPdfLogo),
+                    fit: pw.BoxFit.contain,
+                  ),
+                ),
+              )
+            ],
+          ),
+          pw.SizedBox(height: 6),
+          pw.Divider(height: 3, color: PdfColor.fromHex("#616161")),
+          pw.Row(
+            mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+            children: [
+              pw.Text(
+                "SELECTION",
+                style: pw.TextStyle(
+                  fontSize: 15,
+                  fontWeight: pw.FontWeight.bold,
+                ),
+              ),
+              pw.Text(
+                "${DateFormat('dd/MM/yyyy').format(DateTime.now())} - ${selectionTimeController.text + _selectedTimeStatus.toString()}",
+                style: pw.TextStyle(
+                    fontSize: 13,
+                    fontWeight: pw.FontWeight.normal,
+                    color: PdfColor.fromHex("#616161")),
+              ),
+            ],
+          ),
+          pw.Divider(height: 3, color: PdfColor.fromHex("#BDBDBD")),
+          pw.SizedBox(height: 10),
+        ],
+      );
+    }
+
     // --- Image + Description (single box)
     pw.Widget _buildImageWithDescription(int index) {
       if (index >= _images.length && index >= descriptions.length) {
@@ -704,7 +1078,8 @@ class _SelectionScreenState extends State<SelectionScreen> {
           index < descriptions.length ? descriptions[index] : "";
 
       return pw.Expanded(
-        child: pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start,
+        child: pw.Column(
+          crossAxisAlignment: pw.CrossAxisAlignment.start,
           children: [
             if (imageFile != null)
               pw.ClipRRect(
@@ -713,13 +1088,13 @@ class _SelectionScreenState extends State<SelectionScreen> {
                 child: pw.Image(
                   pw.MemoryImage(imageFile.readAsBytesSync()),
                   fit: pw.BoxFit.contain,
-                  height: 200, // same height
+                  height: 200,
                 ),
               ),
             if (description.isNotEmpty) ...[
               pw.SizedBox(height: 6),
               pw.Padding(
-                padding: const pw.EdgeInsets.all(4),
+                padding: const pw.EdgeInsets.symmetric(vertical: 4,horizontal: 30),
                 child: pw.Text(
                   description,
                   style: const pw.TextStyle(fontSize: 10),
@@ -732,8 +1107,18 @@ class _SelectionScreenState extends State<SelectionScreen> {
       );
     }
 
-    // ✅ pages बनाना (हर page में 4 images + description)
-    for (int i = 0; i < descriptions.length || i < _images.length; i += 4) {
+    // ✅ केवल non-empty descriptions count करो
+    final nonEmptyDescriptions =
+        descriptions.where((d) => d.trim().isNotEmpty).toList();
+
+// ✅ total items = max(images, nonEmptyDescriptions)
+    int totalItems = _images.length > nonEmptyDescriptions.length
+        ? _images.length
+        : nonEmptyDescriptions.length;
+
+// ✅ कितने total pages चाहिए (हर page पर max 4 items)
+    int totalPages = (totalItems / 4).ceil();
+    for (int pageIndex = 0; pageIndex < totalPages; pageIndex++) {
       pdf.addPage(
         pw.Page(
           margin: const pw.EdgeInsets.all(20),
@@ -742,27 +1127,59 @@ class _SelectionScreenState extends State<SelectionScreen> {
             return pw.Column(
               crossAxisAlignment: pw.CrossAxisAlignment.start,
               children: [
-                _buildHeader(),
+                // ✅ पहले पेज पर full header, बाकी पर short header
+                pageIndex == 0 ? _buildFullHeader() : _buildShortHeader(),
                 pw.Expanded(
                   child: pw.Column(
                     children: [
                       pw.Expanded(
                         child: pw.Row(
                           children: [
-                            _buildImageWithDescription(i),
-                            _buildImageWithDescription(i + 1),
+                            _buildImageWithDescription(pageIndex * 4),
+                            _buildImageWithDescription(pageIndex * 4 + 1),
                           ],
                         ),
                       ),
                       pw.Expanded(
                         child: pw.Row(
                           children: [
-                            _buildImageWithDescription(i + 2),
-                            _buildImageWithDescription(i + 3),
+                            _buildImageWithDescription(pageIndex * 4 + 2),
+                            _buildImageWithDescription(pageIndex * 4 + 3),
                           ],
                         ),
                       ),
                     ],
+                  ),
+                ),
+                pw.UrlLink(
+                  destination:
+                      "https://drive.google.com/file/d/1P_2TqdiB-DCNpGdnzNHFniVyr3EPv0J5/view?usp=sharing",
+                  child: pw.Container(
+                    width: double.infinity,
+                    height: 15,
+                    decoration: pw.BoxDecoration(
+                      image: pw.DecorationImage(
+                        image:
+                            pw.MemoryImage(offerLetterFooterProfileLinkImage),
+                        fit: pw.BoxFit.fitWidth,
+                      ),
+                    ),
+                  ),
+                ),
+
+                /// Full width divider
+                pw.Divider(
+                  thickness: 0.5,
+                  color: PdfColors.grey600,
+                ),
+                pw.Container(
+                  width: double.infinity,
+                  height: 18,
+                  decoration: pw.BoxDecoration(
+                    image: pw.DecorationImage(
+                      image: pw.MemoryImage(offerLaterFooterImage),
+                      fit: pw.BoxFit.fitWidth,
+                    ),
                   ),
                 ),
               ],
@@ -779,7 +1196,6 @@ class _SelectionScreenState extends State<SelectionScreen> {
       onLayout: (PdfPageFormat format) async => pdf.save(),
     );
   }
-
 
   Future<void> _getImage() async {
     final pickedFile =

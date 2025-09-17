@@ -956,49 +956,6 @@ This quote is applicable only for ${monthController.text} month from the commenc
       ),
     );
 
-//////#rd Page
-    // pdf.addPage(
-    //   pw.Page(
-    //     margin: const pw.EdgeInsets.all(20),
-    //     build: (pw.Context context) {
-    //       return pw.Column(
-    //           crossAxisAlignment: pw.CrossAxisAlignment.start,
-    //           children: [
-    //             pw.Container(
-    //               width: double.infinity,
-    //               height: 100,
-    //               margin: const pw.EdgeInsets.only(bottom: 2),
-    //               decoration: pw.BoxDecoration(
-    //                 image: pw.DecorationImage(
-    //                   image: pw.MemoryImage(imageData),
-    //                   fit: pw.BoxFit.fitWidth,
-    //                 ),
-    //               ),
-    //             ),
-    //             pw.SizedBox(height: 5),
-    //             pw.Text(
-    //               "INTERIOR DESIGNING SERVICES & DRAWINGS - PREMIUM",
-    //               style: pw.TextStyle(
-    //                 decoration: pw.TextDecoration.underline,
-    //                 fontSize: 15,
-    //                 font: calibriBoldFont,
-    //                 // color: PdfColor.fromHex("#000000"),
-    //               ),
-    //             ),
-    //             pw.SizedBox(height: 5),
-    //             pw.Text(
-    //               "01. Presenta on Floor Plan with Furniture layout (Conceptual)\n02. Presenta on Floor Plan (Civil Changes)*\n 03. Vastu Zoning\n04. Master Layout - Furniture & Civil Work.\n05. 3D Model Design - Each Space\n06. Civil Changes Working Drawing\n          a. Any civil changes\n,          b. Kitchen Pla orm Work\n          c. Tiling Work (Floor & Wall) \n07. False Ceiling Working\n08. Electrical layout & Schedule\n09. Wardrobe Segment & Presenta on drawing\n10. Master Bedroom/s working drawing\n",
-    //               style: pw.TextStyle(
-    //                 font: regularFont,
-    //                 fontSize: 11,
-    //                 fontWeight: pw.FontWeight.normal,
-    //               ),
-    //             ),
-    //           ]);
-    //     },
-    //   ),
-    // );
-
     for (int i = 0; i < _images.length; i += 4) {
       pdf.addPage(
         pw.Page(
@@ -2351,7 +2308,7 @@ This quote is applicable only for ${monthController.text} month from the commenc
                         PickHeightAndWidth.width10,
                         Expanded(
                           child: CommonMaterialButton(
-                          title: "Export As Pdf",
+                            title: "Export As Pdf",
                             suffixIcon: PickImages.pdfIcon,
                             style: CommonTextStyle().buttonTextStyle,
                             onPressed: _generatePDF,
