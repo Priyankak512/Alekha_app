@@ -1068,6 +1068,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
     }
 
     // --- Image + Description (single box)
+
     pw.Widget _buildImageWithDescription(int index) {
       if (index >= _images.length && index >= descriptions.length) {
         return pw.SizedBox();
@@ -1079,24 +1080,31 @@ class _SelectionScreenState extends State<SelectionScreen> {
 
       return pw.Expanded(
         child: pw.Column(
-          crossAxisAlignment: pw.CrossAxisAlignment.start,
+          mainAxisAlignment: pw.MainAxisAlignment.start,
+          crossAxisAlignment: pw.CrossAxisAlignment.center, // ✅ center align
           children: [
             if (imageFile != null)
-              pw.ClipRRect(
-                horizontalRadius: 12,
-                verticalRadius: 12,
-                child: pw.Image(
-                  pw.MemoryImage(imageFile.readAsBytesSync()),
-                  fit: pw.BoxFit.contain,
-                  height: 200,
+              pw.Container(
+                alignment: pw.Alignment.center,
+                child: pw.ClipRRect(
+                  horizontalRadius: 12,
+                  verticalRadius: 12,
+                  child: pw.Image(
+                    pw.MemoryImage(imageFile.readAsBytesSync()),
+                    fit: pw.BoxFit.contain,
+                    height: 240,
+                  ),
                 ),
               ),
             if (description.isNotEmpty) ...[
               pw.SizedBox(height: 6),
-              pw.Padding(
-                padding: const pw.EdgeInsets.symmetric(vertical: 4,horizontal: 30),
+              pw.Container(
+                alignment: pw.Alignment.center,
+                padding: const pw.EdgeInsets.symmetric(horizontal: 15),
                 child: pw.Text(
                   description,
+                  maxLines: 8,
+                  // overflow: pw.TextOverflow.ellips,
                   style: const pw.TextStyle(fontSize: 10),
                   textAlign: pw.TextAlign.center,
                 ),
@@ -1106,6 +1114,45 @@ class _SelectionScreenState extends State<SelectionScreen> {
         ),
       );
     }
+
+    // pw.Widget _buildImageWithDescription(int index) {
+    //   if (index >= _images.length && index >= descriptions.length) {
+    //     return pw.SizedBox();
+    //   }
+
+    //   final File? imageFile = index < _images.length ? _images[index] : null;
+    //   final String description =
+    //       index < descriptions.length ? descriptions[index] : "";
+
+    //   return pw.Expanded(
+    //     child: pw.Column(
+    //       crossAxisAlignment: pw.CrossAxisAlignment.start,
+    //       children: [
+    //         if (imageFile != null)
+    //           pw.ClipRRect(
+    //             horizontalRadius: 12,
+    //             verticalRadius: 12,
+    //             child: pw.Image(
+    //               pw.MemoryImage(imageFile.readAsBytesSync()),
+    //               fit: pw.BoxFit.contain,
+    //               height: 200,
+    //             ),
+    //           ),
+    //         if (description.isNotEmpty) ...[
+    //           pw.SizedBox(height: 6),
+    //           pw.Padding(
+    //             padding: const pw.EdgeInsets.symmetric(vertical: 4,horizontal: 30),
+    //             child: pw.Text(
+    //               description,
+    //               style: const pw.TextStyle(fontSize: 10),
+    //               textAlign: pw.TextAlign.start,
+    //             ),
+    //           ),
+    //         ]
+    //       ],
+    //     ),
+    //   );
+    // }
 
     // ✅ केवल non-empty descriptions count करो
     final nonEmptyDescriptions =
@@ -1151,21 +1198,21 @@ class _SelectionScreenState extends State<SelectionScreen> {
                     ],
                   ),
                 ),
-                pw.UrlLink(
-                  destination:
-                      "https://drive.google.com/file/d/1P_2TqdiB-DCNpGdnzNHFniVyr3EPv0J5/view?usp=sharing",
-                  child: pw.Container(
-                    width: double.infinity,
-                    height: 15,
-                    decoration: pw.BoxDecoration(
-                      image: pw.DecorationImage(
-                        image:
-                            pw.MemoryImage(offerLetterFooterProfileLinkImage),
-                        fit: pw.BoxFit.fitWidth,
-                      ),
-                    ),
-                  ),
-                ),
+                // pw.UrlLink(
+                //   destination:
+                //       "https://drive.google.com/file/d/1P_2TqdiB-DCNpGdnzNHFniVyr3EPv0J5/view?usp=sharing",
+                //   child: pw.Container(
+                //     width: double.infinity,
+                //     height: 15,
+                //     decoration: pw.BoxDecoration(
+                //       image: pw.DecorationImage(
+                //         image:
+                //             pw.MemoryImage(offerLetterFooterProfileLinkImage),
+                //         fit: pw.BoxFit.fitWidth,
+                //       ),
+                //     ),
+                //   ),
+                // ),
 
                 /// Full width divider
                 pw.Divider(
@@ -1405,8 +1452,9 @@ class _SelectionScreenState extends State<SelectionScreen> {
                       ),
                       PickHeightAndWidth.width5,
                       Container(
+                        height: 100, width: 100,
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 5, vertical: 5),
+                            horizontal: 8, vertical: 8),
                         decoration: BoxDecoration(
                           borderRadius:
                               const BorderRadius.all(Radius.circular(8)),
@@ -1444,8 +1492,9 @@ class _SelectionScreenState extends State<SelectionScreen> {
                       ),
                       PickHeightAndWidth.width5,
                       Container(
+                        height: 100, width: 100,
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 10),
+                            horizontal: 8, vertical: 8),
                         decoration: BoxDecoration(
                           borderRadius:
                               const BorderRadius.all(Radius.circular(8)),
@@ -1483,8 +1532,9 @@ class _SelectionScreenState extends State<SelectionScreen> {
                       ),
                       PickHeightAndWidth.width5,
                       Container(
+                        height: 100, width: 100,
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 10),
+                            horizontal: 8, vertical: 8),
                         decoration: BoxDecoration(
                           borderRadius:
                               const BorderRadius.all(Radius.circular(8)),
@@ -1522,8 +1572,9 @@ class _SelectionScreenState extends State<SelectionScreen> {
                       ),
                       PickHeightAndWidth.width5,
                       Container(
+                        height: 100, width: 100,
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 10),
+                            horizontal: 8, vertical: 8),
                         decoration: BoxDecoration(
                           borderRadius:
                               const BorderRadius.all(Radius.circular(8)),
@@ -1561,8 +1612,9 @@ class _SelectionScreenState extends State<SelectionScreen> {
                       ),
                       PickHeightAndWidth.width5,
                       Container(
+                        height: 100, width: 100,
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 10),
+                            horizontal: 8, vertical: 8),
                         decoration: BoxDecoration(
                           borderRadius:
                               const BorderRadius.all(Radius.circular(8)),
@@ -1600,8 +1652,9 @@ class _SelectionScreenState extends State<SelectionScreen> {
                       ),
                       PickHeightAndWidth.width5,
                       Container(
+                        height: 100, width: 100,
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 10),
+                            horizontal: 8, vertical: 8),
                         decoration: BoxDecoration(
                           borderRadius:
                               const BorderRadius.all(Radius.circular(8)),
@@ -1639,8 +1692,9 @@ class _SelectionScreenState extends State<SelectionScreen> {
                       ),
                       PickHeightAndWidth.width5,
                       Container(
+                        height: 100, width: 100,
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 10),
+                            horizontal: 8, vertical: 8),
                         decoration: BoxDecoration(
                           borderRadius:
                               const BorderRadius.all(Radius.circular(8)),
@@ -1678,8 +1732,9 @@ class _SelectionScreenState extends State<SelectionScreen> {
                       ),
                       PickHeightAndWidth.width5,
                       Container(
+                        height: 100, width: 100,
                         padding: const EdgeInsets.symmetric(
-                            horizontal: 10, vertical: 10),
+                            horizontal: 8, vertical: 8),
                         decoration: BoxDecoration(
                           borderRadius:
                               const BorderRadius.all(Radius.circular(8)),
