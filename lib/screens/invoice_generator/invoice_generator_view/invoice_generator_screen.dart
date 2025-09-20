@@ -18,6 +18,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:provider/provider.dart';
+import 'package:number_to_words/number_to_words.dart';
 
 class InvoiceGeneratorScreen extends StatefulWidget {
   const InvoiceGeneratorScreen({super.key});
@@ -104,7 +105,6 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
     Uint8List feesPaidImage =
         (await rootBundle.load(PickImages.paidFeesImage)).buffer.asUint8List();
 
-   
     Uint8List a4PdfBgImage =
         (await rootBundle.load(PickImages.a4PdfBgImage)).buffer.asUint8List();
 
@@ -161,6 +161,9 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
     if (tableData.isNotEmpty) {
       tableData.add(['Total'.toUpperCase(), '', totalPrice.toStringAsFixed(2)]);
     }
+
+    int totalInt = totalPrice.toInt();
+    String totalInWords = NumberToWord().convert('en-in', totalInt) ?? '';
 
     final pdf = pw.Document();
     pdf.addPage(
@@ -340,6 +343,14 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
                         ),
                       ],
                     ),
+
+                    // Total in words below table
+                    // pw.SizedBox(height: 5),
+                    // pw.Text(
+                    //   "Total (In Words): ${totalInWords.toUpperCase()} ONLY",
+                    //   style: pw.TextStyle(
+                    //       fontSize: 12, fontWeight: pw.FontWeight.bold),
+                    // ),
                     pw.Container(
                       padding: const pw.EdgeInsets.all(5.00),
                       width: double.infinity,
@@ -353,7 +364,8 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
                         ),
                       ),
                       child: pw.Text(
-                        amountController.text,
+                        "${totalInWords.isNotEmpty ? totalInWords[0].toUpperCase() + totalInWords.substring(1) : ""}only",
+                        // amountController.text,
                         textAlign: pw.TextAlign.center,
                       ),
                     ),
@@ -460,273 +472,6 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
       ),
     );
 
-    // pdf.addPage(
-    //   pw.Page(
-    //     margin: const pw.EdgeInsets.all(20),
-    //     build: (pw.Context context) {
-    //       return pw.Column(
-    //         crossAxisAlignment: pw.CrossAxisAlignment.start,
-    //         children: [
-    //           pw.Row(
-    //             mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-    //             children: [
-    //               pw.Container(
-    //                 width: 170,
-    //                 height: 60,
-    //                 margin: const pw.EdgeInsets.only(bottom: 2),
-    //                 decoration: pw.BoxDecoration(
-    //                   image: pw.DecorationImage(
-    //                     image: pw.MemoryImage(imageData),
-    //                     fit: pw.BoxFit.fill,
-    //                   ),
-    //                 ),
-    //               ),
-    //               // pw.Expanded(
-    //               //   child:
-    //               pw.Container(
-    //                 width: 120,
-    //                 height: 60,
-    //                 decoration: pw.BoxDecoration(
-    //                   image: pw.DecorationImage(
-    //                     image: pw.MemoryImage(invoiceContactPdfLogo),
-    //                     fit: pw.BoxFit.contain,
-    //                   ),
-    //                 ),
-    //                 // ),
-    //               )
-    //             ],
-    //           ),
-    //           pw.SizedBox(height: 6),
-    //           pw.Divider(height: 3, color: PdfColor.fromHex("#616161")),
-    //           pw.Row(
-    //             mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-    //             children: [
-    //               pw.Text("INVOICE",
-    //                   style: pw.TextStyle(
-    //                       fontSize: 13, fontWeight: pw.FontWeight.bold)),
-    //               pw.Text("Date : ${dateController.text}",
-    //                   style: pw.TextStyle(
-    //                       fontSize: 13, color: PdfColor.fromHex("#616161"))),
-    //             ],
-    //           ),
-    //           pw.Divider(height: 3, color: PdfColor.fromHex("#BDBDBD")),
-    //           pw.SizedBox(height: 5),
-    //           pw.Text(
-    //               "Project No. : ${projectNoController.text} ${_selectedProjectCategory == 'Architecture - A' ? 'A' : _selectedProjectCategory == 'Interior - I' ? 'I' : _selectedProjectCategory == 'Architecture Interior - AI' ? 'AI' : ''}"
-    //               // $_selectedProjectCategory",
-    //               ),
-    //           pw.Text(
-    //               "Invoice No. : ${invoiceNoController.text.toUpperCase()}"),
-    //           pw.Text(
-    //               "Invoice Reference No. : ${invoiceReferenceNoController.text}"),
-    //           pw.Text("For : "),
-    //           pw.Text(
-    //             "${clientNameController.text.toUpperCase()} - ${contactNoController.text}",
-    //             style:
-    //                 pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold),
-    //           ),
-    //           pw.Text(
-    //             addressController.text,
-    //             style:
-    //                 pw.TextStyle(fontSize: 12, fontWeight: pw.FontWeight.bold),
-    //           ),
-    //           pw.SizedBox(height: 20),
-    //           pw.Table(
-    //             border: pw.TableBorder.all(),
-    //             columnWidths: {
-    //               0: const pw.FlexColumnWidth(0.5),
-    //               1: const pw.FlexColumnWidth(3),
-    //               2: const pw.FlexColumnWidth(0.7),
-    //             },
-    //             children: [
-    //               // Header Row
-    //               pw.TableRow(
-    //                 decoration:
-    //                     const pw.BoxDecoration(color: PdfColors.grey300),
-    //                 children: [
-    //                   pw.Padding(
-    //                     padding: const pw.EdgeInsets.all(4),
-    //                     child: pw.Center(
-    //                       child: pw.Text('No.'.toUpperCase(),
-    //                           style:
-    //                               pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-    //                     ),
-    //                   ),
-    //                   pw.Padding(
-    //                     padding: const pw.EdgeInsets.all(4),
-    //                     child: pw.Text('Description'.toUpperCase(),
-    //                         style:
-    //                             pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-    //                   ),
-    //                   pw.Padding(
-    //                     padding: const pw.EdgeInsets.all(4),
-    //                     child: pw.Text('Amount'.toUpperCase(),
-    //                         style:
-    //                             pw.TextStyle(fontWeight: pw.FontWeight.bold)),
-    //                   ),
-    //                 ],
-    //               ),
-
-    //               // Data Rows
-    //               ...tableData.map(
-    //                 (row) {
-    //                   final isTotalRow = row[0].toUpperCase() == 'TOTAL';
-    //                   const defaultTextStyle = pw.TextStyle();
-    //                   final boldTextStyle = pw.TextStyle(
-    //                     fontWeight: pw.FontWeight.bold,
-    //                     fontSize: 12,
-    //                   );
-    //                   final totalAmountStyle = pw.TextStyle(
-    //                     fontWeight: pw.FontWeight.bold,
-    //                     fontSize: 12, // <- Increased font size for amount only
-    //                   );
-
-    //                   return pw.TableRow(
-    //                     children: [
-    //                       pw.Padding(
-    //                         padding: const pw.EdgeInsets.all(4),
-    //                         child: pw.Center(
-    //                           child: pw.Text(row[0],
-    //                               style: isTotalRow
-    //                                   ? boldTextStyle
-    //                                   : defaultTextStyle),
-    //                         ),
-    //                       ),
-    //                       pw.Padding(
-    //                         padding: const pw.EdgeInsets.all(4),
-    //                         child: pw.Align(
-    //                           alignment: pw.Alignment.centerLeft,
-    //                           child: pw.Text(row[1],
-    //                               style: isTotalRow
-    //                                   ? boldTextStyle
-    //                                   : defaultTextStyle),
-    //                         ),
-    //                       ),
-    //                       pw.Padding(
-    //                         padding: const pw.EdgeInsets.all(4),
-    //                         child: pw.Align(
-    //                           alignment: pw.Alignment.centerLeft,
-    //                           child: pw.Text(
-    //                             row[2],
-    //                             style: isTotalRow
-    //                                 ? totalAmountStyle
-    //                                 : defaultTextStyle,
-    //                           ),
-    //                         ),
-    //                       ),
-    //                     ],
-    //                   );
-    //                 },
-    //               ),
-    //             ],
-    //           ),
-    //           pw.Container(
-    //             padding: const pw.EdgeInsets.all(5.00),
-    //             width: double.infinity,
-    //             decoration: pw.BoxDecoration(
-    //               borderRadius: const pw.BorderRadius.only(
-    //                 bottomRight: pw.Radius.circular(0),
-    //                 bottomLeft: pw.Radius.circular(0),
-    //               ),
-    //               border: pw.Border.all(
-    //                 width: 1,
-    //               ),
-    //             ),
-    //             child: pw.Text(
-    //               amountController.text,
-    //               textAlign: pw.TextAlign.center,
-    //             ),
-    //           ),
-    //           pw.Spacer(),
-    //           pw.Container(
-    //             padding: const pw.EdgeInsets.all(5),
-    //             child: pw.Column(
-    //               crossAxisAlignment: pw.CrossAxisAlignment.start,
-    //               children: [
-    //                 pw.Align(
-    //                   alignment: pw.Alignment.topRight,
-    //                   child: pw.Text("ALEKHA ARCHITECTS",
-    //                       style: pw.TextStyle(
-    //                           fontSize: 12, fontWeight: pw.FontWeight.bold)),
-    //                 ),
-    //                 pw.SizedBox(height: 5),
-    //                 pw.Align(
-    //                   alignment: pw.Alignment.topRight,
-    //                   child: pw.Text(_selectedRegardsType.toString(),
-    //                       style: const pw.TextStyle(fontSize: 10)),
-    //                 ),
-    //                 pw.Align(
-    //                   alignment: pw.Alignment.topRight,
-    //                   child: pw.Container(
-    //                     width: 120,
-    //                     height: 60,
-    //                     decoration: pw.BoxDecoration(
-    //                       image: pw.DecorationImage(
-    //                         image: pw.MemoryImage(
-    //                           _selectedRegardsType ==
-    //                                   "Ar.Tushar Kachhadiya     "
-    //                               ? tusharSignatureImage
-    //                               : ronakSignatureImage,
-    //                         ),
-    //                         fit: pw.BoxFit.contain,
-    //                       ),
-    //                     ),
-    //                   ),
-    //                 ),
-    //                 pw.SizedBox(height: 20),
-    //                 pw.Align(
-    //                   alignment: pw.Alignment.center,
-    //                   child: pw.Text(
-    //                     "This is computer generated invoice doesn't required signature.",
-    //                     style: pw.TextStyle(
-    //                         fontSize: 11, color: PdfColor.fromHex("#949494")),
-    //                   ),
-    //                 ),
-    //                 pw.Divider(color: PdfColor.fromHex("#616161")),
-    //                 pw.Row(
-    //                   mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-    //                   crossAxisAlignment: pw.CrossAxisAlignment.start,
-    //                   children: [
-    //                     pw.Column(crossAxisAlignment: pw.CrossAxisAlignment.start,
-    //                       children: [
-    //                       pw.Text("BANK DETAILS :"),
-    //                       pw.Text("A/C NAME - ALEKHA ARCHITECTS"),
-    //                       pw.Text("BANK NAME - SURAT NATIONAL CO. OP. BANK"),
-    //                       pw.Text("A/C NO. - 008120100004535"),
-    //                       pw.Text("IFS CODE - SUNB0000008"),
-    //                     ]),
-    //                     if (_selectedOption == 'Fees Paid')
-    //                       pw.Container(
-    //                         width: 120,
-    //                         height: 60,
-    //                         decoration: pw.BoxDecoration(
-    //                           image: pw.DecorationImage(
-    //                             image: pw.MemoryImage(feesPaidImage),
-    //                             fit: pw.BoxFit.contain,
-    //                           ),
-    //                         ),
-    //                       )
-    //                     else
-    //                       pw.SizedBox(),
-    //                   ],
-    //                 ),
-    //                 pw.Divider(color: PdfColor.fromHex("#616161")),
-    //                 pw.Align(
-    //                   alignment: pw.Alignment.center,
-    //                   child: pw.Text(
-    //                     "G.F. Plot No.29, Hira Nagar, Bamroll Road, Nr.Saraswati Hindi Vidyalaya, Surat, Gujarat.",
-    //                     style: const pw.TextStyle(fontSize: 11),
-    //                   ),
-    //                 ),
-    //               ],
-    //             ),
-    //           ),
-    //         ],
-    //       );
-    //     },
-    //   ),
-    // );
-
     await Printing.layoutPdf(
       name:
           '${projectNoController.text} INVOICE ${dateController.text.replaceAll('_', '/')} ${clientNameController.text.toUpperCase()}',
@@ -734,8 +479,43 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
     );
   }
 
+  double totalPrice = 0.0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    // add listeners for all price fields
+    priceController.addListener(calculateTotal);
+    priceController2.addListener(calculateTotal);
+    priceController3.addListener(calculateTotal);
+    priceController4.addListener(calculateTotal);
+    priceController5.addListener(calculateTotal);
+    priceController6.addListener(calculateTotal);
+    priceController7.addListener(calculateTotal);
+    priceController8.addListener(calculateTotal);
+  }
+
+  void calculateTotal() {
+    double price1 = double.tryParse(priceController.text) ?? 0.0;
+    double price2 = double.tryParse(priceController2.text) ?? 0.0;
+    double price3 = double.tryParse(priceController3.text) ?? 0.0;
+    double price4 = double.tryParse(priceController4.text) ?? 0.0;
+    double price5 = double.tryParse(priceController5.text) ?? 0.0;
+    double price6 = double.tryParse(priceController6.text) ?? 0.0;
+    double price7 = double.tryParse(priceController7.text) ?? 0.0;
+    double price8 = double.tryParse(priceController8.text) ?? 0.0;
+
+    setState(() {
+      totalPrice =
+          price1 + price2 + price3 + price4 + price5 + price6 + price7 + price8;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    int totalInt = totalPrice.toInt();
+    String totalInWords = NumberToWord().convert('en-in', totalInt);
     return Consumer(
       builder: (context, GeneralHelper helper, snapshot) {
         return WillPopScope(
@@ -765,6 +545,7 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
               child: Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CommonTextFieldWithBorder(
                       fillColor: Colors.transparent,
@@ -870,7 +651,7 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
                       hintText: "Contact No.",
                       suffixIcon: InkWell(
                         onTap: () {
-                        helper.pickContact(contactNoController);
+                          helper.pickContact(contactNoController);
                         },
                         child: const Icon(Icons.person),
                       ),
@@ -908,7 +689,7 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
                             controller: priceController,
                             labelText: "Amount",
                             keyboardType: TextInputType.number,
-                            hintText: "Amount in",
+                            hintText: "Amount",
                           ),
                         ),
                       ],
@@ -1091,15 +872,8 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
                     const SizedBox(
                       height: 20,
                     ),
-                    CommonTextFieldWithFocus(
-                      controller: amountController,
-                      labelText: "Amount in words",
-                      hintText: "Amount in words",
-                      // maxLines: 2,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
+                    Text("Total Amount: ₹${totalPrice.toStringAsFixed(2)}"),
+                    Text("In Words: ${totalInWords.isNotEmpty ? totalInWords[0].toUpperCase() + totalInWords.substring(1) : ""}only"),
                     CommonDropDownWithoutSearch(
                       borderColor: PickColors.primaryColor,
                       hintText: "Regards",
@@ -1196,7 +970,7 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
                         ),
                         Expanded(
                           child: CommonMaterialButton(
-                            title: "Whatsapp",
+                            title: "Share",
                             suffixIcon: PickImages.whatsAppIcon,
                             style: CommonTextStyle().buttonTextStyle,
                             color: PickColors.successColor,

@@ -278,7 +278,7 @@ class _FeesReceivedScreenState extends State<FeesReceivedScreen> {
                     Expanded(
                       child: CommonMaterialButton(
                         color: PickColors.successColor,
-                        title: "Whatsapp",
+                        title: "Share",
                         suffixIcon: PickImages.whatsAppIcon,
                         onPressed: () {
                           // _launchWhatsapp();

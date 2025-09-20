@@ -66,8 +66,8 @@ class _NotesScreenState extends State<NotesScreen> {
                       Expanded(
                         child: CommonMaterialButton(
                           color: PickColors.successColor,
-                          title: "SHARE ON WHATSAPP",
-                          suffixIcon: PickImages.whatsAppIcon,
+                          title: "Share",
+                          prefixIcon: PickImages.whatsAppIcon,
                           onPressed: () {
                             // _launchWhatsapp();
                           },
@@ -79,8 +79,8 @@ class _NotesScreenState extends State<NotesScreen> {
                       Expanded(
                         child: CommonMaterialButton(
                           borderColor: PickColors.authSubTitleTextColor,
-                          title: "COPY TO CLIPBOARD",
-                          suffixIcon: PickImages.copyToClipboardIcon,
+                          title: "Copy",
+                          prefixIcon: PickImages.copyToClipboardIcon,
                           style: CommonTextStyle().buttonTextStyle,
                           color: PickColors.transparentColor,
                           onPressed: () {

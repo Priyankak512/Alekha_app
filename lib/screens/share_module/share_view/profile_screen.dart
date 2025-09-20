@@ -80,8 +80,8 @@ Widget build(BuildContext context) {
                       Expanded(
                         child: CommonMaterialButton(
                           color: PickColors.successColor,
-                          title: "SHARE ON WHATSAPP",
-                          suffixIcon: PickImages.whatsAppIcon,
+                          title: "Whatsapp",
+                          prefixIcon: PickImages.whatsAppIcon,
                           onPressed: () {
                             // _launchWhatsapp();
                           },
@@ -91,8 +91,8 @@ Widget build(BuildContext context) {
                       Expanded(
                         child: CommonMaterialButton(
                           borderColor: PickColors.authSubTitleTextColor,
-                          title: "COPY TO CLIPBOARD",
-                          suffixIcon: PickImages.persionMailIcon,
+                          title: "Copy",
+                          prefixIcon: PickImages.persionMailIcon,
                           style: CommonTextStyle().buttonTextStyle,
                           color: PickColors.transparentColor,
                           onPressed: () {

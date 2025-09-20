@@ -146,8 +146,6 @@ $regards
 âlekha architects""";
   }
 
-
-
   @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, GeneralHelper helper, snapshot) {
@@ -237,7 +235,6 @@ $regards
                       ),
                     ),
                   ),
-
 
                 // if (_showPreviewMessage)
                 // RichText(
@@ -342,22 +339,22 @@ $regards
                     Expanded(
                       child: CommonMaterialButton(
                         color: PickColors.successColor,
-                        title: "SHARE ON WHATSAPP",
-                        suffixIcon: PickImages.whatsAppIcon,
+                        title: "share",
+                        prefixIcon: PickImages.whatsAppIcon,
                         onPressed: () {
                           // _launchWhatsapp();
                         },
                       ),
                     ),
-                    const SizedBox(width: 10),
+                    PickHeightAndWidth.width10,
                     Expanded(
                       child: CommonMaterialButton(
                         borderColor: PickColors.authSubTitleTextColor,
-                        title: "COPY TO CLIPBOARD",
-                        suffixIcon: PickImages.persionMailIcon,
+                        title: "Copy",
+                        prefixIcon: PickImages.persionMailIcon,
                         style: CommonTextStyle().buttonTextStyle,
                         color: PickColors.transparentColor,
-                       onPressed: () {
+                        onPressed: () {
                           String message = buildClipboardMessage(
                             nameController.text,
                             _selectedRegardsType.toString(),
@@ -370,8 +367,6 @@ $regards
                                 content: Text("Message copied to clipboard!")),
                           );
                         },
-
-
                       ),
                     )
                   ],

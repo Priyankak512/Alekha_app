@@ -187,8 +187,8 @@ https://www.instagram.com/alekha_architects
                     Expanded(
                       child: CommonMaterialButton(
                         color: PickColors.successColor,
-                        title: "SHARE ON WHATSAPP",
-                        suffixIcon: PickImages.whatsAppIcon,
+                        title: "Share",
+                        prefixIcon: PickImages.whatsAppIcon,
                         onPressed: () {
                           // _launchWhatsapp();
                         },
@@ -198,8 +198,8 @@ https://www.instagram.com/alekha_architects
                     Expanded(
                       child: CommonMaterialButton(
                         borderColor: PickColors.authSubTitleTextColor,
-                        title: "COPY TO CLIPBOARD",
-                        suffixIcon: PickImages.persionMailIcon,
+                        title: "Copy",
+                        prefixIcon: PickImages.persionMailIcon,
                         style: CommonTextStyle().buttonTextStyle,
                         color: PickColors.transparentColor,
                         onPressed: () {

@@ -4,6 +4,7 @@ import 'dart:typed_data';
 import 'package:alekha/constant/colors.dart';
 import 'package:alekha/constant/date_formates.dart';
 import 'package:alekha/constant/global_list.dart';
+import 'package:alekha/constant/hight_width_picker.dart';
 import 'package:alekha/constant/images_route.dart';
 import 'package:alekha/constant/navigation_route.dart';
 import 'package:alekha/constant/text_style.dart';
@@ -545,20 +546,29 @@ class _CreatePdfFromDataState extends State<ArchitectureScreen> {
                         )
                       : Container(),
                   const SizedBox(height: 20),
-                  CommonMaterialButton(
-                      title: 'Add Image',
-                      onPressed: _getImage,
-                      prefixIcon: PickImages.cameraIcon,
-                      prefixIconColor: Colors.black,
-                      color: PickColors.primaryColor),
-                  const SizedBox(height: 20),
-                  CommonMaterialButton(
-                   title: "Export As Pdf",
-                    suffixIcon: PickImages.pdfIcon,
-                    style: CommonTextStyle().buttonTextStyle,
-                    onPressed: _generatePDF,
-                    color: PickColors.primaryColor,
-                    verticalPadding: 20,
+
+                  Row(
+                    children: [
+                      Expanded(
+                        child: CommonMaterialButton(
+                            title: 'Add Image',
+                            onPressed: _getImage,
+                            prefixIcon: PickImages.cameraIcon,
+                            prefixIconColor: Colors.black,
+                            color: PickColors.primaryColor),
+                      ),
+                      PickHeightAndWidth.width10,
+                      Expanded(
+                        child: CommonMaterialButton(
+                          title: "Export As Pdf",
+                          prefixIcon: PickImages.pdfIcon,
+                          style: CommonTextStyle().buttonTextStyle,
+                          onPressed: _generatePDF,
+                          color: PickColors.primaryColor,
+                          verticalPadding: 20,
+                        ),
+                      ),
+                    ],
                   ),
                 ],
               ),

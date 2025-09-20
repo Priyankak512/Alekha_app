@@ -857,7 +857,7 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
                   const SizedBox(height: 10),
                   CommonMaterialButton(
                     color: PickColors.successColor,
-                    title: "Share On Whatsapp",
+                    title: "Share",
                     suffixIcon: PickImages.whatsAppIcon,
                     // onPressed: () {},
 

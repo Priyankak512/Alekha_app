@@ -576,3 +576,89 @@ class _CommonTextFieldWitNumbersState extends State<CommonTextFieldWitNumbers> {
     );
   }
 }
+
+
+
+
+
+class CommonTimePickerField extends StatefulWidget {
+  final TextEditingController controller;
+  final String hintText;
+  final String labelText;
+  final TextInputAction? textInputAction;
+  final Widget? prefixIcon;
+  final Widget? suffixIcon;
+  final void Function(TimeOfDay?)? onTimePicked;
+
+  const CommonTimePickerField({
+    Key? key,
+    required this.controller,
+    required this.hintText,
+    required this.labelText,
+    this.textInputAction,
+    this.prefixIcon,
+    this.suffixIcon,
+    this.onTimePicked,
+  }) : super(key: key);
+
+  @override
+  State<CommonTimePickerField> createState() => _CommonTimePickerFieldState();
+}
+
+class _CommonTimePickerFieldState extends State<CommonTimePickerField> {
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: () async {
+        TimeOfDay? pickedTime = await showTimePicker(
+          context: context,
+          initialTime: TimeOfDay.now(),
+        );
+
+        if (pickedTime != null) {
+          // Convert to 12-hour format manually
+          final hour =
+              pickedTime.hourOfPeriod == 0 ? 12 : pickedTime.hourOfPeriod;
+          final minute = pickedTime.minute.toString().padLeft(2, '0');
+          final period = pickedTime.period == DayPeriod.am ? "AM" : "PM";
+
+          widget.controller.text = "$hour:$minute $period";
+
+          if (widget.onTimePicked != null) {
+            widget.onTimePicked!(pickedTime);
+          }
+        }
+      },
+
+      child: AbsorbPointer(
+        child: TextFormField(
+          controller: widget.controller,
+          readOnly: true,
+          textInputAction: widget.textInputAction,
+          style: CommonTextStyle().textFieldTitleTextStyle,
+          decoration: InputDecoration(
+            contentPadding:
+                const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
+            hintText: widget.hintText,
+            hintStyle: CommonTextStyle().textFieldTitleTextStyle,
+            label: Text(
+              widget.labelText,
+              style: CommonTextStyle().textFieldTitleTextStyle,
+            ),
+            border: const OutlineInputBorder(),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: const BorderSide(color: Colors.teal),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(10),
+              borderSide: BorderSide(color: PickColors.textfieldBorderColor),
+            ),
+            prefixIcon: widget.prefixIcon,
+            suffixIcon: widget.suffixIcon ?? const Icon(Icons.access_time),
+          ),
+        ),
+      ),
+    );
+  }
+}

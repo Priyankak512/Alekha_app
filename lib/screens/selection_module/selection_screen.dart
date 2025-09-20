@@ -46,13 +46,21 @@ class _SelectionScreenState extends State<SelectionScreen> {
   TextEditingController selectionVisitNumber = TextEditingController();
 
   TextEditingController description1Controller = TextEditingController();
+  File? image1;
   TextEditingController description2Controller = TextEditingController();
+  File? image2;
   TextEditingController description3Controller = TextEditingController();
+  File? image3;
   TextEditingController description4Controller = TextEditingController();
+  File? image4;
   TextEditingController description5Controller = TextEditingController();
+  File? image5;
   TextEditingController description6Controller = TextEditingController();
+  File? image6;
   TextEditingController description7Controller = TextEditingController();
+  File? image7;
   TextEditingController description8Controller = TextEditingController();
+  File? image8;
 
   // Future<void> _generatePDF() async {
   //   final pdf = pw.Document();
@@ -957,7 +965,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
                 ),
               ),
               pw.Text(
-                "${DateFormat('dd/MM/yyyy').format(DateTime.now())} - ${selectionTimeController.text + _selectedTimeStatus.toString()}",
+                "${DateFormat('dd/MM/yyyy').format(DateTime.now())} ${selectionTimeController.text.isNotEmpty ? ' - ${selectionTimeController.text}' : ''}",
                 style: pw.TextStyle(
                     fontSize: 13,
                     fontWeight: pw.FontWeight.normal,
@@ -1053,7 +1061,9 @@ class _SelectionScreenState extends State<SelectionScreen> {
                 ),
               ),
               pw.Text(
-                "${DateFormat('dd/MM/yyyy').format(DateTime.now())} - ${selectionTimeController.text + _selectedTimeStatus.toString()}",
+                "${DateFormat('dd/MM/yyyy').format(DateTime.now())} ${selectionTimeController.text.isNotEmpty ? ' - ${selectionTimeController.text}' : ''}",
+
+                // "${DateFormat('dd/MM/yyyy').format(DateTime.now())} - ${selectionTimeController.text + _selectedTimeStatus.toString()}",
                 style: pw.TextStyle(
                     fontSize: 13,
                     fontWeight: pw.FontWeight.normal,
@@ -1085,6 +1095,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
           children: [
             if (imageFile != null)
               pw.Container(
+                padding: const pw.EdgeInsets.symmetric(horizontal: 15),
                 alignment: pw.Alignment.center,
                 child: pw.ClipRRect(
                   horizontalRadius: 12,
@@ -1263,6 +1274,43 @@ class _SelectionScreenState extends State<SelectionScreen> {
     }
   }
 
+  bool _validateAndGeneratePDF() {
+    final pairs = [
+      [description1Controller.text, image1],
+      [description2Controller.text, image2],
+      [description3Controller.text, image3],
+      [description4Controller.text, image4],
+      [description5Controller.text, image5],
+      [description6Controller.text, image6],
+      [description7Controller.text, image7],
+      [description8Controller.text, image8],
+    ];
+
+    for (int i = 0; i < pairs.length; i++) {
+      String desc = pairs[i][0] as String;
+      File? img = pairs[i][1] as File?;
+
+      // ✅ सिर्फ उसी pair को check करेंगे जिसमें user ने कुछ डाला है
+      if (desc.isNotEmpty || img != null) {
+        if (desc.isNotEmpty && img == null) {
+          _showError("Please select image for description.");
+          return false;
+        } else if (desc.isEmpty && img != null) {
+          _showError("Please enter description for image.");
+          return false;
+        }
+      }
+    }
+
+    return true; // ✅ सब ठीक है
+  }
+
+  void _showError(String msg) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(content: Text(msg)),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer(builder: (context, GeneralHelper helper, snapshot) {
@@ -1395,48 +1443,58 @@ class _SelectionScreenState extends State<SelectionScreen> {
                   const SizedBox(
                     height: 20,
                   ),
-                  Row(
-                    children: [
-                      Expanded(
-                        child: CommonTextFieldWithFocus(
-                          controller: selectionTimeController,
-                          labelText: "Selection Time",
-                          hintText: "Selection Time",
-                          inputFormatters: [
-                            TimeTextInputFormatter(),
-                          ],
-                        ),
-                      ),
-                      PickHeightAndWidth.width5,
-                      Expanded(
-                        child: CommonDropDownWithoutSearch(
-                          borderColor: PickColors.secondaryTextColor,
-                          hintText: "AM / PM",
-                          name: 'AM / PM',
-                          items: GlobalList.timeStatus
-                              .map((category) => DropdownMenuItem<String>(
-                                    value: category,
-                                    child: Text(
-                                      category,
-                                      style: CommonTextStyle()
-                                          .textFieldTitleTextStyle,
-                                    ),
-                                  ))
-                              .toList(),
-                          isExpanded: false,
-                          initialValue: _selectedTimeStatus,
-                          onChanged: (newValue) {
-                            setState(
-                              () {
-                                _selectedTimeStatus = newValue.toString();
-                              },
-                            );
-                            debugPrint("----------$_selectedTimeStatus");
-                          },
-                        ),
-                      ),
-                    ],
+                  CommonTimePickerField(
+                    controller: selectionTimeController,
+                    hintText: 'Selection Time',
+                    labelText: 'Selection Time',
                   ),
+                  // Row(
+                  //   children: [
+                  //     Expanded(
+                  //       // child: CommonTextFieldWithFocus(
+                  //       //   controller: selectionTimeController,
+                  //       //   labelText: "Selection Time",
+                  //       //   hintText: "Selection Time",
+                  //       //   inputFormatters: [
+                  //       //     TimeTextInputFormatter(),
+                  //       //   ],
+                  //       // ),
+                  //       child: CommonTimePickerField(
+                  //         controller: selectionTimeController,
+                  //         hintText: 'Selection Time',
+                  //         labelText: 'Selection Time',
+                  //       ),
+                  //     ),
+                  //     PickHeightAndWidth.width5,
+                  //     Expanded(
+                  //       child: CommonDropDownWithoutSearch(
+                  //         borderColor: PickColors.secondaryTextColor,
+                  //         hintText: "AM / PM",
+                  //         name: 'AM / PM',
+                  //         items: GlobalList.timeStatus
+                  //             .map((category) => DropdownMenuItem<String>(
+                  //                   value: category,
+                  //                   child: Text(
+                  //                     category,
+                  //                     style: CommonTextStyle()
+                  //                         .textFieldTitleTextStyle,
+                  //                   ),
+                  //                 ))
+                  //             .toList(),
+                  //         isExpanded: false,
+                  //         initialValue: _selectedTimeStatus,
+                  //         onChanged: (newValue) {
+                  //           setState(
+                  //             () {
+                  //               _selectedTimeStatus = newValue.toString();
+                  //             },
+                  //           );
+                  //           debugPrint("----------$_selectedTimeStatus");
+                  //         },
+                  //       ),
+                  //     ),
+                  //   ],
+                  // ),
                   const SizedBox(
                     height: 20,
                   ),
@@ -1448,6 +1506,10 @@ class _SelectionScreenState extends State<SelectionScreen> {
                           labelText: "Description",
                           hintText: "Description",
                           maxLines: 3,
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(
+                                150), // ✅ 150 letters तक
+                          ],
                         ),
                       ),
                       PickHeightAndWidth.width5,
@@ -1461,18 +1523,35 @@ class _SelectionScreenState extends State<SelectionScreen> {
                           border: Border.all(
                               color: PickColors.textfieldBorderColor),
                         ),
+                        // child: ImagePickerControl(
+                        //   fieldName: "",
+                        //   onFileChange: (value) {
+                        //     if (value != null &&
+                        //         value.isNotEmpty &&
+                        //         value.last != null) {
+                        //       setState(() {
+                        //         _images.add(File(value.last.path));
+                        //       });
+                        //     }
+                        //   },
+                        // ),
                         child: ImagePickerControl(
-                          fieldName: "",
+                          fieldName: "image1",
                           onFileChange: (value) {
-                            if (value != null &&
-                                value.isNotEmpty &&
-                                value.last != null) {
-                              setState(() {
-                                _images.add(File(value.last.path));
-                              });
-                            }
+                            setState(() {
+                              if (image1 != null) _images.remove(image1);
+                              if (value != null &&
+                                  value.isNotEmpty &&
+                                  value.last.path.isNotEmpty) {
+                                image1 = File(value.last.path);
+                                _images.add(image1!);
+                              } else {
+                                image1 = null;
+                              }
+                            });
                           },
                         ),
+
                         // SvgPicture.asset(PickImages.cameraIcon),
                       ),
                     ],
@@ -1488,6 +1567,10 @@ class _SelectionScreenState extends State<SelectionScreen> {
                           labelText: "Description",
                           hintText: "Description",
                           maxLines: 3,
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(
+                                150), // ✅ 150 letters तक
+                          ],
                         ),
                       ),
                       PickHeightAndWidth.width5,
@@ -1501,18 +1584,35 @@ class _SelectionScreenState extends State<SelectionScreen> {
                           border: Border.all(
                               color: PickColors.textfieldBorderColor),
                         ),
+                        // child: ImagePickerControl(
+                        //   fieldName: "",
+                        //   onFileChange: (value) {
+                        //     if (value != null &&
+                        //         value.isNotEmpty &&
+                        //         value.last != null) {
+                        //       setState(() {
+                        //         _images.add(File(value.last.path));
+                        //       });
+                        //     }
+                        //   },
+                        // ),
                         child: ImagePickerControl(
-                          fieldName: "",
+                          fieldName: "image2",
                           onFileChange: (value) {
-                            if (value != null &&
-                                value.isNotEmpty &&
-                                value.last != null) {
-                              setState(() {
-                                _images.add(File(value.last.path));
-                              });
-                            }
+                            setState(() {
+                              if (image2 != null) _images.remove(image2);
+                              if (value != null &&
+                                  value.isNotEmpty &&
+                                  value.last.path.isNotEmpty) {
+                                image2 = File(value.last.path);
+                                _images.add(image2!);
+                              } else {
+                                image2 = null;
+                              }
+                            });
                           },
                         ),
+
                         // SvgPicture.asset(PickImages.cameraIcon),
                       ),
                     ],
@@ -1528,6 +1628,10 @@ class _SelectionScreenState extends State<SelectionScreen> {
                           labelText: "Description",
                           maxLines: 3,
                           hintText: "Description",
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(
+                                150), // ✅ 150 letters तक
+                          ],
                         ),
                       ),
                       PickHeightAndWidth.width5,
@@ -1541,18 +1645,35 @@ class _SelectionScreenState extends State<SelectionScreen> {
                           border: Border.all(
                               color: PickColors.textfieldBorderColor),
                         ),
+                        // child: ImagePickerControl(
+                        //   fieldName: "",
+                        //   onFileChange: (value) {
+                        //     if (value != null &&
+                        //         value.isNotEmpty &&
+                        //         value.last != null) {
+                        //       setState(() {
+                        //         _images.add(File(value.last.path));
+                        //       });
+                        //     }
+                        //   },
+                        // ),
                         child: ImagePickerControl(
                           fieldName: "",
                           onFileChange: (value) {
+                            // Agar user cancel karega to value null ya empty hogi
                             if (value != null &&
                                 value.isNotEmpty &&
-                                value.last != null) {
+                                value.last.path.isNotEmpty) {
+                              File selectedImage = File(value.last.path);
                               setState(() {
-                                _images.add(File(value.last.path));
+                                image3 = selectedImage; // ✅ validation के लिए
+                                _images.add(selectedImage);
+                                // image1 = File(value.last.path); // ✅ pair 1
                               });
                             }
                           },
                         ),
+
                         // child: SvgPicture.asset(PickImages.cameraIcon),
                       ),
                     ],
@@ -1568,6 +1689,10 @@ class _SelectionScreenState extends State<SelectionScreen> {
                           labelText: "Description",
                           hintText: "Description",
                           maxLines: 3,
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(
+                                150), // ✅ 150 letters तक
+                          ],
                         ),
                       ),
                       PickHeightAndWidth.width5,
@@ -1581,18 +1706,35 @@ class _SelectionScreenState extends State<SelectionScreen> {
                           border: Border.all(
                               color: PickColors.textfieldBorderColor),
                         ),
+                        // child: ImagePickerControl(
+                        //   fieldName: "",
+                        //   onFileChange: (value) {
+                        //     if (value != null &&
+                        //         value.isNotEmpty &&
+                        //         value.last != null) {
+                        //       setState(() {
+                        //         _images.add(File(value.last.path));
+                        //       });
+                        //     }
+                        //   },
+                        // ),
                         child: ImagePickerControl(
-                          fieldName: "",
+                          fieldName: "image4",
                           onFileChange: (value) {
-                            if (value != null &&
-                                value.isNotEmpty &&
-                                value.last != null) {
-                              setState(() {
-                                _images.add(File(value.last.path));
-                              });
-                            }
+                            setState(() {
+                              if (image4 != null) _images.remove(image4);
+                              if (value != null &&
+                                  value.isNotEmpty &&
+                                  value.last.path.isNotEmpty) {
+                                image4 = File(value.last.path);
+                                _images.add(image4!);
+                              } else {
+                                image4 = null;
+                              }
+                            });
                           },
                         ),
+
                         // child: SvgPicture.asset(PickImages.cameraIcon),
                       ),
                     ],
@@ -1608,6 +1750,10 @@ class _SelectionScreenState extends State<SelectionScreen> {
                           labelText: "Description",
                           hintText: "Description",
                           maxLines: 3,
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(
+                                150), // ✅ 150 letters तक
+                          ],
                         ),
                       ),
                       PickHeightAndWidth.width5,
@@ -1621,18 +1767,35 @@ class _SelectionScreenState extends State<SelectionScreen> {
                           border: Border.all(
                               color: PickColors.textfieldBorderColor),
                         ),
+                        // child: ImagePickerControl(
+                        //   fieldName: "",
+                        //   onFileChange: (value) {
+                        //     if (value != null &&
+                        //         value.isNotEmpty &&
+                        //         value.last != null) {
+                        //       setState(() {
+                        //         _images.add(File(value.last.path));
+                        //       });
+                        //     }
+                        //   },
+                        // ),
                         child: ImagePickerControl(
-                          fieldName: "",
+                          fieldName: "image5",
                           onFileChange: (value) {
-                            if (value != null &&
-                                value.isNotEmpty &&
-                                value.last != null) {
-                              setState(() {
-                                _images.add(File(value.last.path));
-                              });
-                            }
+                            setState(() {
+                              if (image5 != null) _images.remove(image5);
+                              if (value != null &&
+                                  value.isNotEmpty &&
+                                  value.last.path.isNotEmpty) {
+                                image5 = File(value.last.path);
+                                _images.add(image5!);
+                              } else {
+                                image5 = null;
+                              }
+                            });
                           },
                         ),
+
                         // child: SvgPicture.asset(PickImages.cameraIcon),
                       ),
                     ],
@@ -1648,6 +1811,10 @@ class _SelectionScreenState extends State<SelectionScreen> {
                           labelText: "Description",
                           hintText: "Description",
                           maxLines: 3,
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(
+                                150), // ✅ 150 letters तक
+                          ],
                         ),
                       ),
                       PickHeightAndWidth.width5,
@@ -1661,18 +1828,35 @@ class _SelectionScreenState extends State<SelectionScreen> {
                           border: Border.all(
                               color: PickColors.textfieldBorderColor),
                         ),
+                        // child: ImagePickerControl(
+                        //   fieldName: "",
+                        //   onFileChange: (value) {
+                        //     if (value != null &&
+                        //         value.isNotEmpty &&
+                        //         value.last != null) {
+                        //       setState(() {
+                        //         _images.add(File(value.last.path));
+                        //       });
+                        //     }
+                        //   },
+                        // ),
                         child: ImagePickerControl(
-                          fieldName: "",
+                          fieldName: "image6",
                           onFileChange: (value) {
-                            if (value != null &&
-                                value.isNotEmpty &&
-                                value.last != null) {
-                              setState(() {
-                                _images.add(File(value.last.path));
-                              });
-                            }
+                            setState(() {
+                              if (image6 != null) _images.remove(image6);
+                              if (value != null &&
+                                  value.isNotEmpty &&
+                                  value.last.path.isNotEmpty) {
+                                image6 = File(value.last.path);
+                                _images.add(image6!);
+                              } else {
+                                image6 = null;
+                              }
+                            });
                           },
                         ),
+
                         // child: SvgPicture.asset(PickImages.cameraIcon),
                       ),
                     ],
@@ -1688,6 +1872,10 @@ class _SelectionScreenState extends State<SelectionScreen> {
                           labelText: "Description",
                           hintText: "Description",
                           maxLines: 3,
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(
+                                150), // ✅ 150 letters तक
+                          ],
                         ),
                       ),
                       PickHeightAndWidth.width5,
@@ -1701,19 +1889,36 @@ class _SelectionScreenState extends State<SelectionScreen> {
                           border: Border.all(
                               color: PickColors.textfieldBorderColor),
                         ),
+                        // child: ImagePickerControl(
+                        //   fieldName: "",
+                        //   onFileChange: (value) {
+                        //     if (value != null &&
+                        //         value.isNotEmpty &&
+                        //         value.last != null) {
+                        //       setState(() {
+                        //         _images.add(File(value.last.path));
+                        //       });
+                        //     }
+                        //   },
+                        // ),
+                        // child: SvgPicture.asset(PickImages.cameraIcon),
+
                         child: ImagePickerControl(
-                          fieldName: "",
+                          fieldName: "image7",
                           onFileChange: (value) {
-                            if (value != null &&
-                                value.isNotEmpty &&
-                                value.last != null) {
-                              setState(() {
-                                _images.add(File(value.last.path));
-                              });
-                            }
+                            setState(() {
+                              if (image7 != null) _images.remove(image7);
+                              if (value != null &&
+                                  value.isNotEmpty &&
+                                  value.last.path.isNotEmpty) {
+                                image7 = File(value.last.path);
+                                _images.add(image7!);
+                              } else {
+                                image7 = null;
+                              }
+                            });
                           },
                         ),
-                        // child: SvgPicture.asset(PickImages.cameraIcon),
                       ),
                     ],
                   ),
@@ -1728,6 +1933,10 @@ class _SelectionScreenState extends State<SelectionScreen> {
                           labelText: "Description",
                           hintText: "Description",
                           maxLines: 3,
+                          inputFormatters: [
+                            LengthLimitingTextInputFormatter(
+                                150), // ✅ 150 letters तक
+                          ],
                         ),
                       ),
                       PickHeightAndWidth.width5,
@@ -1741,18 +1950,50 @@ class _SelectionScreenState extends State<SelectionScreen> {
                           border: Border.all(
                               color: PickColors.textfieldBorderColor),
                         ),
+                        // child: ImagePickerControl(
+                        //   fieldName: "",
+                        //   onFileChange: (value) {
+                        //     if (value != null &&
+                        //         value.isNotEmpty &&
+                        //         value.last != null) {
+                        //       setState(() {
+                        //         _images.add(File(value.last.path));
+                        //       });
+                        //     }
+                        //   },
+                        // ),
+                        // child: ImagePickerControl(
+                        //   fieldName: "",
+                        //   onFileChange: (value) {
+                        //     // Agar user cancel karega to value null ya empty hogi
+                        //     if (value != null &&
+                        //         value.isNotEmpty &&
+                        //         value.last.path.isNotEmpty) {
+                        //       setState(() {
+                        //         // _images.add(File(value.last.path));
+
+                        //         image8 = File(value.last.path);
+                        //       });
+                        //     }
+                        //   },
+                        // ),
                         child: ImagePickerControl(
-                          fieldName: "",
+                          fieldName: "image8",
                           onFileChange: (value) {
-                            if (value != null &&
-                                value.isNotEmpty &&
-                                value.last != null) {
-                              setState(() {
-                                _images.add(File(value.last.path));
-                              });
-                            }
+                            setState(() {
+                              if (image8 != null) _images.remove(image8);
+                              if (value != null &&
+                                  value.isNotEmpty &&
+                                  value.last.path.isNotEmpty) {
+                                image8 = File(value.last.path);
+                                _images.add(image8!);
+                              } else {
+                                image8 = null;
+                              }
+                            });
                           },
                         ),
+
                         // child: SvgPicture.asset(PickImages.cameraIcon),
                       ),
                     ],
@@ -1775,9 +2016,13 @@ class _SelectionScreenState extends State<SelectionScreen> {
                       Expanded(
                         child: CommonMaterialButton(
                           title: "Export As Pdf",
-                          suffixIcon: PickImages.pdfIcon,
+                          prefixIcon: PickImages.pdfIcon,
                           style: CommonTextStyle().buttonTextStyle,
-                          onPressed: _generatePDF,
+                          onPressed: () async {
+                            if (_validateAndGeneratePDF()) {
+                              await _generatePDF(); // ✅ सिर्फ तभी call होगा जब सब valid हो
+                            }
+                          },
                           color: PickColors.primaryColor,
                           verticalPadding: 20,
                         ),
