@@ -806,16 +806,6 @@ Site Visits -  Includes ${noOfPremiumCategoryController.text} Visits + ${noOfPre
 (additional 3D Designs & Revision charges - Rs.${elevation3DController.text}/side & Rs.${revision3DController.text}/revision)
 This quote is applicable only for ${monthController.text} month from the commencement of work on site.
 """ : ""}
-${(noOfElevationController.text.isNotEmpty || noOfRenderController.text.isNotEmpty || noOfPremiumCategoryController.text.isNotEmpty || noOfPremiumCategorySelectionController.text.isNotEmpty || noOfAdditionalVisitController.text.isNotEmpty || noOfOptionsController.text.isNotEmpty || noFRevisionController.text.isNotEmpty || layout2DController.text.isNotEmpty || revision2DController.text.isNotEmpty || elevation3DOptionalController.text.isNotEmpty || revision3DOptionalController.text.isNotEmpty || elevation3DController.text.isNotEmpty || monthController.text.isNotEmpty) ? """
-3D Rendering of Final 3D Designs - Includes ${noOfElevationController.text} Views/space  (only for PREMIUM category)
-(additional view charges - Rs.${noOfRenderController.text}/view)
-Site Visits -  Includes ${noOfPremiumCategoryController.text} Visits + ${noOfPremiumCategorySelectionController.text} Selection Visits (PREMIUM category)(additional visit charges - Rs.${noOfAdditionalVisitController.text}/visit)
-2D Layout - Includes ${noOfOptionsController.text} Options & ${noFRevisionController.text} Revisions
-(additional 2D Layout & Revision charges - Rs.${layout2DController.text}/layout & Rs.${revision2DController.text}/revision)
-3D Design - Includes ${(elevation3DOptionalController.text.isNotEmpty ? "${elevation3DOptionalController.text} Options & " : "")}${revision3DOptionalController.text} Revisions
-(additional 3D Designs & Revision charges - Rs.${elevation3DController.text}/side & Rs.${revision3DController.text}/revision)
-This quote is applicable only for ${monthController.text} month from the commencement of work on site.
-""" : ""}
 """,
                         style: pw.TextStyle(
                           font: regularFont,
