@@ -25,25 +25,53 @@ class _MeetingScreenState extends State<MeetingScreen> {
   String? _selectedMeetingType;
   String? _selectedRegardsType;
   String? _selectedTimeStatus;
+  bool isAgencySelected = false;
+  bool isClientSelected = false;
 
-  TextEditingController nameController = TextEditingController();
+  TextEditingController agencyNameController = TextEditingController();
+
+  TextEditingController siteNameController = TextEditingController();
   TextEditingController projectNumberController = TextEditingController();
   TextEditingController timeMeetingController = TextEditingController();
   TextEditingController dateMeetingController = TextEditingController();
   TextEditingController locationMeetingController = TextEditingController();
   TextEditingController meetingPurposeController = TextEditingController();
 
+  /// 🔹 Dynamic Meeting Message
+  String getMeetingMessage() {
+    String nameBlock = "";
+
+    if (isAgencySelected && agencyNameController.text.isNotEmpty) {
+      nameBlock =
+          "${agencyNameController.text}\n${isAgencySelected ? "Site : " : ""}${siteNameController.text.isNotEmpty ? siteNameController.text : ""}";
+    } else {
+      nameBlock =
+          siteNameController.text.isNotEmpty ? siteNameController.text : "-";
+    }
+
+    return """Hi,
+$nameBlock
+
+âlekha architects is confirming our upcoming meeting scheduled on ${dateMeetingController.text.isNotEmpty ? dateMeetingController.text : "-"} at ${timeMeetingController.text.isNotEmpty ? timeMeetingController.text : "-"} ${_selectedTimeStatus ?? "-"} at ${locationMeetingController.text.isNotEmpty ? locationMeetingController.text : "-"}. For Project No. ${projectNumberController.text.isNotEmpty ? projectNumberController.text : "-"} ${_selectedMeetingType != null ? _selectedMeetingType!.split(" - ").last.trim() : "-"}. Meeting purpose would be as follows : ${meetingPurposeController.text.isNotEmpty ? meetingPurposeController.text : "-"}.
+
+If you require any additional information before our meeting, please feel free to contact.
+
+Regards
+${_selectedRegardsType ?? "-"}
+âlekha architects
+""";
+  }
+
   _launchWhatsapp() async {
-    var whatsapp = "+919512738943";
-    var whatsappAndroid =
-        Uri.parse("whatsapp://send?phone=$whatsapp&text=hello");
-    if (await canLaunchUrl(whatsappAndroid)) {
-      await launchUrl(whatsappAndroid);
+    final Uri whatsappUrl = Uri.parse(
+      "whatsapp://send?phone=+919512738943&text=${Uri.encodeComponent(getMeetingMessage())}",
+    );
+
+    if (await canLaunchUrl(whatsappUrl)) {
+      await launchUrl(whatsappUrl);
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text("WhatsApp is not installed on the device"),
-        ),
+        const SnackBar(content: Text("WhatsApp not installed")),
       );
     }
   }
@@ -82,10 +110,81 @@ class _MeetingScreenState extends State<MeetingScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  Row(
+                    children: [
+                      Expanded(
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              isAgencySelected = !isAgencySelected;
+                              isClientSelected = false;
+                            });
+                          },
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Checkbox(
+                                value: isAgencySelected,
+                                activeColor: PickColors.primaryColor,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isAgencySelected = value ?? false;
+                                    isClientSelected = false;
+                                  });
+                                },
+                              ),
+                              const SizedBox(width: 4),
+                              const Text("Agency"),
+                            ],
+                          ),
+                        ),
+                      ),
+                      Expanded(
+                        child: InkWell(
+                          onTap: () {
+                            setState(() {
+                              isClientSelected = !isClientSelected;
+                              isAgencySelected = false;
+                            });
+                          },
+                          child: Row(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Checkbox(
+                                value: isClientSelected,
+                                activeColor: PickColors.primaryColor,
+                                onChanged: (value) {
+                                  setState(() {
+                                    isClientSelected = value ?? false;
+                                    isAgencySelected = false;
+                                  });
+                                },
+                              ),
+                              const SizedBox(width: 4),
+                              const Text("Client"),
+                            ],
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+
+                  if (isAgencySelected) ...[
+                    const SizedBox(height: 10),
+                    CommonTextFieldWithFocus(
+                      controller: agencyNameController,
+                      labelText: "Agency Name",
+                      hintText: "Enter Agency Name",
+                    ),
+                  ],
+                  if (isAgencySelected)
+                    const SizedBox(
+                      height: 20,
+                    ),
                   CommonTextFieldWithFocus(
-                    controller: nameController,
-                    labelText: "Name",
-                    hintText: "Name",
+                    controller: siteNameController,
+                    labelText: "Site Name",
+                    hintText: "Site Name",
                     keyboardType: TextInputType.name,
                   ),
                   const SizedBox(
@@ -267,10 +366,16 @@ class _MeetingScreenState extends State<MeetingScreen> {
                         });
                       }),
                   const SizedBox(height: 10),
+                  // if (_showPreviewMessage)
+                  //   Text(
+                  //     "Hi,\n${siteNameController.text.isNotEmpty ? siteNameController.text : "-"}\n\nâlekha architects is confirming our upcoming meeting scheduled on ${dateMeetingController.text.isNotEmpty ? dateMeetingController.text : "-"} at ${timeMeetingController.text.isNotEmpty ? timeMeetingController.text : "-"} ${_selectedTimeStatus ?? "-"} at ${locationMeetingController.text.isNotEmpty ? locationMeetingController.text : "-"}. For Project No. ${projectNumberController.text.isNotEmpty ? projectNumberController.text : "-"} ${_selectedMeetingType != null ? _selectedMeetingType!.split(" - ").last.trim() : "-"}. Meeting purpose would be as follows : ${meetingPurposeController.text.isNotEmpty ? meetingPurposeController.text : "-"}.\n\nIf you require any additional information before our meeting. Please feel free to contact.\n\nRegards\n${_selectedRegardsType ?? "-"}\nâlekha architects",
+                  //     // "Selected Regards: $_selectedRegardsType ${siteNameController.text}",
+                  //     style: CommonTextStyle().authSubTitleTextStyle,
+                  //   ),
+
                   if (_showPreviewMessage)
                     Text(
-                      "Hi,\n${nameController.text.isNotEmpty ? nameController.text : "-"}\n\nâlekha architects is confirming our upcoming meeting scheduled on ${dateMeetingController.text.isNotEmpty ? dateMeetingController.text : "-"} at ${timeMeetingController.text.isNotEmpty ? timeMeetingController.text : "-"} ${_selectedTimeStatus ?? "-"} at ${locationMeetingController.text.isNotEmpty ? locationMeetingController.text : "-"}. For Project No. ${projectNumberController.text.isNotEmpty ? projectNumberController.text : "-"} ${_selectedMeetingType != null ? _selectedMeetingType!.split(" - ").last.trim() : "-"}. Meeting purpose would be as follows : ${meetingPurposeController.text.isNotEmpty ? meetingPurposeController.text : "-"}.\n\nIf you require any additional information before our meeting. Please feel free to contact.\n\nRegards\n${_selectedRegardsType ?? "-"}\nâlekha architects",
-                      // "Selected Regards: $_selectedRegardsType ${nameController.text}",
+                      getMeetingMessage(),
                       style: CommonTextStyle().authSubTitleTextStyle,
                     ),
                   Row(
@@ -296,11 +401,14 @@ class _MeetingScreenState extends State<MeetingScreen> {
                           style: CommonTextStyle().buttonTextStyle,
                           color: PickColors.transparentColor,
                           onPressed: () {
-                            String message =
-                                "Hi,\n${nameController.text.isNotEmpty ? nameController.text : "-"}\n\nâlekha architects is confirming our upcoming meeting scheduled on ${dateMeetingController.text.isNotEmpty ? dateMeetingController.text : "-"} at ${timeMeetingController.text.isNotEmpty ? timeMeetingController.text : "-"} ${_selectedTimeStatus ?? "-"} at ${locationMeetingController.text.isNotEmpty ? locationMeetingController.text : "-"}. For Project No. ${projectNumberController.text.isNotEmpty ? projectNumberController.text : "-"} ${_selectedMeetingType != null ? _selectedMeetingType!.split(" - ").last.trim() : "-"}. Meeting purpose would be as follows : ${meetingPurposeController.text.isNotEmpty ? meetingPurposeController.text : "-"}.\n\nIf you require any additional information before our meeting. Please feel free to contact.\n\nRegards\n${_selectedRegardsType ?? "-"}\nâlekha architects";
+                            Clipboard.setData(
+                              ClipboardData(text: getMeetingMessage()),
+                            );
+                            // String message =
+                            //     "Hi,\n${siteNameController.text.isNotEmpty ? siteNameController.text : "-"}\n\nâlekha architects is confirming our upcoming meeting scheduled on ${dateMeetingController.text.isNotEmpty ? dateMeetingController.text : "-"} at ${timeMeetingController.text.isNotEmpty ? timeMeetingController.text : "-"} ${_selectedTimeStatus ?? "-"} at ${locationMeetingController.text.isNotEmpty ? locationMeetingController.text : "-"}. For Project No. ${projectNumberController.text.isNotEmpty ? projectNumberController.text : "-"} ${_selectedMeetingType != null ? _selectedMeetingType!.split(" - ").last.trim() : "-"}. Meeting purpose would be as follows : ${meetingPurposeController.text.isNotEmpty ? meetingPurposeController.text : "-"}.\n\nIf you require any additional information before our meeting. Please feel free to contact.\n\nRegards\n${_selectedRegardsType ?? "-"}\nâlekha architects";
 
-                            Clipboard.setData(ClipboardData(
-                                text: message)); // Copy to clipboard
+                            // Clipboard.setData(ClipboardData(
+                            //     text: message)); // Copy to clipboard
 
                             // Show a snackbar to confirm the text has been copied
                             ScaffoldMessenger.of(context).showSnackBar(

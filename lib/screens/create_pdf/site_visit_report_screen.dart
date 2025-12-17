@@ -12,11 +12,9 @@ import 'package:alekha/widget/common_dropdown.dart';
 import 'package:alekha/widget/common_material_button.dart';
 import 'package:alekha/widget/common_text_field.dart';
 import 'package:alekha/widget/get_date_function.dart';
-import 'package:alekha/widget/html_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart' show rootBundle;
 import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
@@ -233,277 +231,215 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
       ),
     );
 
-    // for (var imageFile in _images) {
-    //   final image = pw.MemoryImage(imageFile.readAsBytesSync());
-    //   pdf.addPage(
-    //     pw.Page(
-    //       margin: const pw.EdgeInsets.all(20),
-    //       pageFormat: PdfPageFormat.a4,
-    //       build: (pw.Context context) {
-    //         return pw.Center(child: pw.Image(image));
-    //       },
-    //     ),
-    //   );
-    // }
-    // Add images 4 per page in 2x2 grid
-//     for (int i = 0; i < _images.length; i += 4) {
-//       pdf.addPage(
-//         pw.Page(
-//           pageFormat: PdfPageFormat.a4,
-//           margin: const pw.EdgeInsets.all(20), // optional: page margin
-//           build: (pw.Context context) {
-//             return pw.FullPage(
-//               ignoreMargins: true, // Ignore margins for full control
-//               child: pw.Container(
-//                 width: 60,
-//                 height: 60,
-//                 decoration: pw.BoxDecoration(
-//                   image: pw.DecorationImage(
-//                     image: pw.MemoryImage(
-//                         a4PdfBgImage), // This will be your background
-//                     fit: pw.BoxFit.contain,
-//                   ),
-//                 ),
-//                 child: pw.Padding(
-//                   padding: const pw.EdgeInsets.all(20),
-//                   child: pw.Column(
-//                     children: [
-//                       pw.Row(
-//                         mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-//                         children: [
-//                           pw.Container(
-//                             width: 170,
-//                             height: 60,
-//                             margin: const pw.EdgeInsets.only(bottom: 2),
-//                             decoration: pw.BoxDecoration(
-//                               image: pw.DecorationImage(
-//                                 image: pw.MemoryImage(imageData),
-//                                 fit: pw.BoxFit.fill,
-//                               ),
-//                             ),
-//                           ),
-//                           // pw.Expanded(
-//                           //   child:
-//                           pw.Container(
-//                             width: 120,
-//                             height: 60,
-//                             decoration: pw.BoxDecoration(
-//                               image: pw.DecorationImage(
-//                                 image: pw.MemoryImage(invoiceContactPdfLogo),
-//                                 fit: pw.BoxFit.contain,
-//                               ),
-//                             ),
-//                             // ),
-//                           )
-//                         ],
-//                       ),
-//                       pw.SizedBox(height: 6),
-//                       // pw.Divider(color: PdfColor.fromHex("#616161"), height: 5),
-//                       pw.Divider(height: 3, color: PdfColor.fromHex("#616161")),
-//                       pw.Row(
-//                         mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-//                         children: [
-//                           pw.Text(
-//                             "SITE VISIT",
-//                             style: pw.TextStyle(
-//                                 fontSize: 15, fontWeight: pw.FontWeight.bold),
-//                           ),
-//                           pw.Text(
-//                             dateController.text,
-//                             style: pw.TextStyle(
-//                                 fontSize: 15,
-//                                 fontWeight: pw.FontWeight.normal,
-//                                 color: PdfColor.fromHex("#616161")),
-//                           ),
-//                         ],
-//                       ),
-//                       pw.Divider(color: PdfColor.fromHex("#616161")),
-
-//                       pw.Expanded(
-//                         child: pw.Row(
-//                           children: [
-//                             pw.Container(
-//                               width: 200,
-//                               height: 150,
-//                               decoration: pw.BoxDecoration(
-//                                 border: pw.Border.all(
-//                                     color: PdfColors.grey), // optional border
-//                               ),
-//                               child: pw.Image(
-//                                 pw.MemoryImage(_images[i].readAsBytesSync()),
-//                                 fit: pw.BoxFit
-//                                     .cover, // cover / contain / fill / scaleDown
-//                               ),
-//                             ),
-//                             if (i + 1 < _images.length) ...[
-//                               pw.SizedBox(width: 20),
-//                               pw.Container(
-//                                 width: 200,
-//                                 height: 150,
-//                                 decoration: pw.BoxDecoration(
-//                                   border: pw.Border.all(color: PdfColors.grey),
-//                                 ),
-//                                 child: pw.Image(
-//                                   pw.MemoryImage(
-//                                       _images[i + 1].readAsBytesSync()),
-//                                   fit: pw.BoxFit.cover,
-//                                 ),
-//                               ),
-//                             ],
-//                           ],
-//                         ),
-//                       ),
-//                       pw.SizedBox(height: 20),
-
-// // Bottom row
-//                       pw.Row(
-//                         children: [
-//                           if (i + 2 < _images.length)
-//                             pw.Container(
-//                               width: 200,
-//                               height: 150,
-//                               decoration: pw.BoxDecoration(
-//                                 border: pw.Border.all(color: PdfColors.grey),
-//                               ),
-//                               child: pw.Image(
-//                                 pw.MemoryImage(
-//                                     _images[i + 2].readAsBytesSync()),
-//                                 fit: pw.BoxFit.cover,
-//                               ),
-//                             ),
-//                           if (i + 3 < _images.length) ...[
-//                             pw.SizedBox(width: 20),
-//                             pw.Container(
-//                               width: 200,
-//                               height: 150,
-//                               decoration: pw.BoxDecoration(
-//                                 border: pw.Border.all(color: PdfColors.grey),
-//                               ),
-//                               child: pw.Image(
-//                                 pw.MemoryImage(
-//                                     _images[i + 3].readAsBytesSync()),
-//                                 fit: pw.BoxFit.cover,
-//                               ),
-//                             ),
-//                           ],
-//                         ],
-//                       ),
-
-//                       pw.Spacer(),
-//                       pw.Divider(color: PdfColor.fromHex("#616161")),
-//                       pw.Align(
-//                         alignment: pw.Alignment.center,
-//                         child: pw.Text(
-//                           "G.F. Plot No.29, Hira Nagar, Bamroll Road, Nr.Saraswati Hindi Vidyalaya, Surat, Gujarat.",
-//                           style: const pw.TextStyle(fontSize: 11),
-//                         ),
-//                       ),
-//                     ],
-//                   ),
-//                 ),
-//               ),
-//             );
-//           },
-//         ),
-//       );
-//     }
     for (int i = 0; i < _images.length; i += 4) {
       pdf.addPage(
         pw.Page(
           pageFormat: PdfPageFormat.a4,
-          margin: const pw.EdgeInsets.all(20),
+          margin: pw.EdgeInsets.zero,
           build: (pw.Context context) {
-            return pw.Column(
-              children: [
-                pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                  children: [
-                    pw.Container(
-                      width: 170,
-                      height: 60,
-                      decoration: pw.BoxDecoration(
-                        image: pw.DecorationImage(
-                          image: pw.MemoryImage(imageData),
-                          fit: pw.BoxFit.fill,
-                        ),
-                      ),
-                    ),
-                    pw.Container(
-                      width: 120,
-                      height: 60,
-                      decoration: pw.BoxDecoration(
-                        image: pw.DecorationImage(
-                          image: pw.MemoryImage(invoiceContactPdfLogo),
-                          fit: pw.BoxFit.contain,
-                        ),
-                      ),
-                    ),
-                  ],
+            return pw.FullPage(
+              ignoreMargins: true,
+              child: pw.Container(
+                decoration: pw.BoxDecoration(
+                  image: pw.DecorationImage(
+                    image: pw.MemoryImage(a4PdfBgImage),
+                    fit: pw.BoxFit.contain,
+                  ),
                 ),
-                pw.SizedBox(height: 6),
-                pw.Divider(height: 3, color: PdfColor.fromHex("#616161")),
-                pw.Row(
-                  mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-                  children: [
-                    pw.Text(
-                      "SITE VISIT",
-                      style: pw.TextStyle(
-                        fontSize: 15,
-                        fontWeight: pw.FontWeight.bold,
-                      ),
-                    ),
-                    pw.Text(
-                      dateController.text,
-                      style: pw.TextStyle(
-                        fontSize: 15,
-                        fontWeight: pw.FontWeight.normal,
-                        color: PdfColor.fromHex("#616161"),
-                      ),
-                    ),
-                  ],
-                ),
-                pw.Divider(height: 3, color: PdfColor.fromHex("#BDBDBD")),
-                pw.SizedBox(height: 5),
-
-                // 📌 Image Grid Full Height
-                pw.Expanded(
+                child: pw.Padding(
+                  padding: const pw.EdgeInsets.all(20),
                   child: pw.Column(
                     children: [
-                      // Top Row
+                      // ===== HEADER =====
+                      pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                        children: [
+                          pw.Container(
+                            width: 170,
+                            height: 60,
+                            decoration: pw.BoxDecoration(
+                              image: pw.DecorationImage(
+                                image: pw.MemoryImage(imageData),
+                                fit: pw.BoxFit.fill,
+                              ),
+                            ),
+                          ),
+                          pw.Container(
+                            width: 120,
+                            height: 60,
+                            decoration: pw.BoxDecoration(
+                              image: pw.DecorationImage(
+                                image: pw.MemoryImage(invoiceContactPdfLogo),
+                                fit: pw.BoxFit.contain,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      pw.SizedBox(height: 6),
+                      pw.Divider(height: 3, color: PdfColor.fromHex("#616161")),
+
+                      pw.Row(
+                        mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+                        children: [
+                          pw.Text(
+                            "SITE VISIT",
+                            style: pw.TextStyle(
+                              fontSize: 15,
+                              fontWeight: pw.FontWeight.bold,
+                            ),
+                          ),
+                          pw.Text(
+                            dateController.text,
+                            style: pw.TextStyle(
+                              fontSize: 15,
+                              color: PdfColor.fromHex("#616161"),
+                            ),
+                          ),
+                        ],
+                      ),
+
+                      pw.Divider(height: 3, color: PdfColor.fromHex("#BDBDBD")),
+                      pw.SizedBox(height: 5),
+
+                      // ===== IMAGE GRID =====
                       pw.Expanded(
-                        child: pw.Row(
+                        child: pw.Column(
                           children: [
-                            _buildImageBox(_images, i),
-                            _buildImageBox(_images, i + 1),
+                            pw.Expanded(
+                              child: pw.Row(
+                                children: [
+                                  _buildImageBox(_images, i),
+                                  _buildImageBox(_images, i + 1),
+                                ],
+                              ),
+                            ),
+                            pw.Expanded(
+                              child: pw.Row(
+                                children: [
+                                  _buildImageBox(_images, i + 2),
+                                  _buildImageBox(_images, i + 3),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       ),
-                      // Bottom Row
-                      pw.Expanded(
-                        child: pw.Row(
-                          children: [
-                            _buildImageBox(_images, i + 2),
-                            _buildImageBox(_images, i + 3),
-                          ],
+
+                      pw.Divider(color: PdfColor.fromHex("#616161")),
+                      pw.Align(
+                        alignment: pw.Alignment.center,
+                        child: pw.Text(
+                          "G.F. Plot No.29, Hira Nagar, Bamroll Road, Nr.Saraswati Hindi Vidyalaya, Surat, Gujarat.",
+                          style: const pw.TextStyle(fontSize: 11),
                         ),
                       ),
                     ],
                   ),
                 ),
-
-                pw.Divider(color: PdfColor.fromHex("#616161")),
-                pw.Align(
-                  alignment: pw.Alignment.center,
-                  child: pw.Text(
-                    "G.F. Plot No.29, Hira Nagar, Bamroll Road, Nr.Saraswati Hindi Vidyalaya, Surat, Gujarat.",
-                    style: const pw.TextStyle(fontSize: 11),
-                  ),
-                ),
-              ],
+              ),
             );
           },
         ),
       );
+
+      // pdf.addPage(
+      //   pw.Page(
+      //     pageFormat: PdfPageFormat.a4,
+      //     margin: const pw.EdgeInsets.all(20),
+      //     build: (pw.Context context) {
+      //       return pw.Column(
+      //         children: [
+      //           pw.Row(
+      //             mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+      //             children: [
+      //               pw.Container(
+      //                 width: 170,
+      //                 height: 60,
+      //                 decoration: pw.BoxDecoration(
+      //                   image: pw.DecorationImage(
+      //                     image: pw.MemoryImage(imageData),
+      //                     fit: pw.BoxFit.fill,
+      //                   ),
+      //                 ),
+      //               ),
+      //               pw.Container(
+      //                 width: 120,
+      //                 height: 60,
+      //                 decoration: pw.BoxDecoration(
+      //                   image: pw.DecorationImage(
+      //                     image: pw.MemoryImage(invoiceContactPdfLogo),
+      //                     fit: pw.BoxFit.contain,
+      //                   ),
+      //                 ),
+      //               ),
+      //             ],
+      //           ),
+      //           pw.SizedBox(height: 6),
+      //           pw.Divider(height: 3, color: PdfColor.fromHex("#616161")),
+      //           pw.Row(
+      //             mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+      //             children: [
+      //               pw.Text(
+      //                 "SITE VISIT",
+      //                 style: pw.TextStyle(
+      //                   fontSize: 15,
+      //                   fontWeight: pw.FontWeight.bold,
+      //                 ),
+      //               ),
+      //               pw.Text(
+      //                 dateController.text,
+      //                 style: pw.TextStyle(
+      //                   fontSize: 15,
+      //                   fontWeight: pw.FontWeight.normal,
+      //                   color: PdfColor.fromHex("#616161"),
+      //                 ),
+      //               ),
+      //             ],
+      //           ),
+      //           pw.Divider(height: 3, color: PdfColor.fromHex("#BDBDBD")),
+      //           pw.SizedBox(height: 5),
+
+      //           // 📌 Image Grid Full Height
+      //           pw.Expanded(
+      //             child: pw.Column(
+      //               children: [
+      //                 // Top Row
+      //                 pw.Expanded(
+      //                   child: pw.Row(
+      //                     children: [
+      //                       _buildImageBox(_images, i),
+      //                       _buildImageBox(_images, i + 1),
+      //                     ],
+      //                   ),
+      //                 ),
+      //                 // Bottom Row
+      //                 pw.Expanded(
+      //                   child: pw.Row(
+      //                     children: [
+      //                       _buildImageBox(_images, i + 2),
+      //                       _buildImageBox(_images, i + 3),
+      //                     ],
+      //                   ),
+      //                 ),
+      //               ],
+      //             ),
+      //           ),
+
+      //           pw.Divider(color: PdfColor.fromHex("#616161")),
+      //           pw.Align(
+      //             alignment: pw.Alignment.center,
+      //             child: pw.Text(
+      //               "G.F. Plot No.29, Hira Nagar, Bamroll Road, Nr.Saraswati Hindi Vidyalaya, Surat, Gujarat.",
+      //               style: const pw.TextStyle(fontSize: 11),
+      //             ),
+      //           ),
+      //         ],
+      //       );
+      //     },
+      //   ),
+      // );
     }
 
     // Print the PDF or show preview
@@ -695,27 +631,6 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
                     hintText: "Work Stage on Site",
                     maxLines: 4,
                   ),
-                  // CommonTextFieldWitNumbers(
-                  //   controller: dummy1Controller,
-                  //   hintText: 'Points with Number',
-                  //   maxLines: 5,
-                  //   labelText: 'Points with Number',
-                  // ),
-                  // CommonTextFieldWithBullets(
-                  //   controller: dummy2Controller,
-                  //   hintText: 'Bullet Points',
-                  //   maxLines: 5,
-                  //   labelText: 'Bullet Points',
-                  // ),
-                  // HtmlEditorWidget(
-                  //     jdDescriptionController: workStageOnSiteController,
-                  //     initialText: "Initial Text",
-                  //     onValueChanged: (value) async {
-                  //       String? html = await workStageOnSiteController.getText();
-                  //       String plainText =
-                  //           Bidi.stripHtmlIfNeeded(html ?? "").trim();
-                  //       print("Plain Text: $plainText");
-                  //     }),
                   const SizedBox(
                     height: 20,
                   ),
@@ -753,26 +668,6 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
                     maxLines: 4,
                   ),
                   const SizedBox(height: 10),
-                  // _images.isNotEmpty
-                  //     ? SizedBox(
-                  //         height: 400,
-                  //         child: ListView.builder(
-                  //           itemCount: _images.length,
-                  //           itemBuilder: (context, index) {
-                  //             return Container(
-                  //               height: 400,
-                  //               width: double.infinity,
-                  //               margin: const EdgeInsets.all(8.00),
-                  //               child: Image.file(
-                  //                 _images[index],
-                  //                 fit: BoxFit.cover,
-                  //               ),
-                  //             );
-                  //           },
-                  //         ),
-                  //       )
-                  //     : Container(),
-
                   _images.isNotEmpty
                       ? SizedBox(
                           height: 400,
@@ -820,9 +715,7 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
                           ),
                         )
                       : Container(),
-
                   const SizedBox(height: 20),
-
                   Row(
                     children: [
                       Expanded(
