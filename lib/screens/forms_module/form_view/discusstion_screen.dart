@@ -14,47 +14,41 @@ import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class MeetingScreen extends StatefulWidget {
-  const MeetingScreen({super.key});
+class DiscussionScreen extends StatefulWidget {
+  const DiscussionScreen({super.key});
 
   @override
-  State<MeetingScreen> createState() => _MeetingScreenState();
+  State<DiscussionScreen> createState() => _DiscussionScreenState();
 }
 
-class _MeetingScreenState extends State<MeetingScreen> {
-  String? _selectedMeetingType;
+class _DiscussionScreenState extends State<DiscussionScreen> {
+  // String? _selectedMeetingType;
   String? _selectedRegardsType;
-  String? _selectedTimeStatus;
-  bool isAgencySelected = false;
-  bool isClientSelected = false;
+  String? _selectedFromType;
+  // String? _selectedTimeStatus;
+  // bool isAgencySelected = false;
+  // bool isClientSelected = false;
 
-  TextEditingController agencyNameController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
+  TextEditingController descriptionController = TextEditingController();
+  TextEditingController projectCategoryController = TextEditingController();
 
-  TextEditingController siteNameController = TextEditingController();
+  // TextEditingController siteNameController = TextEditingController();
   TextEditingController projectNumberController = TextEditingController();
-  TextEditingController timeMeetingController = TextEditingController();
-  TextEditingController dateMeetingController = TextEditingController();
+  TextEditingController timeController = TextEditingController();
+  TextEditingController dateController = TextEditingController();
   TextEditingController locationMeetingController = TextEditingController();
   TextEditingController meetingPurposeController = TextEditingController();
 
   /// 🔹 Dynamic Meeting Message
-  String getMeetingMessage() {
-    String nameBlock = "";
-
-    if (isAgencySelected && agencyNameController.text.isNotEmpty) {
-      nameBlock =
-          "${agencyNameController.text}\n${isAgencySelected ? "Site : " : ""}${siteNameController.text.isNotEmpty ? siteNameController.text : ""}";
-    } else {
-      nameBlock =
-          siteNameController.text.isNotEmpty ? siteNameController.text : "-";
-    }
-
+  String getDiscussionMessage() {
     return """Hi,
-$nameBlock
+${nameController.text.isNotEmpty ? nameController.text : "-"}
+${projectNumberController.text.isNotEmpty ? "Project No. ${projectNumberController.text}" : "Project No. -"}
 
-âlekha architects is confirming our upcoming meeting scheduled on ${dateMeetingController.text.isNotEmpty ? dateMeetingController.text : "-"} at ${timeMeetingController.text.isNotEmpty ? timeMeetingController.text : "-"} ${_selectedTimeStatus ?? "-"} at ${locationMeetingController.text.isNotEmpty ? locationMeetingController.text : "-"}. For Project No. ${projectNumberController.text.isNotEmpty ? projectNumberController.text : "-"} ${_selectedMeetingType != null ? _selectedMeetingType!.split(" - ").last.trim() : "-"}. Meeting purpose would be as follows : ${meetingPurposeController.text.isNotEmpty ? meetingPurposeController.text : "-"}.
-
-If you require any additional information before our meeting, please feel free to contact.
+We had a discussion on ${dateController.text.isNotEmpty ? dateController.text : "-"} at ${timeController.text.isNotEmpty ? timeController.text : "-"} at ${_selectedFromType ?? "-"}.
+Description are as follows :
+${descriptionController.text.isNotEmpty ? descriptionController.text : "-"}
 
 Regards
 ${_selectedRegardsType ?? "-"}
@@ -64,7 +58,7 @@ ${_selectedRegardsType ?? "-"}
 
   _launchWhatsapp() async {
     final Uri whatsappUrl = Uri.parse(
-      "whatsapp://send?phone=+919512738943&text=${Uri.encodeComponent(getMeetingMessage())}",
+      "whatsapp://send?phone=+919512738943&text=${Uri.encodeComponent(getDiscussionMessage())}",
     );
 
     if (await canLaunchUrl(whatsappUrl)) {
@@ -100,7 +94,7 @@ ${_selectedRegardsType ?? "-"}
             ),
             automaticallyImplyLeading: false,
             title: Text(
-              'Meeting',
+              'Discussion',
               style: CommonTextStyle().appBarTextStyle,
             ),
           ),
@@ -110,83 +104,13 @@ ${_selectedRegardsType ?? "-"}
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  Row(
-                    children: [
-                      Expanded(
-                        child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              isAgencySelected = !isAgencySelected;
-                              isClientSelected = false;
-                            });
-                          },
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Checkbox(
-                                value: isAgencySelected,
-                                activeColor: PickColors.primaryColor,
-                                onChanged: (value) {
-                                  setState(() {
-                                    isAgencySelected = value ?? false;
-                                    isClientSelected = false;
-                                  });
-                                },
-                              ),
-                              const SizedBox(width: 4),
-                              const Text("Agency"),
-                            ],
-                          ),
-                        ),
-                      ),
-                      Expanded(
-                        child: InkWell(
-                          onTap: () {
-                            setState(() {
-                              isClientSelected = !isClientSelected;
-                              isAgencySelected = false;
-                            });
-                          },
-                          child: Row(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              Checkbox(
-                                value: isClientSelected,
-                                activeColor: PickColors.primaryColor,
-                                onChanged: (value) {
-                                  setState(() {
-                                    isClientSelected = value ?? false;
-                                    isAgencySelected = false;
-                                  });
-                                },
-                              ),
-                              const SizedBox(width: 4),
-                              const Text("Client"),
-                            ],
-                          ),
-                        ),
-                      ),
-                    ],
+                  const SizedBox(height: 10),
+                  CommonTextFieldWithFocus(
+                    controller: nameController,
+                    labelText: "Name",
+                    hintText: "Enter Name",
                   ),
 
-                  if (isAgencySelected) ...[
-                    const SizedBox(height: 10),
-                    CommonTextFieldWithFocus(
-                      controller: agencyNameController,
-                      labelText: "Agency Name",
-                      hintText: "Enter Agency Name",
-                    ),
-                  ],
-                  if (isAgencySelected)
-                    const SizedBox(
-                      height: 20,
-                    ),
-                  CommonTextFieldWithFocus(
-                    controller: siteNameController,
-                    labelText: isAgencySelected ? "Site Name" : "Client Name",
-                    hintText: isAgencySelected?"Site Name":"Client Name",
-                    keyboardType: TextInputType.name,
-                  ),
                   const SizedBox(
                     height: 20,
                   ),
@@ -199,34 +123,16 @@ ${_selectedRegardsType ?? "-"}
                   const SizedBox(
                     height: 20,
                   ),
-                  CommonDropDownWithoutSearch(
-                    borderColor: PickColors.primaryColor,
-                    hintText: "Select project category",
-                    name: 'Project Category',
-                    items: GlobalList.projectCategory
-                        .map((category) => DropdownMenuItem<String>(
-                              value: category,
-                              child: Text(
-                                category,
-                                style:
-                                    CommonTextStyle().textFieldTitleTextStyle,
-                              ),
-                            ))
-                        .toList(),
-                    isExpanded: false,
-                    initialValue: _selectedMeetingType,
-                    onChanged: (newValue) {
-                      setState(
-                        () {
-                          _selectedMeetingType = newValue.toString();
-                        },
-                      );
-                      debugPrint("----------$_selectedMeetingType");
-                    },
+                  CommonTextFieldWithFocus(
+                    controller: projectCategoryController,
+                    labelText: "Project Category",
+                    hintText: "Project Category",
+                    keyboardType: TextInputType.number,
                   ),
                   const SizedBox(
                     height: 20,
                   ),
+
                   CommonTextFieldWithBorder(
                     fillColor: Colors.transparent,
                     filled: true,
@@ -240,7 +146,7 @@ ${_selectedRegardsType ?? "-"}
                     isRequired: true,
                     readOnly: true,
                     hint: "Date",
-                    controller: dateMeetingController,
+                    controller: dateController,
                     textInputAction: TextInputAction.none,
                     keyboardType: TextInputType.none,
                     validator: (value) {
@@ -254,7 +160,7 @@ ${_selectedRegardsType ?? "-"}
                       if (pickedDate != null) {
                         String formattedDate =
                             DateFormate.normalDateFormate.format(pickedDate);
-                        dateMeetingController.text =
+                        dateController.text =
                             formattedDate; // Set the picked date
                       }
                     },
@@ -263,68 +169,47 @@ ${_selectedRegardsType ?? "-"}
                   const SizedBox(
                     height: 20,
                   ),
-                  // Row(
-                  //   children: [
-                  //     Expanded(
-                  //       child: CommonTextFieldWithFocus(
-                  //         controller: timeMeetingController,
-                  //         labelText: "Time",
-                  //         hintText: "Time",
-                  //         inputFormatters: [
-                  //           TimeTextInputFormatter(),
-                  //         ],
-                  //       ),
-                  //     ),
-                  //     PickHeightAndWidth.width5,
-                  //     Expanded(
-                  //       child: CommonDropDownWithoutSearch(
-                  //         borderColor: PickColors.secondaryTextColor,
-                  //         hintText: "AM / PM",
-                  //         name: 'AM / PM',
-                  //         items: GlobalList.timeStatus
-                  //             .map((category) => DropdownMenuItem<String>(
-                  //                   value: category,
-                  //                   child: Text(
-                  //                     category,
-                  //                     style:
-                  //                         CommonTextStyle().textFieldTitleTextStyle,
-                  //                   ),
-                  //                 ))
-                  //             .toList(),
-                  //         isExpanded: false,
-                  //         initialValue: _selectedTimeStatus,
-                  //         onChanged: (newValue) {
-                  //           setState(
-                  //             () {
-                  //               _selectedTimeStatus = newValue.toString();
-                  //             },
-                  //           );
-                  //           debugPrint("----------$_selectedTimeStatus");
-                  //         },
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
                   CommonTimePickerField(
-                    controller: timeMeetingController,
+                    controller: timeController,
                     hintText: 'Time',
                     labelText: 'Time',
                   ),
                   const SizedBox(
                     height: 20,
                   ),
-                  CommonTextFieldWithFocus(
-                    controller: locationMeetingController,
-                    labelText: "Location",
-                    hintText: "Location",
+
+                  CommonDropDownWithoutSearch(
+                    borderColor: PickColors.primaryColor,
+                    hintText: "From",
+                    name: 'From',
+                    items: GlobalList.discussionFromList
+                        .map((category) => DropdownMenuItem<String>(
+                              value: category,
+                              child: Text(
+                                category,
+                                style:
+                                    CommonTextStyle().textFieldTitleTextStyle,
+                              ),
+                            ))
+                        .toList(),
+                    isExpanded: false,
+                    initialValue: _selectedFromType,
+                    onChanged: (newValue) {
+                      setState(
+                        () {
+                          _selectedFromType = newValue.toString();
+                        },
+                      );
+                      debugPrint("----------$_selectedFromType");
+                    },
                   ),
                   const SizedBox(
                     height: 20,
                   ),
                   CommonTextFieldWithFocus(
-                    controller: meetingPurposeController,
-                    labelText: "Meeting Purpose",
-                    hintText: "Meeting Purpose",
+                    controller: descriptionController,
+                    labelText: "Description",
+                    hintText: "Description",
                     maxLines: 5,
                   ),
                   const SizedBox(
@@ -375,7 +260,7 @@ ${_selectedRegardsType ?? "-"}
 
                   if (_showPreviewMessage)
                     Text(
-                      getMeetingMessage(),
+                      getDiscussionMessage(),
                       style: CommonTextStyle().authSubTitleTextStyle,
                     ),
                   Row(
@@ -402,7 +287,7 @@ ${_selectedRegardsType ?? "-"}
                           color: PickColors.transparentColor,
                           onPressed: () {
                             Clipboard.setData(
-                              ClipboardData(text: getMeetingMessage()),
+                              ClipboardData(text: getDiscussionMessage()),
                             );
                             // String message =
                             //     "Hi,\n${siteNameController.text.isNotEmpty ? siteNameController.text : "-"}\n\nâlekha architects is confirming our upcoming meeting scheduled on ${dateMeetingController.text.isNotEmpty ? dateMeetingController.text : "-"} at ${timeMeetingController.text.isNotEmpty ? timeMeetingController.text : "-"} ${_selectedTimeStatus ?? "-"} at ${locationMeetingController.text.isNotEmpty ? locationMeetingController.text : "-"}. For Project No. ${projectNumberController.text.isNotEmpty ? projectNumberController.text : "-"} ${_selectedMeetingType != null ? _selectedMeetingType!.split(" - ").last.trim() : "-"}. Meeting purpose would be as follows : ${meetingPurposeController.text.isNotEmpty ? meetingPurposeController.text : "-"}.\n\nIf you require any additional information before our meeting. Please feel free to contact.\n\nRegards\n${_selectedRegardsType ?? "-"}\nâlekha architects";

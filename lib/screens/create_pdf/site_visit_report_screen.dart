@@ -47,6 +47,23 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
 
   File? _image;
   List<File> _images = [];
+  Future<void> _getImages() async {
+    final ImagePicker picker = ImagePicker();
+
+    final List<XFile> pickedFiles = await picker.pickMultiImage(
+      imageQuality: 80,
+    );
+
+    if (pickedFiles != null && pickedFiles.isNotEmpty) {
+      setState(() {
+        _images.addAll(
+          pickedFiles.map((x) => File(x.path)).toList(),
+        );
+      });
+    } else {
+      debugPrint("No images selected");
+    }
+  }
 
   Future<void> _generatePDF() async {
     final pdf = pw.Document();
@@ -474,24 +491,24 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
     );
   }
 
-  Future<void> _getImage() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    setState(
-      () {
-        if (pickedFile != null) {
-          _images.add(File(pickedFile.path));
-        } else {
-          debugPrint("No Image selected");
-        }
-      },
-    );
-    if (pickedFile != null) {
-      setState(() {
-        _image = File(pickedFile.path);
-      });
-    }
-  }
+  // Future<void> _getImage() async {
+  //   final pickedFile =
+  //       await ImagePicker().pickImage(source: ImageSource.gallery);
+  //   setState(
+  //     () {
+  //       if (pickedFile != null) {
+  //         _images.add(File(pickedFile.path));
+  //       } else {
+  //         debugPrint("No Image selected");
+  //       }
+  //     },
+  //   );
+  //   if (pickedFile != null) {
+  //     setState(() {
+  //       _image = File(pickedFile.path);
+  //     });
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -726,7 +743,8 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
                           color: PickColors.primaryColor,
                           suffixIcon: PickImages.cameraIcon,
                           onPressed: () {
-                            _getImage();
+                            _getImages();
+                            // _getImage();
                           },
                         ),
                       ),

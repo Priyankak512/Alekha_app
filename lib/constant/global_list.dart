@@ -6,6 +6,7 @@ import 'package:alekha/screens/fees_module/fees_view/fees_received_screen.dart';
 import 'package:alekha/screens/fees_module/fees_view/fees_reminder_screen.dart';
 import 'package:alekha/screens/fees_module/fees_view/fees_screen.dart';
 import 'package:alekha/screens/forms_module/form_view/architecture_screen.dart';
+import 'package:alekha/screens/forms_module/form_view/discusstion_screen.dart';
 import 'package:alekha/screens/forms_module/form_view/form_screen.dart';
 import 'package:alekha/screens/forms_module/form_view/interior_screen.dart';
 import 'package:alekha/screens/forms_module/form_view/other_forn_screen.dart';
@@ -106,7 +107,7 @@ class GlobalList {
     {"id": 5, "title": "Plan Detail Dim.", "isChecked": false},
   ];
 
-   static List<Map<String, dynamic>> interiorBasicOptions = [
+  static List<Map<String, dynamic>> interiorBasicOptions = [
     {"id": 1, "title": "2D Existing Layout", "isChecked": false},
     {"id": 2, "title": "2D Furniture Plan", "isChecked": false},
     {"id": 3, "title": "Quotation", "isChecked": false},
@@ -193,6 +194,7 @@ class GlobalList {
     "Ar.Tushar Kachhadiya     ",
     "Ar.Ronak Jain             "
   ];
+  static List<String> discussionFromList = ["Site", "Office", "Phone Call"];
   static List<String> paymentModeList = ["Cash", "UPI", "Bank Transfer"];
 
   static List<String> timeStatus = ["AM", "PM"];
@@ -304,6 +306,12 @@ class GlobalList {
       "title": "Offer Letter",
       "icon": PickImages.interiorOfferLetterIcon,
       "screen": const InteriorOfferLetterScreen(),
+    },
+    {
+      "id": "5",
+      "title": "Discussion",
+      "icon": PickImages.interiorOfferLetterIcon,
+      "screen": const DiscussionScreen(),
     },
   ];
 
