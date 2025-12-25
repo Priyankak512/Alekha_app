@@ -22,12 +22,9 @@ class DiscussionScreen extends StatefulWidget {
 }
 
 class _DiscussionScreenState extends State<DiscussionScreen> {
-  // String? _selectedMeetingType;
+  String? _selectedMeetingType;
   String? _selectedRegardsType;
   String? _selectedFromType;
-  // String? _selectedTimeStatus;
-  // bool isAgencySelected = false;
-  // bool isClientSelected = false;
 
   TextEditingController nameController = TextEditingController();
   TextEditingController descriptionController = TextEditingController();
@@ -44,7 +41,7 @@ class _DiscussionScreenState extends State<DiscussionScreen> {
   String getDiscussionMessage() {
     return """Hi,
 ${nameController.text.isNotEmpty ? nameController.text : "-"}
-${projectNumberController.text.isNotEmpty ? "Project No. ${projectNumberController.text}" : "Project No. -"}
+${projectNumberController.text.isNotEmpty ? "Project No. - ${projectNumberController.text} ${_selectedMeetingType == 'Architecture - A' ? 'A' : _selectedMeetingType == 'Interior - I' ? 'I' : _selectedMeetingType == 'Architecture Interior - AI' ? 'AI' : ''}" : "Project No. -"}
 
 We had a discussion on ${dateController.text.isNotEmpty ? dateController.text : "-"} at ${timeController.text.isNotEmpty ? timeController.text : "-"} at ${_selectedFromType ?? "-"}.
 Description are as follows :
@@ -123,11 +120,36 @@ ${_selectedRegardsType ?? "-"}
                   const SizedBox(
                     height: 20,
                   ),
-                  CommonTextFieldWithFocus(
-                    controller: projectCategoryController,
-                    labelText: "Project Category",
-                    hintText: "Project Category",
-                    keyboardType: TextInputType.number,
+                  // CommonTextFieldWithFocus(
+                  //   controller: projectCategoryController,
+                  //   labelText: "Project Category",
+                  //   hintText: "Project Category",
+                  //   keyboardType: TextInputType.number,
+                  // ),
+                  CommonDropDownWithoutSearch(
+                    borderColor: PickColors.primaryColor,
+                    hintText: "Select project category",
+                    name: 'Project Category',
+                    items: GlobalList.projectCategory
+                        .map((category) => DropdownMenuItem<String>(
+                              value: category,
+                              child: Text(
+                                category,
+                                style:
+                                    CommonTextStyle().textFieldTitleTextStyle,
+                              ),
+                            ))
+                        .toList(),
+                    isExpanded: false,
+                    initialValue: _selectedMeetingType,
+                    onChanged: (newValue) {
+                      setState(
+                        () {
+                          _selectedMeetingType = newValue.toString();
+                        },
+                      );
+                      debugPrint("----------$_selectedMeetingType");
+                    },
                   ),
                   const SizedBox(
                     height: 20,

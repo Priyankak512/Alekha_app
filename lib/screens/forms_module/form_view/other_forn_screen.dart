@@ -234,18 +234,51 @@ class _CreatePdfFromDataState extends State<OtherFormsScreen> {
       ),
     );
 
+    // for (var imageFile in _images) {
+    //   final image = pw.MemoryImage(imageFile.readAsBytesSync());
+    //   pdf.addPage(
+    //     pw.Page(
+    //       margin: const pw.EdgeInsets.all(20),
+    //       pageFormat: PdfPageFormat.a4,
+    //       build: (pw.Context context) {
+    //         return pw.Center(child: pw.Image(image));
+    //       },
+    //     ),
+    //   );
+    // }
     for (var imageFile in _images) {
       final image = pw.MemoryImage(imageFile.readAsBytesSync());
+
       pdf.addPage(
         pw.Page(
-          margin: const pw.EdgeInsets.all(20),
           pageFormat: PdfPageFormat.a4,
+          margin: pw.EdgeInsets.zero, // 🔥 IMPORTANT
           build: (pw.Context context) {
-            return pw.Center(child: pw.Image(image));
+            return pw.FullPage(
+              ignoreMargins: true,
+              child: pw.Container(
+                decoration: pw.BoxDecoration(
+                  image: pw.DecorationImage(
+                    image: pw.MemoryImage(a4PdfBgImage),
+                    fit: pw.BoxFit.contain, // same as your first page
+                  ),
+                ),
+                child: pw.Padding(
+                  padding: const pw.EdgeInsets.all(20),
+                  child: pw.Center(
+                    child: pw.Image(
+                      image,
+                      fit: pw.BoxFit.contain,
+                    ),
+                  ),
+                ),
+              ),
+            );
           },
         ),
       );
     }
+
 
     // // Save and share the generated PDF
     await Printing.layoutPdf(

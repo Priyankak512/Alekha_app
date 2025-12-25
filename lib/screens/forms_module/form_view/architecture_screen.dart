@@ -40,9 +40,7 @@ class _CreatePdfFromDataState extends State<ArchitectureScreen> {
   TextEditingController dateController = TextEditingController();
   TextEditingController addressController = TextEditingController();
   TextEditingController plotSizeController = TextEditingController();
-  // TextEditingController requirementController = TextEditingController();
   TextEditingController siteContextController = TextEditingController();
-  // HtmlEditorController requirementController = HtmlEditorController();
 
   File? _image;
   List<File> _images = [];
@@ -172,15 +170,47 @@ class _CreatePdfFromDataState extends State<ArchitectureScreen> {
       ),
     );
 
-    // Add images to the PDF
+    // // Add images to the PDF
+    // for (var imageFile in _images) {
+    //   final image = pw.MemoryImage(imageFile.readAsBytesSync());
+    //   pdf.addPage(
+    //     pw.Page(
+    //       margin: const pw.EdgeInsets.all(20),
+    //       pageFormat: PdfPageFormat.a4,
+    //       build: (pw.Context context) {
+    //         return pw.Center(child: pw.Image(image));
+    //       },
+    //     ),
+    //   );
+    // }
     for (var imageFile in _images) {
       final image = pw.MemoryImage(imageFile.readAsBytesSync());
+
       pdf.addPage(
         pw.Page(
-          margin: const pw.EdgeInsets.all(20),
           pageFormat: PdfPageFormat.a4,
+          margin: pw.EdgeInsets.zero, // 🔥 IMPORTANT
           build: (pw.Context context) {
-            return pw.Center(child: pw.Image(image));
+            return pw.FullPage(
+              ignoreMargins: true,
+              child: pw.Container(
+                decoration: pw.BoxDecoration(
+                  image: pw.DecorationImage(
+                    image: pw.MemoryImage(a4PdfBgImage),
+                    fit: pw.BoxFit.contain, // same as your first page
+                  ),
+                ),
+                child: pw.Padding(
+                  padding: const pw.EdgeInsets.all(20),
+                  child: pw.Center(
+                    child: pw.Image(
+                      image,
+                      fit: pw.BoxFit.contain,
+                    ),
+                  ),
+                ),
+              ),
+            );
           },
         ),
       );
@@ -193,132 +223,6 @@ class _CreatePdfFromDataState extends State<ArchitectureScreen> {
       onLayout: (PdfPageFormat format) async => pdf.save(),
     );
   }
-
-  // Future<void> _generatePDF() async {
-  //   final pdf = pw.Document();
-
-  //   Uint8List imageData =
-  //       (await rootBundle.load(PickImages.alekhaArchitectsIcon))
-  //           .buffer
-  //           .asUint8List();
-  //   Uint8List invoiceContactPdfLogo =
-  //       (await rootBundle.load(PickImages.siteVisitContactsPdfImage))
-  //           .buffer
-  //           .asUint8List();
-
-  //   // Retrieve selected project category and project number
-  //   String selectedCategory = _selectedProjectType ?? '';
-
-  //   // Add pages to the PDF document
-  //   pdf.addPage(
-  //     pw.Page(
-  //       margin: const pw.EdgeInsets.all(20),
-  //       build: (pw.Context context) {
-  //         return pw.Column(
-  //           crossAxisAlignment: pw.CrossAxisAlignment.start,
-  //           children: [
-  //             pw.Row(
-  //               mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-  //               children: [
-  //                 pw.Container(
-  //                   width: 170,
-  //                   height: 60,
-  //                   margin: const pw.EdgeInsets.only(bottom: 2),
-  //                   decoration: pw.BoxDecoration(
-  //                     image: pw.DecorationImage(
-  //                       image: pw.MemoryImage(imageData),
-  //                       fit: pw.BoxFit.fill,
-  //                     ),
-  //                   ),
-  //                 ),
-  //                 // pw.Expanded(
-  //                 //   child:
-  //                 pw.Container(
-  //                   width: 120,
-  //                   height: 60,
-  //                   decoration: pw.BoxDecoration(
-  //                     image: pw.DecorationImage(
-  //                       image: pw.MemoryImage(invoiceContactPdfLogo),
-  //                       fit: pw.BoxFit.contain,
-  //                     ),
-  //                   ),
-  //                   // ),
-  //                 )
-  //               ],
-  //             ),
-  //             pw.SizedBox(height: 6),
-  //             pw.Divider(height: 3, color: PdfColor.fromHex("#616161")),
-  //             pw.Row(
-  //               mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
-  //               children: [
-  //                 pw.Text(
-  //                   "Architecture Form",
-  //                   style: pw.TextStyle(
-  //                       fontSize: 13, fontWeight: pw.FontWeight.normal),
-  //                 ),
-  //                 pw.Text(
-  //                   DateFormat('dd/MM/yyyy').format(DateTime.now()),
-  //                   style: pw.TextStyle(
-  //                       fontSize: 13,
-  //                       fontWeight: pw.FontWeight.normal,
-  //                       color: PdfColor.fromHex("#616161")),
-  //                 ),
-  //               ],
-  //             ),
-  //             pw.Divider(height: 3, color: PdfColor.fromHex("#BDBDBD")),
-  //             pw.SizedBox(height: 5),
-  //             // Client Name
-  //             _buildTextFieldRow(
-  //                 'Client Name : ', clientNameController.text, pdf),
-
-  //             // Contact Number
-  //             _buildTextFieldRow(
-  //                 'Contact No. : ', contactNoController.text, pdf),
-
-  //             // Date
-  //             _buildTextFieldRow('Date :', dateController.text, pdf),
-
-  //             // Address
-  //             _buildTextFieldRow('Address : ', addressController.text, pdf),
-
-  //             // Project Type
-  //             _buildTextFieldRow(
-  //                 'Project Type : ', _selectedProjectType.toString(), pdf),
-
-  //             // Project Size
-  //             _buildTextFieldRow('Plot Size :', plotSizeController.text, pdf),
-
-  //             // Changes On Site
-
-  //             // Decision Pending
-  //             _buildTextFieldRow(
-  //                 'Site Context : ', siteContextController.text, pdf),
-  //           ],
-  //         );
-  //       },
-  //     ),
-  //   );
-
-  //   for (var imageFile in _images) {
-  //     final image = pw.MemoryImage(imageFile.readAsBytesSync());
-  //     pdf.addPage(
-  //       pw.Page(
-  //         margin: const pw.EdgeInsets.all(20),
-  //         pageFormat: PdfPageFormat.a4,
-  //         build: (pw.Context context) {
-  //           return pw.Center(child: pw.Image(image));
-  //         },
-  //       ),
-  //     );
-  //   }
-
-  //   // // Save and share the generated PDF
-  //   await Printing.layoutPdf(
-  //     name:
-  //         'ARCH FORM ${dateController.text.replaceAll('_', '/')} ${clientNameController.text.toUpperCase()}',
-  //     onLayout: (PdfPageFormat format) async => pdf.save(),
-  //   );
-  // }
 
   // Helper function to build a row of text fields
   pw.Widget _buildTextFieldRow(String label, String value, pw.Document pdf) {
