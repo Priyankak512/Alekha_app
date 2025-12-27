@@ -6,8 +6,8 @@ import 'package:alekha/services/general_helper.dart';
 import 'package:alekha/constant/image_picker_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
-
 import 'package:form_builder_validators/form_builder_validators.dart';
+
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -32,6 +32,39 @@ class ImagePickerControl extends StatefulWidget {
   @override
   State<ImagePickerControl> createState() => _ImagePickerControlState();
 }
+// Future<XFile?> _cropImage(XFile pickedImage, BuildContext context) async {
+
+//   /// ❌ Web / Desktop me crop supported nahi (Flutter 3.19)
+//   if (checkPlatForm(
+//     context: context,
+//     platforms: [
+//       CustomPlatForm.WEB,CustomPlatForm.LARGE_LAPTOP_VIEW
+//     ],
+//   )) {
+//     return pickedImage; // direct return
+//   }
+
+//   /// ✅ Mobile only
+//   CroppedFile? croppedFile = await ImageCropper().cropImage(
+//     sourcePath: pickedImage.path,
+//     uiSettings: [
+//       AndroidUiSettings(
+//         toolbarTitle: 'Crop Image',
+//         toolbarColor: PickColors.primaryColor,
+//         toolbarWidgetColor: Colors.white,
+//         activeControlsWidgetColor: PickColors.primaryColor,
+//         lockAspectRatio: false,
+//       ),
+//       IOSUiSettings(
+//         title: 'Crop Image',
+//       ),
+//     ],
+//   );
+
+//   if (croppedFile == null) return null;
+//   return XFile(croppedFile.path);
+// }
+
 
 class _ImagePickerControlState extends State<ImagePickerControl> {
   @override
@@ -64,7 +97,7 @@ class _ImagePickerControlState extends State<ImagePickerControl> {
                         CustomPlatForm.TABLET,
                       ]),
                     );
-              
+
                     // List<XFile?> imagesList = [];
                     // if (field.value != null) {
                     //   imagesList.addAll(field.value);
@@ -73,6 +106,33 @@ class _ImagePickerControlState extends State<ImagePickerControl> {
                     field.didChange([pickedImage]);
                   }
                 },
+                // onTap: () async {
+                //   if ((field.value ?? []).isEmpty ||
+                //       ((field.value.last ?? "") == "")) {
+                //     XFile? pickedImage = await CustomImagePicker.show(
+                //       context,
+                //       !checkPlatForm(
+                //         context: context,
+                //         platforms: [
+                //           CustomPlatForm.MIN_MOBILE,
+                //           CustomPlatForm.MOBILE,
+                //           CustomPlatForm.TABLET,
+                //         ],
+                //       ),
+                //     );
+
+                //     if (pickedImage == null) return;
+
+                //     // ✅ Crop image after picking
+                //     XFile? croppedImage =
+                //         await _cropImage(pickedImage, context);
+
+                //     if (croppedImage != null) {
+                //       field.didChange([croppedImage]);
+                //     }
+                //   }
+                // },
+
                 child: MouseRegion(
                   hitTestBehavior: HitTestBehavior.deferToChild,
                   cursor: SystemMouseCursors.click,
@@ -104,8 +164,7 @@ class _ImagePickerControlState extends State<ImagePickerControl> {
                                                 ]) &&
                                             !field.value.last.path.contains(
                                                 'Documents/Recruitment/CandidatePhoto')
-                                        ? FileImage(
-                                            File(field.value.last.path))
+                                        ? FileImage(File(field.value.last.path))
                                         : NetworkImage(field.value.last.path)
                                             as ImageProvider,
                                   ),
@@ -143,5 +202,23 @@ class _ImagePickerControlState extends State<ImagePickerControl> {
             );
           });
     });
+  }
+}
+
+
+
+
+class CommonMultipleImagePicker {
+  static final ImagePicker _picker = ImagePicker();
+
+  /// ✅ Pick multiple images from gallery
+  static Future<List<File>> pickMultipleImages() async {
+    final List<XFile> pickedFiles = await _picker.pickMultiImage();
+
+    if (pickedFiles == null || pickedFiles.isEmpty) {
+      return [];
+    }
+
+    return pickedFiles.map((xFile) => File(xFile.path)).toList();
   }
 }

@@ -10,11 +10,12 @@ import 'package:alekha/constant/navigation_route.dart';
 import 'package:alekha/constant/text_style.dart';
 import 'package:alekha/services/general_helper.dart';
 import 'package:alekha/widget/common_dropdown.dart';
+import 'package:alekha/widget/common_image_picker.dart';
 import 'package:alekha/widget/common_material_button.dart';
 import 'package:alekha/widget/common_text_field.dart';
 import 'package:alekha/widget/get_date_function.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/services.dart' show FilteringTextInputFormatter, LengthLimitingTextInputFormatter, rootBundle;
 import 'package:image_picker/image_picker.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
@@ -323,24 +324,39 @@ class _CreatePdfFromDataState extends State<OtherFormsScreen> {
     }
   }
 
+  // Future<void> _getImage() async {
+  //   final pickedFile =
+  //       await ImagePicker().pickImage(source: ImageSource.gallery);
+  //   setState(
+  //     () {
+  //       if (pickedFile != null) {
+  //         _images.add(File(pickedFile.path));
+  //       } else {
+  //         debugPrint("No Image selected");
+  //       }
+  //     },
+  //   );
+  //   if (pickedFile != null) {
+  //     setState(() {
+  //       _image = File(pickedFile.path);
+  //     });
+  //   }
+  // }
+
+  
   Future<void> _getImage() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    setState(
-      () {
-        if (pickedFile != null) {
-          _images.add(File(pickedFile.path));
-        } else {
-          debugPrint("No Image selected");
-        }
-      },
-    );
-    if (pickedFile != null) {
+    final List<File> pickedImages =
+        await CommonMultipleImagePicker.pickMultipleImages();
+
+    if (pickedImages.isNotEmpty) {
       setState(() {
-        _image = File(pickedFile.path);
+        _images.addAll(pickedImages);
       });
+    } else {
+      debugPrint("No Images selected");
     }
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -383,11 +399,21 @@ class _CreatePdfFromDataState extends State<OtherFormsScreen> {
                   const SizedBox(
                     height: 20,
                   ),
-                  CommonTextFieldWithFocus(
+                 CommonTextFieldWithFocus(
                     controller: contactNoController,
                     labelText: "Contact No.",
                     hintText: "Contact No.",
+                    suffixIcon: InkWell(
+                      onTap: () {
+                        helper.pickContact(contactNoController);
+                      },
+                      child: const Icon(Icons.person),
+                    ),
                     keyboardType: TextInputType.number,
+                    inputFormatters: [
+                      LengthLimitingTextInputFormatter(13), // Max 13 digits
+                      FilteringTextInputFormatter.digitsOnly, // Only digits
+                    ],
                   ),
                   const SizedBox(
                     height: 20,

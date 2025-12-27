@@ -314,56 +314,127 @@ class _SelectionScreenState extends State<SelectionScreen> {
 
 // ✅ कितने total pages चाहिए (हर page पर max 4 items)
     int totalPages = (totalItems / 4).ceil();
+    // for (int pageIndex = 0; pageIndex < totalPages; pageIndex++) {
+    //   pdf.addPage(
+    //     pw.Page(
+    //       margin: const pw.EdgeInsets.all(20),
+    //       pageFormat: PdfPageFormat.a4,
+    //       build: (pw.Context context) {
+    //         return pw.Column(
+    //           crossAxisAlignment: pw.CrossAxisAlignment.start,
+    //           children: [
+    //             // ✅ पहले पेज पर full header, बाकी पर short header
+    //             pageIndex == 0 ? _buildFullHeader() : _buildShortHeader(),
+    //             pw.Expanded(
+    //               child: pw.Column(
+    //                 children: [
+    //                   pw.Expanded(
+    //                     child: pw.Row(
+    //                       children: [
+    //                         _buildImageWithDescription(pageIndex * 4),
+    //                         _buildImageWithDescription(pageIndex * 4 + 1),
+    //                       ],
+    //                     ),
+    //                   ),
+    //                   pw.Expanded(
+    //                     child: pw.Row(
+    //                       children: [
+    //                         _buildImageWithDescription(pageIndex * 4 + 2),
+    //                         _buildImageWithDescription(pageIndex * 4 + 3),
+    //                       ],
+    //                     ),
+    //                   ),
+    //                 ],
+    //               ),
+    //             ),
+
+    //             /// Full width divider
+    //             pw.Divider(
+    //               thickness: 0.5,
+    //               color: PdfColors.grey600,
+    //             ),
+    //             pw.Container(
+    //               width: double.infinity,
+    //               height: 18,
+    //               decoration: pw.BoxDecoration(
+    //                 image: pw.DecorationImage(
+    //                   image: pw.MemoryImage(offerLaterFooterImage),
+    //                   fit: pw.BoxFit.fitWidth,
+    //                 ),
+    //               ),
+    //             ),
+    //           ],
+    //         );
+    //       },
+    //     ),
+    //   );
+    // }
+
     for (int pageIndex = 0; pageIndex < totalPages; pageIndex++) {
       pdf.addPage(
         pw.Page(
-          margin: const pw.EdgeInsets.all(20),
           pageFormat: PdfPageFormat.a4,
+          margin: pw.EdgeInsets.zero, // ❗ important
           build: (pw.Context context) {
-            return pw.Column(
-              crossAxisAlignment: pw.CrossAxisAlignment.start,
-              children: [
-                // ✅ पहले पेज पर full header, बाकी पर short header
-                pageIndex == 0 ? _buildFullHeader() : _buildShortHeader(),
-                pw.Expanded(
+            return pw.FullPage(
+              ignoreMargins: true,
+              child: pw.Container(
+                decoration: pw.BoxDecoration(
+                  image: pw.DecorationImage(
+                    image: pw.MemoryImage(a4PdfBgImage), // ✅ BG IMAGE
+                    fit: pw.BoxFit.contain, // or cover
+                  ),
+                ),
+                child: pw.Padding(
+                  padding: const pw.EdgeInsets.all(20),
                   child: pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
+                      // ✅ First page = full header, others = short header
+                      pageIndex == 0 ? _buildFullHeader() : _buildShortHeader(),
+
                       pw.Expanded(
-                        child: pw.Row(
+                        child: pw.Column(
                           children: [
-                            _buildImageWithDescription(pageIndex * 4),
-                            _buildImageWithDescription(pageIndex * 4 + 1),
+                            pw.Expanded(
+                              child: pw.Row(
+                                children: [
+                                  _buildImageWithDescription(pageIndex * 4),
+                                  _buildImageWithDescription(pageIndex * 4 + 1),
+                                ],
+                              ),
+                            ),
+                            pw.Expanded(
+                              child: pw.Row(
+                                children: [
+                                  _buildImageWithDescription(pageIndex * 4 + 2),
+                                  _buildImageWithDescription(pageIndex * 4 + 3),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       ),
-                      pw.Expanded(
-                        child: pw.Row(
-                          children: [
-                            _buildImageWithDescription(pageIndex * 4 + 2),
-                            _buildImageWithDescription(pageIndex * 4 + 3),
-                          ],
+
+                      pw.Divider(
+                        thickness: 0.5,
+                        color: PdfColors.grey600,
+                      ),
+
+                      pw.Container(
+                        width: double.infinity,
+                        height: 18,
+                        decoration: pw.BoxDecoration(
+                          image: pw.DecorationImage(
+                            image: pw.MemoryImage(offerLaterFooterImage),
+                            fit: pw.BoxFit.fitWidth,
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
-
-                /// Full width divider
-                pw.Divider(
-                  thickness: 0.5,
-                  color: PdfColors.grey600,
-                ),
-                pw.Container(
-                  width: double.infinity,
-                  height: 18,
-                  decoration: pw.BoxDecoration(
-                    image: pw.DecorationImage(
-                      image: pw.MemoryImage(offerLaterFooterImage),
-                      fit: pw.BoxFit.fitWidth,
-                    ),
-                  ),
-                ),
-              ],
+              ),
             );
           },
         ),

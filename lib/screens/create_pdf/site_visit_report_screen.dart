@@ -9,6 +9,7 @@ import 'package:alekha/constant/navigation_route.dart';
 import 'package:alekha/constant/text_style.dart';
 import 'package:alekha/services/general_helper.dart';
 import 'package:alekha/widget/common_dropdown.dart';
+import 'package:alekha/widget/common_image_picker.dart';
 import 'package:alekha/widget/common_material_button.dart';
 import 'package:alekha/widget/common_text_field.dart';
 import 'package:alekha/widget/get_date_function.dart';
@@ -47,21 +48,34 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
 
   File? _image;
   List<File> _images = [];
-  Future<void> _getImages() async {
-    final ImagePicker picker = ImagePicker();
+  // Future<void> _getImages() async {
+  //   final ImagePicker picker = ImagePicker();
 
-    final List<XFile> pickedFiles = await picker.pickMultiImage(
-      imageQuality: 80,
-    );
+  //   final List<XFile> pickedFiles = await picker.pickMultiImage(
+  //     imageQuality: 80,
+  //   );
 
-    if (pickedFiles != null && pickedFiles.isNotEmpty) {
+  //   if (pickedFiles != null && pickedFiles.isNotEmpty) {
+  //     setState(() {
+  //       _images.addAll(
+  //         pickedFiles.map((x) => File(x.path)).toList(),
+  //       );
+  //     });
+  //   } else {
+  //     debugPrint("No images selected");
+  //   }
+  // }
+
+  Future<void> _getImage() async {
+    final List<File> pickedImages =
+        await CommonMultipleImagePicker.pickMultipleImages();
+
+    if (pickedImages.isNotEmpty) {
       setState(() {
-        _images.addAll(
-          pickedFiles.map((x) => File(x.path)).toList(),
-        );
+        _images.addAll(pickedImages);
       });
     } else {
-      debugPrint("No images selected");
+      debugPrint("No Images selected");
     }
   }
 
@@ -737,13 +751,13 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
                     children: [
                       Expanded(
                         child: CommonMaterialButton(
-                          title: "Add Pictures",
+                          title: "Add Image ",
                           style: CommonTextStyle().buttonTextStyle,
                           verticalPadding: 20,
                           color: PickColors.primaryColor,
                           suffixIcon: PickImages.cameraIcon,
                           onPressed: () {
-                            _getImages();
+                            _getImage();
                             // _getImage();
                           },
                         ),

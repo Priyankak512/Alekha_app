@@ -9,6 +9,7 @@ import 'package:alekha/screens/forms_module/form_view/architecture_screen.dart';
 import 'package:alekha/screens/forms_module/form_view/discusstion_screen.dart';
 import 'package:alekha/screens/forms_module/form_view/form_screen.dart';
 import 'package:alekha/screens/forms_module/form_view/interior_screen.dart';
+import 'package:alekha/screens/forms_module/form_view/offer_latter_basic.dart';
 import 'package:alekha/screens/forms_module/form_view/other_forn_screen.dart';
 import 'package:alekha/screens/invoice_generator/invoice_generator_view/invoice_generator_screen.dart';
 import 'package:alekha/screens/meeting_module/meeting_view/meeting_screen.dart';
@@ -308,11 +309,18 @@ class GlobalList {
       "screen": const InteriorOfferLetterScreen(),
     },
     {
-      "id": "5",
+      "id": "6",
       "title": "Discussion",
       "icon": PickImages.interiorOfferLetterIcon,
       "screen": const DiscussionScreen(),
     },
+    {
+      "id": "7",
+      "title": "Basic",
+      "icon": PickImages.interiorOfferLetterIcon,
+      "screen": const BasicOfferLatter  (),
+    },
+    
   ];
 
   //Share List =======================

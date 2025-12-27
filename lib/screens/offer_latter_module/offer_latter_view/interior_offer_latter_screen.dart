@@ -2,6 +2,7 @@
 
 import 'dart:io';
 import 'package:alekha/widget/common_dropdown.dart';
+import 'package:alekha/widget/common_image_picker.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:alekha/constant/colors.dart';
 import 'package:alekha/constant/date_formates.dart';
@@ -944,91 +945,200 @@ This quote is applicable only for ${monthController.text} month from the commenc
       ),
     );
 
+    // for (int i = 0; i < _images.length; i += 4) {
+    //   pdf.addPage(
+    //     pw.Page(
+    //       pageFormat: PdfPageFormat.a4,
+    //       margin: const pw.EdgeInsets.all(20),
+    //       build: (pw.Context context) {
+    //         return pw.Column(
+    //           crossAxisAlignment: pw.CrossAxisAlignment.start,
+    //           children: [
+    //             pw.Container(
+    //               width: double.infinity,
+    //               height: 100,
+    //               margin: const pw.EdgeInsets.only(bottom: 2),
+    //               decoration: pw.BoxDecoration(
+    //                 image: pw.DecorationImage(
+    //                   image: pw.MemoryImage(imageData),
+    //                   fit: pw.BoxFit.fitWidth,
+    //                 ),
+    //               ),
+    //             ),
+    //             pw.Text(
+    //               "06. SITE PICTURES/LAYOUT",
+    //               style: pw.TextStyle(
+    //                 decoration: pw.TextDecoration.underline,
+    //                 fontSize: 15,
+    //                 font: calibriBoldFont,
+    //                 // color: PdfColor.fromHex("#000000"),
+    //               ),
+    //             ),
+
+    //             // 📌 Image Grid Full Height
+    //             pw.Expanded(
+    //               child: pw.Column(
+    //                 children: [
+    //                   // Top Row
+    //                   pw.Expanded(
+    //                     child: pw.Row(
+    //                       children: [
+    //                         _buildImageBox(_images, i),
+    //                         _buildImageBox(_images, i + 1),
+    //                       ],
+    //                     ),
+    //                   ),
+    //                   // Bottom Row
+    //                   pw.Expanded(
+    //                     child: pw.Row(
+    //                       children: [
+    //                         _buildImageBox(_images, i + 2),
+    //                         _buildImageBox(_images, i + 3),
+    //                       ],
+    //                     ),
+    //                   ),
+    //                 ],
+    //               ),
+    //             ),
+    //             pw.Text(
+    //               "Thank You.",
+    //               style: pw.TextStyle(
+    //                 decoration: pw.TextDecoration.underline,
+    //                 fontSize: 12,
+    //                 font: calibriBoldFont,
+    //               ),
+    //             ),
+    //             pw.Text(
+    //               "Note : Additional GST would be applicable on professional fees on all categories. | Advance payment is non refundable in any case. | Design quote is totally upon requirement/scope described by client, quote may differ as requirements/scope changes. | Quote given are subjected to change without prior information. |CAD or SKP file of final designs additional charges are applicable.",
+    //               style: pw.TextStyle(
+    //                 fontSize: 7,
+    //                 font: calibriRegularFont,
+    //               ),
+    //             ),
+    //             pw.Divider(
+    //               thickness: 0.5,
+    //               color: PdfColors.grey600,
+    //             ),
+    //             pw.Container(
+    //               width: double.infinity,
+    //               height: 25,
+    //               decoration: pw.BoxDecoration(
+    //                 image: pw.DecorationImage(
+    //                   image: pw.MemoryImage(offerLaterFooterImage),
+    //                   fit: pw.BoxFit.fitWidth,
+    //                 ),
+    //               ),
+    //             ),
+    //           ],
+    //         );
+    //       },
+    //     ),
+    //   );
+    // }
+
     for (int i = 0; i < _images.length; i += 4) {
       pdf.addPage(
         pw.Page(
           pageFormat: PdfPageFormat.a4,
-          margin: const pw.EdgeInsets.all(20),
+          margin: pw.EdgeInsets.zero, // ❗ margin zero
           build: (pw.Context context) {
-            return pw.Column(
-              crossAxisAlignment: pw.CrossAxisAlignment.start,
-              children: [
-                pw.Container(
-                  width: double.infinity,
-                  height: 100,
-                  margin: const pw.EdgeInsets.only(bottom: 2),
-                  decoration: pw.BoxDecoration(
-                    image: pw.DecorationImage(
-                      image: pw.MemoryImage(imageData),
-                      fit: pw.BoxFit.fitWidth,
-                    ),
+            return pw.FullPage(
+              ignoreMargins: true,
+              child: pw.Container(
+                decoration: pw.BoxDecoration(
+                  image: pw.DecorationImage(
+                    image: pw.MemoryImage(a4PdfBgImage), // ✅ BACKGROUND IMAGE
+                    fit: pw.BoxFit.contain, // or cover
                   ),
                 ),
-                pw.Text(
-                  "06. SITE PICTURES/LAYOUT",
-                  style: pw.TextStyle(
-                    decoration: pw.TextDecoration.underline,
-                    fontSize: 15,
-                    font: calibriBoldFont,
-                    // color: PdfColor.fromHex("#000000"),
-                  ),
-                ),
-
-                // 📌 Image Grid Full Height
-                pw.Expanded(
+                child: pw.Padding(
+                  padding: const pw.EdgeInsets.all(20), // content padding
                   child: pw.Column(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
                     children: [
-                      // Top Row
+                      // ===== HEADER =====
+                      pw.Container(
+                        width: double.infinity,
+                        height: 100,
+                        margin: const pw.EdgeInsets.only(bottom: 2),
+                        decoration: pw.BoxDecoration(
+                          image: pw.DecorationImage(
+                            image: pw.MemoryImage(imageData),
+                            fit: pw.BoxFit.fitWidth,
+                          ),
+                        ),
+                      ),
+
+                      pw.Text(
+                        "06. SITE PICTURES/LAYOUT",
+                        style: pw.TextStyle(
+                          decoration: pw.TextDecoration.underline,
+                          fontSize: 15,
+                          font: calibriBoldFont,
+                        ),
+                      ),
+
+                      // ===== IMAGE GRID =====
                       pw.Expanded(
-                        child: pw.Row(
+                        child: pw.Column(
                           children: [
-                            _buildImageBox(_images, i),
-                            _buildImageBox(_images, i + 1),
+                            pw.Expanded(
+                              child: pw.Row(
+                                children: [
+                                  _buildImageBox(_images, i),
+                                  _buildImageBox(_images, i + 1),
+                                ],
+                              ),
+                            ),
+                            pw.Expanded(
+                              child: pw.Row(
+                                children: [
+                                  _buildImageBox(_images, i + 2),
+                                  _buildImageBox(_images, i + 3),
+                                ],
+                              ),
+                            ),
                           ],
                         ),
                       ),
-                      // Bottom Row
-                      pw.Expanded(
-                        child: pw.Row(
-                          children: [
-                            _buildImageBox(_images, i + 2),
-                            _buildImageBox(_images, i + 3),
-                          ],
+
+                      pw.Text(
+                        "Thank You.",
+                        style: pw.TextStyle(
+                          decoration: pw.TextDecoration.underline,
+                          fontSize: 12,
+                          font: calibriBoldFont,
+                        ),
+                      ),
+
+                      pw.Text(
+                        "Note : Additional GST would be applicable on professional fees on all categories. | Advance payment is non refundable in any case. | Design quote is totally upon requirement/scope described by client, quote may differ as requirements/scope changes. | Quote given are subjected to change without prior information. | CAD or SKP file of final designs additional charges are applicable.",
+                        style: pw.TextStyle(
+                          fontSize: 7,
+                          font: calibriRegularFont,
+                        ),
+                      ),
+
+                      pw.Divider(
+                        thickness: 0.5,
+                        color: PdfColors.grey600,
+                      ),
+
+                      // ===== FOOTER =====
+                      pw.Container(
+                        width: double.infinity,
+                        height: 25,
+                        decoration: pw.BoxDecoration(
+                          image: pw.DecorationImage(
+                            image: pw.MemoryImage(offerLaterFooterImage),
+                            fit: pw.BoxFit.fitWidth,
+                          ),
                         ),
                       ),
                     ],
                   ),
                 ),
-                pw.Text(
-                  "Thank You.",
-                  style: pw.TextStyle(
-                    decoration: pw.TextDecoration.underline,
-                    fontSize: 12,
-                    font: calibriBoldFont,
-                  ),
-                ),
-                pw.Text(
-                  "Note : Additional GST would be applicable on professional fees on all categories. | Advance payment is non refundable in any case. | Design quote is totally upon requirement/scope described by client, quote may differ as requirements/scope changes. | Quote given are subjected to change without prior information. |CAD or SKP file of final designs additional charges are applicable.",
-                  style: pw.TextStyle(
-                    fontSize: 7,
-                    font: calibriRegularFont,
-                  ),
-                ),
-                pw.Divider(
-                  thickness: 0.5,
-                  color: PdfColors.grey600,
-                ),
-                pw.Container(
-                  width: double.infinity,
-                  height: 25,
-                  decoration: pw.BoxDecoration(
-                    image: pw.DecorationImage(
-                      image: pw.MemoryImage(offerLaterFooterImage),
-                      fit: pw.BoxFit.fitWidth,
-                    ),
-                  ),
-                ),
-              ],
+              ),
             );
           },
         ),
@@ -1294,22 +1404,35 @@ This quote is applicable only for ${monthController.text} month from the commenc
     }
   }
 
+  // Future<void> _getImage() async {
+  //   final pickedFile =
+  //       await ImagePicker().pickImage(source: ImageSource.gallery);
+  //   setState(
+  //     () {
+  //       if (pickedFile != null) {
+  //         _images.add(File(pickedFile.path));
+  //       } else {
+  //         debugPrint("No Image selected");
+  //       }
+  //     },
+  //   );
+  //   if (pickedFile != null) {
+  //     setState(() {
+  //       _image = File(pickedFile.path);
+  //     });
+  //   }
+  // }
+
   Future<void> _getImage() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    setState(
-      () {
-        if (pickedFile != null) {
-          _images.add(File(pickedFile.path));
-        } else {
-          debugPrint("No Image selected");
-        }
-      },
-    );
-    if (pickedFile != null) {
+    final List<File> pickedImages =
+        await CommonMultipleImagePicker.pickMultipleImages();
+
+    if (pickedImages.isNotEmpty) {
       setState(() {
-        _image = File(pickedFile.path);
+        _images.addAll(pickedImages);
       });
+    } else {
+      debugPrint("No Images selected");
     }
   }
 
@@ -2283,7 +2406,7 @@ This quote is applicable only for ${monthController.text} month from the commenc
                       children: [
                         Expanded(
                           child: CommonMaterialButton(
-                            title: "Add Pictures",
+                            title: "Add Image",
                             style: CommonTextStyle().buttonTextStyle,
                             verticalPadding: 20,
                             suffixIcon: PickImages.cameraIcon,
