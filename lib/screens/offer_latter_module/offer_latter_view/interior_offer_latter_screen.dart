@@ -51,8 +51,11 @@ class _InteriorOfferLetterScreenState extends State<InteriorOfferLetterScreen> {
   TextEditingController locationController = TextEditingController();
   TextEditingController dateController = TextEditingController();
   TextEditingController basicFeesController = TextEditingController();
+  TextEditingController basicController = TextEditingController();
   TextEditingController standardFeesController = TextEditingController();
+  TextEditingController standardController = TextEditingController();
   TextEditingController premiumFeesController = TextEditingController();
+  TextEditingController premiumController = TextEditingController();
   TextEditingController noOfElevationController = TextEditingController();
   TextEditingController noOfRenderController = TextEditingController();
   TextEditingController noOfPremiumCategoryController = TextEditingController();
@@ -745,6 +748,7 @@ class _InteriorOfferLetterScreenState extends State<InteriorOfferLetterScreen> {
                                   selectedBasicOptions,
                                   calibriBoldFont,
                                   calibriRegularFont,
+                                  basicController.text.toString(),
                                   basicFeesController.text),
 
                             if (selectedStandardOptions.isNotEmpty)
@@ -753,6 +757,7 @@ class _InteriorOfferLetterScreenState extends State<InteriorOfferLetterScreen> {
                                   selectedStandardOptions,
                                   calibriBoldFont,
                                   calibriRegularFont,
+                                  standardController.text.toString(),
                                   standardFeesController.text),
 
                             if (selectedPremiumOptions.isNotEmpty)
@@ -761,6 +766,7 @@ class _InteriorOfferLetterScreenState extends State<InteriorOfferLetterScreen> {
                                   selectedPremiumOptions,
                                   calibriBoldFont,
                                   calibriRegularFont,
+                                  premiumController.text.toString(),
                                   premiumFeesController.text),
                           ],
                         ),
@@ -1296,17 +1302,93 @@ This quote is applicable only for ${monthController.text} month from the commenc
     return stageWidgets;
   }
 
+  // pw.Widget buildServiceColumn(
+  //   String title,
+  //   List<Map<String, dynamic>> items,
+  //   pw.Font titleFont,
+  //   pw.Font itemFont,
+  //   String amount,
+  // ) {
+  //   return pw.Container(
+  //     width: 140, // fixed width to ensure consistent layout in row
+  //     padding: const pw.EdgeInsets.only(right: 15, top: 10, bottom: 10),
+
+  //     child: pw.Column(
+  //       crossAxisAlignment: pw.CrossAxisAlignment.start,
+  //       mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+  //       children: [
+  //         pw.Column(
+  //           crossAxisAlignment: pw.CrossAxisAlignment.start,
+  //           children: [
+  //             pw.Container(
+  //               width: double.infinity,
+  //               padding: const pw.EdgeInsets.symmetric(vertical: 4),
+  //               decoration: pw.BoxDecoration(
+  //                 color: PdfColor.fromHex("#ECECEC"),
+  //                 borderRadius: pw.BorderRadius.circular(6),
+  //               ),
+  //               child: pw.Center(
+  //                 child: pw.Text(
+  //                   title,
+  //                   style: pw.TextStyle(font: titleFont, fontSize: 14),
+  //                 ),
+  //               ),
+  //             ),
+  //             pw.SizedBox(height: 5),
+  //             ...items.asMap().entries.map((entry) {
+  //               final index = entry.key;
+  //               final text = entry.value['title'] ?? '';
+  //               return pw.Text(
+  //                 "${String.fromCharCode(65 + index)}. ${text.toString().toUpperCase()}",
+  //                 style: pw.TextStyle(
+  //                   font: itemFont,
+  //                   fontSize: 12,
+  //                   color: PdfColor.fromHex("#424242"),
+  //                 ),
+  //               );
+  //             }).toList(),
+  //           ],
+  //         ),
+  //         if (amount.trim().isNotEmpty)
+  //           pw.Align(
+  //             child: pw.Container(
+  //               width: double.infinity,
+  //               margin: pw.EdgeInsets.only(top: 8),
+  //               padding: const pw.EdgeInsets.symmetric(vertical: 4),
+  //               decoration: pw.BoxDecoration(
+  //                 color: PdfColor.fromHex("#ECECEC"),
+  //                 borderRadius: pw.BorderRadius.circular(6),
+  //               ),
+  //               child: pw.Center(
+  //                 child: pw.Text(
+  //                   "$amount + GST",
+  //                   style: pw.TextStyle(
+  //                     fontSize: 11,
+  //                     fontWeight: pw.FontWeight.normal,
+  //                     color: PdfColor.fromHex("#000000"),
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //           )
+  //       ],
+  //     ),
+  //   );
+  // }
+
   pw.Widget buildServiceColumn(
     String title,
     List<Map<String, dynamic>> items,
     pw.Font titleFont,
     pw.Font itemFont,
+    String extraValue, // 👈 NEW
     String amount,
   ) {
-    return pw.Container(
-      width: 140, // fixed width to ensure consistent layout in row
-      padding: const pw.EdgeInsets.only(right: 15, top: 10, bottom: 10),
+    final int nextIndex = items.length; // next alphabet index
 
+    return pw.Container(
+      width: 140,
+      padding: const pw.EdgeInsets.only(right: 15, top: 10, bottom: 10),
       child: pw.Column(
         crossAxisAlignment: pw.CrossAxisAlignment.start,
         mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
@@ -1314,6 +1396,7 @@ This quote is applicable only for ${monthController.text} month from the commenc
           pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
+              /// TITLE
               pw.Container(
                 width: double.infinity,
                 padding: const pw.EdgeInsets.symmetric(vertical: 4),
@@ -1328,7 +1411,10 @@ This quote is applicable only for ${monthController.text} month from the commenc
                   ),
                 ),
               ),
+
               pw.SizedBox(height: 5),
+
+              /// EXISTING CHECKED OPTIONS
               ...items.asMap().entries.map((entry) {
                 final index = entry.key;
                 final text = entry.value['title'] ?? '';
@@ -1341,8 +1427,33 @@ This quote is applicable only for ${monthController.text} month from the commenc
                   ),
                 );
               }).toList(),
+
+              /// 🔥 EXTRA LINE WITH AMOUNT + GST (SAME LINE)
+              // if (extraValue.trim().isNotEmpty)
+              //   pw.Text(
+              //     "${String.fromCharCode(65 + nextIndex)}. "
+              //     "${extraValue.toUpperCase()}"
+              //     "${amount.trim().isNotEmpty ? " - $amount + GST" : ""}",
+              //     style: pw.TextStyle(
+              //       font: itemFont,
+              //       fontSize: 12,
+              //       color: PdfColor.fromHex("#424242"),
+              //     ),
+              //   ),
+
+               if (extraValue.trim().isNotEmpty)
+                pw.Text(
+                  "${String.fromCharCode(65 + nextIndex)}. ${extraValue.toUpperCase()}",
+                  style: pw.TextStyle(
+                    font: itemFont,
+                    fontSize: 12,
+                    color: PdfColor.fromHex("#424242"),
+                  ),
+                ),
             ],
           ),
+
+          /// EXISTING GST BOX (UNCHANGED)
           if (amount.trim().isNotEmpty)
             pw.Align(
               child: pw.Container(
@@ -1364,7 +1475,7 @@ This quote is applicable only for ${monthController.text} month from the commenc
                   ),
                 ),
               ),
-            )
+            ),
         ],
       ),
     );
@@ -1642,6 +1753,13 @@ This quote is applicable only for ${monthController.text} month from the commenc
                       }).toList(),
                     ),
                     CommonTextFieldWithFocus(
+                      controller: basicController,
+                      labelText: "Basic",
+                      hintText: "Basic",
+                      keyboardType: TextInputType.number,
+                    ),
+                    PickHeightAndWidth.height10,
+                    CommonTextFieldWithFocus(
                       controller: basicFeesController,
                       labelText: "Basic - Professional Fees",
                       hintText: "Basic - Professional Fees",
@@ -1682,6 +1800,13 @@ This quote is applicable only for ${monthController.text} month from the commenc
                       }).toList(),
                     ),
                     CommonTextFieldWithFocus(
+                      controller: standardController,
+                      labelText: "Standard",
+                      hintText: "Standard",
+                      keyboardType: TextInputType.number,
+                    ),
+                    PickHeightAndWidth.height10,
+                    CommonTextFieldWithFocus(
                       controller: standardFeesController,
                       labelText: "Standard - Professional Fees",
                       hintText: "Standard - Professional Fees",
@@ -1721,6 +1846,13 @@ This quote is applicable only for ${monthController.text} month from the commenc
                         );
                       }).toList(),
                     ),
+                    CommonTextFieldWithFocus(
+                      controller: premiumController,
+                      labelText: "Premium",
+                      hintText: "Premium",
+                      keyboardType: TextInputType.number,
+                    ),
+                    PickHeightAndWidth.height10,
                     CommonTextFieldWithFocus(
                       controller: premiumFeesController,
                       labelText: "Premium - Professional Fees",

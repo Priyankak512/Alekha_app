@@ -4,9 +4,6 @@ import 'dart:io';
 import 'package:alekha/widget/common_dropdown.dart';
 import 'package:alekha/widget/common_image_picker.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:intl/intl.dart';
-import 'package:flutter_staggered_grid_view/flutter_staggered_grid_view.dart';
 import 'package:alekha/constant/colors.dart';
 import 'package:alekha/constant/date_formates.dart';
 import 'package:alekha/constant/global_list.dart';
@@ -20,7 +17,6 @@ import 'package:alekha/services/general_helper.dart';
 import 'package:alekha/widget/common_material_button.dart';
 import 'package:alekha/widget/common_text_field.dart';
 import 'package:alekha/widget/get_date_function.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart'
     as ncp;
@@ -55,8 +51,11 @@ class _ArchitectureOfferLetterScreenState
   TextEditingController locationController = TextEditingController();
   TextEditingController dateController = TextEditingController();
   TextEditingController basicFeesController = TextEditingController();
+  TextEditingController basicController = TextEditingController();
   TextEditingController standardFeesController = TextEditingController();
+  TextEditingController standardController = TextEditingController();
   TextEditingController premiumFeesController = TextEditingController();
+  TextEditingController premiumController = TextEditingController();
   TextEditingController noOfElevationController = TextEditingController();
   TextEditingController noOfRenderController = TextEditingController();
   TextEditingController noOfPremiumCategoryController = TextEditingController();
@@ -571,40 +570,7 @@ This quote is applicable only for ${monthController.text} month from the commenc
                                   ),
                                 ],
                               )),
-                          // pw.SizedBox(height: 30),
                           pw.Spacer(),
-                          // pw.Column(
-                          //   crossAxisAlignment: pw.CrossAxisAlignment.stretch, // full width
-                          //   children: [
-                          /// Top line in full width, centered
-                          // pw.Container(
-                          //   width: double.infinity,
-                          //   child: pw.RichText(
-                          //     textAlign:
-                          //         pw.TextAlign.center, // 👈 center within full width
-                          //     text: pw.TextSpan(
-                          //       children: [
-                          //         pw.TextSpan(
-                          //           text:
-                          //               "Have a look on our Work Profile by clicking on : ",
-                          //           style: pw.TextStyle(
-                          //             fontSize: 12,
-                          //             fontWeight: pw.FontWeight.bold,
-                          //             font: boldFont,
-                          //           ),
-                          //         ),
-                          //         pw.TextSpan(
-                          //           text: "âlekha architects",
-                          //           style: pw.TextStyle(
-                          //             fontSize: 12,
-                          //             fontWeight: pw.FontWeight.bold,
-                          //             font: boldFont,
-                          //           ),
-                          //         ),
-                          //       ],
-                          //     ),
-                          //   ),
-                          // ),
 
                           pw.UrlLink(
                             destination:
@@ -629,25 +595,6 @@ This quote is applicable only for ${monthController.text} month from the commenc
                             thickness: 0.5,
                             color: PdfColors.grey600,
                           ),
-
-                          // pw.SizedBox(height: 4),
-
-                          /// Address text in full width, centered
-                          //     pw.Container(
-                          //       width: double.infinity,
-                          //       child: pw.Text(
-                          //         "28-29, Hiranagar, G.H.B., Bamroli Rd., Pandesara, Surat - 394221",
-                          //         textAlign: pw.TextAlign.center, // 👈 centered
-                          //         style: pw.TextStyle(
-                          //           fontSize: 8,
-                          //           letterSpacing: 1.2,
-                          //           font: regularFont,
-                          //           color: PdfColors.grey800,
-                          //         ),
-                          //       ),
-                          //     ),
-                          //   ],
-                          // ),
 
                           pw.Container(
                             width: double.infinity,
@@ -815,6 +762,7 @@ This quote is applicable only for ${monthController.text} month from the commenc
                                     selectedBasicOptions,
                                     calibriBoldFont,
                                     calibriRegularFont,
+                                    basicController.text.toString(),
                                     basicFeesController.text),
 
                               if (selectedStandardOptions.isNotEmpty)
@@ -823,6 +771,7 @@ This quote is applicable only for ${monthController.text} month from the commenc
                                     selectedStandardOptions,
                                     calibriBoldFont,
                                     calibriRegularFont,
+                                    standardController.text.toString(),
                                     standardFeesController.text),
 
                               if (selectedPremiumOptions.isNotEmpty)
@@ -831,129 +780,13 @@ This quote is applicable only for ${monthController.text} month from the commenc
                                     selectedPremiumOptions,
                                     calibriBoldFont,
                                     calibriRegularFont,
+                                    premiumController.text.toString(),
                                     premiumFeesController.text),
                             ],
                           ),
                         ),
                         pw.SizedBox(height: 5),
-                        // pw.Container(
-                        //   padding: const pw.EdgeInsets.all(12),
-                        //   decoration: pw.BoxDecoration(
-                        //     // color: PdfColor.fromHex("#F5F5F5"),
-                        //     borderRadius: pw.BorderRadius.circular(8),
-                        //     border: pw.Border.all(
-                        //         color: PdfColor.fromHex("#BDBDBD"), width: 0.5),
-                        //   ),
-                        //   child: pw.Row(
-                        //     children: [
-                        //       pw.Expanded(
-                        //         child: pw.Container(),
-                        //       ),
-                        //       pw.Expanded(
-                        //         child: pw.RichText(
-                        //           text: pw.TextSpan(
-                        //             children: [
-                        //               pw.TextSpan(
-                        //                 text: basicFeesController.text,
-                        //                 style: pw.TextStyle(
-                        //                   font: calibriRegularFont,
-                        //                   fontSize: 15,
-                        //                   color: PdfColor.fromHex("#000000"),
-                        //                 ),
-                        //               ),
-                        //               if (basicFeesController.text.isNotEmpty)
-                        //                 pw.TextSpan(
-                        //                   text: "+GST",
-                        //                   style: pw.TextStyle(
-                        //                     font: regularFont,
-                        //                     fontSize: 11,
-                        //                     fontWeight: pw.FontWeight.bold,
-                        //                     color: PdfColor.fromHex("#000000"),
-                        //                   ),
-                        //                 ),
-                        //             ],
-                        //           ),
-                        //         ),
-                        //       ),
-                        //       pw.Expanded(
-                        //         child: pw.RichText(
-                        //           text: pw.TextSpan(
-                        //             children: [
-                        //               pw.TextSpan(
-                        //                 text: standardFeesController.text,
-                        //                 style: pw.TextStyle(
-                        //                   font: calibriRegularFont,
-                        //                   fontSize: 15,
-                        //                   color: PdfColor.fromHex("#000000"),
-                        //                 ),
-                        //               ),
-                        //               if (standardFeesController.text.isNotEmpty)
-                        //                 pw.TextSpan(
-                        //                   text: "+GST",
-                        //                   style: pw.TextStyle(
-                        //                     font: regularFont,
-                        //                     fontSize: 11,
-                        //                     fontWeight: pw.FontWeight.bold,
-                        //                     color: PdfColor.fromHex("#000000"),
-                        //                   ),
-                        //                 ),
-                        //             ],
-                        //           ),
-                        //         ),
-                        //       ),
-                        //       pw.Expanded(
-                        //         child: pw.RichText(
-                        //           text: pw.TextSpan(
-                        //             children: [
-                        //               pw.TextSpan(
-                        //                 text: premiumFeesController.text,
-                        //                 style: pw.TextStyle(
-                        //                   font: calibriRegularFont,
-                        //                   fontSize: 15,
-                        //                   color: PdfColor.fromHex("#000000"),
-                        //                 ),
-                        //               ),
-                        //               if (premiumFeesController.text.isNotEmpty)
-                        //                 pw.TextSpan(
-                        //                   text: "+GST",
-                        //                   style: pw.TextStyle(
-                        //                     font: regularFont,
-                        //                     fontSize: 11,
-                        //                     fontWeight: pw.FontWeight.bold,
-                        //                     color: PdfColor.fromHex("#000000"),
-                        //                   ),
-                        //                 )
-                        //             ],
-                        //           ),
-                        //         ),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
-
                         pw.SizedBox(height: 10),
-//               pw.Text(
-//                 """
-//      Charges are only as per scope/area describe by client.
-//      Charges may differ if any space is deducted/added from/to designing scope.
-//      3D Rendering of Final 3D Designs - Includes ${noOfElevationController.text} Views/space  (only for PREMIUM category)
-//      (additional view charges - Rs.${noOfRenderController.text}/view)
-//      Site Visits -  Includes ${noOfPremiumCategoryController.text} Visits + ${noOfPremiumCategorySelectionController.text} Selection Visits (PREMIUM category)(additional visit charges - Rs.${noOfAdditionalVisitController.text}/visit)
-//      2D Layout - Includes ${noOfOptionsController.text} Options & ${noFRevisionController.text} Revisions
-//      (additional 2D Layout & Revision charges - Rs.${layout2DController.text}/layout & Rs.${revision2DController.text}/revision)
-//      3D Design - Includes ${elevation3DOptionalController.text} Options ${revision3DOptionalController.text.isNotEmpty ? " & ${revision3DOptionalController.text} Revisions" : ""}
-//      (additional 3D Elevation & Revision charges - Rs.${elevation3DController.text}/side & Rs.${revision3DController.text}/revision)
-//      This quote is applicable only for ${monthController.text} month from the commencement of work on site.
-//      Structural changes are chargeable after final designs. Drawing for loan process is chargeable.
-// """,
-
-//                 // "     Charges are only as per scope/area describe by client.\n     Charges may differ if any space is deducted/added from/to designing scope.\n     3D Rendering of Final 3D Designs - Includes ${noOfElevationController.text} Views/space  (only for PREMIUM category)\n     (additional view charges - Rs.${noOfRenderController.text}/view)\n     Site Visits -  Includes ${noOfPremiumCategoryController.text} Visits + ${noOfPremiumCategorySelectionController.text} Selection Visits (PREMIUM category)(additional visit charges - Rs..${noOfAdditionalVisitController.text}/visit)\n     2D Layout - Includes ${noOfOptionsController.text} Options & ${noFRevisionController.text} Revisions\n     (additional 2D Layout & Revision charges - Rs..${layout2DController.text}/layout & Rs..${revision2DController.text}/revision)\n     3D Design - Includes ${elevation3DOptionalController.text} Revisions ${revision3DOptionalController.text.isNotEmpty??"& ${revision3DOptionalController.text.isNotEmpty}Revisions"}\n     (additional 3D Elevation & Revision charges - Rs..${elevation3DController.text}/space & Rs..${revision3DController.text}/revision)\n     This quote is applicable only for ${monthController.text} month from the commencement of work on site.)\n     Structural changes are chargeable after final designs. Drawing for loan process is chargeable.",
-//                 style: pw.TextStyle(
-//                   font: regularFont,
-//                   fontSize: 9,
-//                   fontWeight: pw.FontWeight.normal,
-//                 ),
-//               ),
                         pw.Text(
                           buildScopeText(),
                           style: pw.TextStyle(
@@ -974,66 +807,6 @@ This quote is applicable only for ${monthController.text} month from the commenc
                           ),
                         ),
                         pw.SizedBox(height: 5),
-                        // pw.Text(
-                        //   "We are charging professional fee in the following stages consistent with the work done plus other charges and reimbursable expenses as agreed upon : PREMIUM",
-                        //   style: pw.TextStyle(
-                        //     font: regularFont,
-                        //     fontSize: 11,
-                        //     fontWeight: pw.FontWeight.normal,
-                        //   ),
-                        // ),
-                        // pw.SizedBox(height: 5),
-                        // pw.Container(
-                        //   width: double.infinity,
-                        //   padding:
-                        //       pw.EdgeInsets.only(right: 5, bottom: 8, left: 8, top: 8),
-                        //   // padding: const pw.EdgeInsets.all(8),
-                        //   decoration: pw.BoxDecoration(
-                        //     borderRadius: pw.BorderRadius.circular(8),
-                        //     border: pw.Border.all(
-                        //         color: PdfColor.fromHex("#BDBDBD"), width: 0.5),
-                        //   ),
-                        //   child: pw.Wrap(
-                        //     spacing: 2,
-                        //     runSpacing: 2,
-                        //     children: _buildPaymentScheduleStages(
-                        //         calibriBoldFont, calibriRegularFont,
-                        //         isPremium: true),
-                        //   ),
-                        // ),
-                        // pw.SizedBox(height: 5),
-                        // pw.Container(
-                        //   width: double.infinity,
-                        //   padding:
-                        //       pw.EdgeInsets.only(right: 5, bottom: 8, left: 8, top: 8),
-                        //   decoration: pw.BoxDecoration(
-                        //     borderRadius: pw.BorderRadius.circular(8),
-                        //     border: pw.Border.all(
-                        //         color: PdfColor.fromHex("#BDBDBD"), width: 0.5),
-                        //   ),
-                        //   child: pw.Row(
-                        //     children: [
-                        //       pw.Text(
-                        //         "Standard".toUpperCase(),
-                        //         style: pw.TextStyle(
-                        //           font: regularFont,
-                        //           fontSize: 11,
-                        //           fontWeight: pw.FontWeight.normal,
-                        //         ),
-                        //       ),
-                        //       pw.SizedBox(width: 15),
-                        //       pw.Wrap(
-                        //         spacing: 2,
-                        //         runSpacing: 2,
-                        //         children: _buildPaymentScheduleStages(
-                        //           calibriBoldFont,
-                        //           calibriRegularFont,
-                        //           isPremium: false,
-                        //         ),
-                        //       ),
-                        //     ],
-                        //   ),
-                        // ),
                         pw.Column(
                           crossAxisAlignment: pw.CrossAxisAlignment.start,
                           children: [
@@ -1268,98 +1041,6 @@ This quote is applicable only for ${monthController.text} month from the commenc
       );
     }
 
-    // for (int i = 0; i < _images.length; i += 4) {
-    //   pdf.addPage(
-    //     pw.Page(
-    //       pageFormat: PdfPageFormat.a4,
-    //       margin: const pw.EdgeInsets.all(20),
-    //       build: (pw.Context context) {
-    //         return pw.Column(
-    //           crossAxisAlignment: pw.CrossAxisAlignment.start,
-    //           children: [
-    //             pw.Container(
-    //               width: double.infinity,
-    //               height: 100,
-    //               margin: const pw.EdgeInsets.only(bottom: 2),
-    //               decoration: pw.BoxDecoration(
-    //                 image: pw.DecorationImage(
-    //                   image: pw.MemoryImage(imageData),
-    //                   fit: pw.BoxFit.fitWidth,
-    //                 ),
-    //               ),
-    //             ),
-    //             pw.SizedBox(height: 5),
-    //             pw.Text(
-    //               "06. SITE PICTURES/LAYOUT",
-    //               style: pw.TextStyle(
-    //                 decoration: pw.TextDecoration.underline,
-    //                 fontSize: 15,
-    //                 font: calibriBoldFont,
-    //                 // color: PdfColor.fromHex("#000000"),
-    //               ),
-    //             ),
-
-    //             // 📌 Image Grid Full Height
-    //             pw.Expanded(
-    //               child: pw.Column(
-    //                 children: [
-    //                   // Top Row
-    //                   pw.Expanded(
-    //                     child: pw.Row(
-    //                       children: [
-    //                         _buildImageBox(_images, i),
-    //                         _buildImageBox(_images, i + 1),
-    //                       ],
-    //                     ),
-    //                   ),
-    //                   // Bottom Row
-    //                   pw.Expanded(
-    //                     child: pw.Row(
-    //                       children: [
-    //                         _buildImageBox(_images, i + 2),
-    //                         _buildImageBox(_images, i + 3),
-    //                       ],
-    //                     ),
-    //                   ),
-    //                 ],
-    //               ),
-    //             ),
-    //             pw.Text(
-    //               "Thank You.",
-    //               style: pw.TextStyle(
-    //                 decoration: pw.TextDecoration.underline,
-    //                 fontSize: 12,
-    //                 font: calibriBoldFont,
-    //               ),
-    //             ),
-    //             pw.Text(
-    //               "Note : Additional GST would be applicable on professional fees on all categories. | Advance payment is non refundable in any case. | Design quote is totally upon requirement/scope described by client, quote may differ as requirements/scope changes. | Quote given are subjected to change without prior information. |CAD or SKP file of final designs additional charges are applicable.",
-    //               style: pw.TextStyle(
-    //                 fontSize: 7,
-    //                 font: calibriRegularFont,
-    //               ),
-    //             ),
-    //             pw.Divider(
-    //               thickness: 0.5,
-    //               color: PdfColors.grey600,
-    //             ),
-    //             pw.Container(
-    //               width: double.infinity,
-    //               height: 25,
-    //               decoration: pw.BoxDecoration(
-    //                 image: pw.DecorationImage(
-    //                   image: pw.MemoryImage(offerLaterFooterImage),
-    //                   fit: pw.BoxFit.fitWidth,
-    //                 ),
-    //               ),
-    //             ),
-    //           ],
-    //         );
-    //       },
-    //     ),
-    //   );
-    // }
-
     // Save and share the generated PDF
     await Printing.layoutPdf(
       name:
@@ -1392,91 +1073,6 @@ This quote is applicable only for ${monthController.text} month from the commenc
       ),
     );
   }
-  // List<pw.Widget> _buildPaymentScheduleStages(
-  //     pw.Font boldFont, pw.Font regularFont) {
-  //   List<pw.Widget> stageWidgets = [];
-
-  //   List<Map<String, String>> selectedStages = [];
-
-  //   // Add only if controller has value and dropdown selected
-  //   if (aPremiumController.text.trim().isNotEmpty && _feeStage1!.isNotEmpty) {
-  //     selectedStages.add({
-  //       "percentage": aPremiumController.text.trim() + "%",
-  //       "label": _feeStage1.toString(),
-  //     });
-  //   }
-  //   if (bPremiumController.text.trim().isNotEmpty && _feeStage2!.isNotEmpty) {
-  //     selectedStages.add({
-  //       "percentage": bPremiumController.text.trim() + "%",
-  //       "label": _feeStage2.toString(),
-  //     });
-  //   }
-  //   if (cPremiumController.text.trim().isNotEmpty && _feeStage3!.isNotEmpty) {
-  //     selectedStages.add({
-  //       "percentage": cPremiumController.text.trim() + "%",
-  //       "label": _feeStage3.toString(),
-  //     });
-  //   }
-  //   if (dPremiumController.text.trim().isNotEmpty && _feeStage4!.isNotEmpty) {
-  //     selectedStages.add({
-  //       "percentage": dPremiumController.text.trim() + "%",
-  //       "label": _feeStage4.toString(),
-  //     });
-  //   }
-  //   if (ePremiumController.text.trim().isNotEmpty && _feeStage5!.isNotEmpty) {
-  //     selectedStages.add({
-  //       "percentage": ePremiumController.text.trim() + "%",
-  //       "label": _feeStage5.toString(),
-  //     });
-  //   }
-  //   if (fPremiumController.text.trim().isNotEmpty && _feeStage6!.isNotEmpty) {
-  //     selectedStages.add({
-  //       "percentage": "${fPremiumController.text.trim()}%",
-  //       "label": _feeStage6.toString(),
-  //     });
-  //   }
-
-  //   for (var stage in selectedStages) {
-  //     stageWidgets.add(
-  //       pw.Container(
-  //         width: 85,
-  //         margin: const pw.EdgeInsets.only(right: 3),
-  //         padding: const pw.EdgeInsets.symmetric(vertical: 6, horizontal: 5),
-  //         decoration: pw.BoxDecoration(
-  //           color: PdfColor.fromHex("#ECECEC"),
-  //           borderRadius: pw.BorderRadius.circular(4),
-  //         ),
-  //         child: pw.Column(
-  //           crossAxisAlignment: pw.CrossAxisAlignment.center,
-  //           children: [
-  //             pw.Text(
-  //               stage["percentage"]!,
-  //               style: pw.TextStyle(
-  //                 font: boldFont,
-  //                 fontSize: 12,
-  //               ),
-  //             ),
-  //             pw.SizedBox(height: 3),
-  //             pw.FittedBox(
-  //               fit: pw.BoxFit.scaleDown,
-  //               alignment: pw.Alignment.centerLeft,
-  //               child: pw.Text(
-  //                 stage["label"]!,
-  //                 textAlign: pw.TextAlign.center,
-  //                 style: pw.TextStyle(
-  //                   font: regularFont,
-  //                   fontSize: 9,
-  //                 ),
-  //               ),
-  //             )
-  //           ],
-  //         ),
-  //       ),
-  //     );
-  //   }
-
-  //   return stageWidgets;
-  // }
 
   List<pw.Widget> _buildPaymentScheduleStages(
     pw.Font boldFont,
@@ -1596,17 +1192,93 @@ This quote is applicable only for ${monthController.text} month from the commenc
     return stageWidgets;
   }
 
+  // pw.Widget buildServiceColumn(
+  //   String title,
+  //   List<Map<String, dynamic>> items,
+  //   pw.Font titleFont,
+  //   pw.Font itemFont,
+  //   String amount,
+  // ) {
+  //   return pw.Container(
+  //     width: 140, // fixed width to ensure consistent layout in row
+  //     padding: const pw.EdgeInsets.only(right: 15, top: 10, bottom: 10),
+
+  //     child: pw.Column(
+  //       crossAxisAlignment: pw.CrossAxisAlignment.start,
+  //       mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
+  //       children: [
+  //         pw.Column(
+  //           crossAxisAlignment: pw.CrossAxisAlignment.start,
+  //           children: [
+  //             pw.Container(
+  //               width: double.infinity,
+  //               padding: const pw.EdgeInsets.symmetric(vertical: 4),
+  //               decoration: pw.BoxDecoration(
+  //                 color: PdfColor.fromHex("#ECECEC"),
+  //                 borderRadius: pw.BorderRadius.circular(6),
+  //               ),
+  //               child: pw.Center(
+  //                 child: pw.Text(
+  //                   title,
+  //                   style: pw.TextStyle(font: titleFont, fontSize: 14),
+  //                 ),
+  //               ),
+  //             ),
+  //             pw.SizedBox(height: 5),
+  //             ...items.asMap().entries.map((entry) {
+  //               final index = entry.key;
+  //               final text = entry.value['title'] ?? '';
+  //               return pw.Text(
+  //                 "${String.fromCharCode(65 + index)}. ${text.toString().toUpperCase()}",
+  //                 style: pw.TextStyle(
+  //                   font: itemFont,
+  //                   fontSize: 12,
+  //                   color: PdfColor.fromHex("#424242"),
+  //                 ),
+  //               );
+  //             }).toList(),
+  //           ],
+  //         ),
+  //         if (amount.trim().isNotEmpty)
+  //           pw.Align(
+  //             child: pw.Container(
+  //               width: double.infinity,
+  //               margin: pw.EdgeInsets.only(top: 8),
+  //               padding: const pw.EdgeInsets.symmetric(vertical: 4),
+  //               decoration: pw.BoxDecoration(
+  //                 color: PdfColor.fromHex("#ECECEC"),
+  //                 borderRadius: pw.BorderRadius.circular(6),
+  //               ),
+  //               child: pw.Center(
+  //                 child: pw.Text(
+  //                   "$amount + GST",
+  //                   style: pw.TextStyle(
+  //                     fontSize: 11,
+  //                     fontWeight: pw.FontWeight.normal,
+  //                     color: PdfColor.fromHex("#000000"),
+  //                   ),
+  //                 ),
+  //               ),
+  //             ),
+  //           )
+  //       ],
+  //     ),
+  //   );
+  // }
+
   pw.Widget buildServiceColumn(
     String title,
     List<Map<String, dynamic>> items,
     pw.Font titleFont,
-    pw.Font itemFont,
+    pw.Font itemFont, String extraValue,
     String amount,
+   
   ) {
-    return pw.Container(
-      width: 140, // fixed width to ensure consistent layout in row
-      padding: const pw.EdgeInsets.only(right: 15, top: 10, bottom: 10),
+    int baseIndex = items.length; // last alphabet index
 
+    return pw.Container(
+      width: 140,
+      padding: const pw.EdgeInsets.only(right: 15, top: 10, bottom: 10),
       child: pw.Column(
         crossAxisAlignment: pw.CrossAxisAlignment.start,
         mainAxisAlignment: pw.MainAxisAlignment.spaceBetween,
@@ -1614,6 +1286,7 @@ This quote is applicable only for ${monthController.text} month from the commenc
           pw.Column(
             crossAxisAlignment: pw.CrossAxisAlignment.start,
             children: [
+              /// TITLE
               pw.Container(
                 width: double.infinity,
                 padding: const pw.EdgeInsets.symmetric(vertical: 4),
@@ -1628,7 +1301,10 @@ This quote is applicable only for ${monthController.text} month from the commenc
                   ),
                 ),
               ),
+
               pw.SizedBox(height: 5),
+
+              /// EXISTING CHECKED OPTIONS (A, B, C...)
               ...items.asMap().entries.map((entry) {
                 final index = entry.key;
                 final text = entry.value['title'] ?? '';
@@ -1641,30 +1317,40 @@ This quote is applicable only for ${monthController.text} month from the commenc
                   ),
                 );
               }).toList(),
+
+              /// 🔥 EXTRA LINE IF CONTROLLER FILLED
+                if (extraValue.trim().isNotEmpty)
+                  pw.Text(
+                    "${String.fromCharCode(65 + baseIndex)}. ${extraValue.toUpperCase()}",
+                    style: pw.TextStyle(
+                      font: itemFont,
+                      fontSize: 12,
+                      color: PdfColor.fromHex("#424242"),
+                    ),
+                  ),
             ],
           ),
+
+          /// FEES
           if (amount.trim().isNotEmpty)
-            pw.Align(
-              child: pw.Container(
-                width: double.infinity,
-                margin: pw.EdgeInsets.only(top: 8),
-                padding: const pw.EdgeInsets.symmetric(vertical: 4),
-                decoration: pw.BoxDecoration(
-                  color: PdfColor.fromHex("#ECECEC"),
-                  borderRadius: pw.BorderRadius.circular(6),
-                ),
-                child: pw.Center(
-                  child: pw.Text(
-                    "$amount + GST",
-                    style: pw.TextStyle(
-                      fontSize: 11,
-                      fontWeight: pw.FontWeight.normal,
-                      color: PdfColor.fromHex("#000000"),
-                    ),
+            pw.Container(
+              width: double.infinity,
+              margin: pw.EdgeInsets.only(top: 8),
+              padding: const pw.EdgeInsets.symmetric(vertical: 4),
+              decoration: pw.BoxDecoration(
+                color: PdfColor.fromHex("#ECECEC"),
+                borderRadius: pw.BorderRadius.circular(6),
+              ),
+              child: pw.Center(
+                child: pw.Text(
+                  "$amount + GST",
+                  style: pw.TextStyle(
+                    fontSize: 11,
+                    color: PdfColor.fromHex("#000000"),
                   ),
                 ),
               ),
-            )
+            ),
         ],
       ),
     );
@@ -1722,7 +1408,7 @@ This quote is applicable only for ${monthController.text} month from the commenc
   //     });
   //   }
   // }
-  
+
   Future<void> _getImage() async {
     final List<File> pickedImages =
         await CommonMultipleImagePicker.pickMultipleImages();
@@ -1735,7 +1421,6 @@ This quote is applicable only for ${monthController.text} month from the commenc
       debugPrint("No Images selected");
     }
   }
-
 
   @override
   Widget build(BuildContext context) {
@@ -1943,6 +1628,13 @@ This quote is applicable only for ${monthController.text} month from the commenc
                       }).toList(),
                     ),
                     CommonTextFieldWithFocus(
+                      controller: basicController,
+                      labelText: "Basic",
+                      hintText: "Basic",
+                      keyboardType: TextInputType.number,
+                    ),
+                    PickHeightAndWidth.height10,
+                    CommonTextFieldWithFocus(
                       controller: basicFeesController,
                       labelText: "Basic - Professional Fees",
                       hintText: "Basic - Professional Fees",
@@ -1955,7 +1647,6 @@ This quote is applicable only for ${monthController.text} month from the commenc
                             .copyWith(
                               decoration: TextDecoration.none,
                             )),
-
                     Wrap(
                       spacing: 10.0,
                       runSpacing: -8.0,
@@ -1983,6 +1674,13 @@ This quote is applicable only for ${monthController.text} month from the commenc
                         );
                       }).toList(),
                     ),
+                    CommonTextFieldWithFocus(
+                      controller: standardController,
+                      labelText: "Standard",
+                      hintText: "Standard",
+                      keyboardType: TextInputType.number,
+                    ),
+                    PickHeightAndWidth.height10,
                     CommonTextFieldWithFocus(
                       controller: standardFeesController,
                       labelText: "Standard - Professional Fees",
@@ -2023,6 +1721,13 @@ This quote is applicable only for ${monthController.text} month from the commenc
                         );
                       }).toList(),
                     ),
+                    CommonTextFieldWithFocus(
+                      controller: premiumController,
+                      labelText: "Premium",
+                      hintText: "Premium",
+                      keyboardType: TextInputType.number,
+                    ),
+                    PickHeightAndWidth.height10,
                     CommonTextFieldWithFocus(
                       controller: premiumFeesController,
                       labelText: "Premium - Professional Fees",
@@ -2084,7 +1789,6 @@ This quote is applicable only for ${monthController.text} month from the commenc
                             .copyWith(
                               decoration: TextDecoration.none,
                             )),
-
                     LabelAndTextFieldRow(
                       label: "2D layout options",
                       controller: noOfOptionsController,
@@ -2234,9 +1938,7 @@ This quote is applicable only for ${monthController.text} month from the commenc
                         ),
                       ],
                     ),
-
                     PickHeightAndWidth.height10,
-
                     Row(
                       children: [
                         Expanded(
@@ -2286,7 +1988,6 @@ This quote is applicable only for ${monthController.text} month from the commenc
                       ],
                     ),
                     PickHeightAndWidth.height10,
-
                     Row(
                       children: [
                         Expanded(
@@ -2336,7 +2037,6 @@ This quote is applicable only for ${monthController.text} month from the commenc
                       ],
                     ),
                     PickHeightAndWidth.height10,
-
                     Row(
                       children: [
                         Expanded(
@@ -2386,7 +2086,6 @@ This quote is applicable only for ${monthController.text} month from the commenc
                       ],
                     ),
                     PickHeightAndWidth.height10,
-
                     Row(
                       children: [
                         Expanded(
@@ -2436,7 +2135,6 @@ This quote is applicable only for ${monthController.text} month from the commenc
                       ],
                     ),
                     PickHeightAndWidth.height10,
-
                     Row(
                       children: [
                         Expanded(
@@ -2485,116 +2183,6 @@ This quote is applicable only for ${monthController.text} month from the commenc
                         ),
                       ],
                     ),
-                    // Row(
-                    //   children: [
-                    //     Flexible(
-                    //       child: CommonTextFieldWithFocus(
-                    //         controller: aPremiumController,
-                    //         labelText: "Stage 01",
-                    //         hintText: 'Stage 01',
-                    //         inputFormatters: [
-                    //           FilteringTextInputFormatter.allow(
-                    //               RegExp(r'^\d+\.?\d{0,2}')),
-                    //           limitInputBasedOnTotal(
-                    //               aPremiumController, () => _getPremiumTotal()),
-                    //         ],
-                    //         labelTextStyle: CommonTextStyle()
-                    //             .fillableTextFieldTextStyle
-                    //             .copyWith(fontSize: SizeConfig.fontSize12),
-                    //       ),
-                    //     ),
-                    //     PickHeightAndWidth.width5,
-                    //     Flexible(
-                    //       child: CommonTextFieldWithFocus(
-                    //         controller: bPremiumController,
-                    //         labelText: "Stage 02",
-                    //         hintText: 'Stage 02',
-                    //         inputFormatters: [
-                    //           FilteringTextInputFormatter.allow(
-                    //               RegExp(r'^\d+\.?\d{0,2}')),
-                    //           limitInputBasedOnTotal(
-                    //               aPremiumController, () => _getPremiumTotal()),
-                    //         ],
-                    //         labelTextStyle: CommonTextStyle()
-                    //             .fillableTextFieldTextStyle
-                    //             .copyWith(fontSize: SizeConfig.fontSize12),
-                    //       ),
-                    //     ),
-                    //     PickHeightAndWidth.width5,
-                    //     Flexible(
-                    //       child: CommonTextFieldWithFocus(
-                    //         controller: cPremiumController,
-                    //         labelText: "Stage 03",
-                    //         hintText: 'Stage 03',
-                    //         inputFormatters: [
-                    //           FilteringTextInputFormatter.allow(
-                    //               RegExp(r'^\d+\.?\d{0,2}')),
-                    //           limitInputBasedOnTotal(
-                    //               aPremiumController, () => _getPremiumTotal()),
-                    //         ],
-                    //         labelTextStyle: CommonTextStyle()
-                    //             .fillableTextFieldTextStyle
-                    //             .copyWith(fontSize: SizeConfig.fontSize12),
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
-                    // PickHeightAndWidth.height10,
-                    // Row(
-                    //   children: [
-                    //     Flexible(
-                    //       child: CommonTextFieldWithFocus(
-                    //         controller: dPremiumController,
-                    //         labelText: "Stage 04",
-                    //         hintText: 'Stage 04',
-                    //         inputFormatters: [
-                    //           FilteringTextInputFormatter.allow(
-                    //               RegExp(r'^\d+\.?\d{0,2}')),
-                    //           limitInputBasedOnTotal(
-                    //               aPremiumController, () => _getPremiumTotal()),
-                    //         ],
-                    //         labelTextStyle: CommonTextStyle()
-                    //             .fillableTextFieldTextStyle
-                    //             .copyWith(fontSize: SizeConfig.fontSize12),
-                    //       ),
-                    //     ),
-                    //     PickHeightAndWidth.width5,
-                    //     Flexible(
-                    //       child: CommonTextFieldWithFocus(
-                    //         controller: ePremiumController,
-                    //         labelText: "Stage 05",
-                    //         hintText: 'Stage 05',
-                    //         inputFormatters: [
-                    //           FilteringTextInputFormatter.allow(
-                    //               RegExp(r'^\d+\.?\d{0,2}')),
-                    //           limitInputBasedOnTotal(
-                    //               aPremiumController, () => _getPremiumTotal()),
-                    //         ],
-                    //         labelTextStyle: CommonTextStyle()
-                    //             .fillableTextFieldTextStyle
-                    //             .copyWith(fontSize: SizeConfig.fontSize12),
-                    //       ),
-                    //     ),
-                    //     PickHeightAndWidth.width5,
-                    //     Flexible(
-                    //       child: CommonTextFieldWithFocus(
-                    //         controller: fPremiumController,
-                    //         labelText: "Stage 06",
-                    //         hintText: 'Stage 06',
-                    //         inputFormatters: [
-                    //           FilteringTextInputFormatter.allow(
-                    //               RegExp(r'^\d+\.?\d{0,2}')),
-                    //           limitInputBasedOnTotal(
-                    //               aPremiumController, () => _getPremiumTotal()),
-                    //         ],
-                    //         labelTextStyle: CommonTextStyle()
-                    //             .fillableTextFieldTextStyle
-                    //             .copyWith(fontSize: SizeConfig.fontSize12),
-                    //       ),
-                    //     ),
-                    //   ],
-                    // ),
-
                     PickHeightAndWidth.height10,
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -2616,7 +2204,6 @@ This quote is applicable only for ${monthController.text} month from the commenc
                       ],
                     ),
                     PickHeightAndWidth.height10,
-
                     Row(
                       children: [
                         Expanded(
@@ -2665,9 +2252,7 @@ This quote is applicable only for ${monthController.text} month from the commenc
                         ),
                       ],
                     ),
-
                     PickHeightAndWidth.height10,
-
                     Row(
                       children: [
                         Expanded(
@@ -2717,7 +2302,6 @@ This quote is applicable only for ${monthController.text} month from the commenc
                       ],
                     ),
                     PickHeightAndWidth.height10,
-
                     Row(
                       children: [
                         Expanded(
@@ -2825,7 +2409,6 @@ This quote is applicable only for ${monthController.text} month from the commenc
                             ),
                           )
                         : Container(),
-
                     const SizedBox(height: 20),
                     Row(
                       children: [

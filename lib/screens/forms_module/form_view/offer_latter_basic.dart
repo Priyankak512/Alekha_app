@@ -278,12 +278,18 @@ ${clientRequirementsController.text.isNotEmpty ? clientRequirementsController.te
                   Text("SCOPE DESCRIBED BY CLIENT",
                       style: CommonTextStyle().offerLetterTopicNameTextStyle),
                   PickHeightAndWidth.height10,
-                  CommonTextFieldWithFocus(
+                  // CommonTextFieldWithFocus(
+                  //   controller: clientRequirementsController,
+                  //   maxLines: 10,
+                  //   labelText: "Client requirements",
+                  //   hintText: "Client requirements",
+                  //   keyboardType: TextInputType.name,
+                  // ),
+                   CommonTextFieldWithFocus(
                     controller: clientRequirementsController,
-                    maxLines: 10,
                     labelText: "Client requirements",
                     hintText: "Client requirements",
-                    keyboardType: TextInputType.name,
+                    maxLines: 5,
                   ),
                   const SizedBox(
                     height: 20,
