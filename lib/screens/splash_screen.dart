@@ -59,9 +59,7 @@ class _SplashScreenState extends State<SplashScreen> {
               padding: const EdgeInsets.only(bottom: 20.0),
               child: Text(
                 "developed by Priyanka Kachhadiya",
-                style: CommonTextStyle().buttonTextStyle.copyWith(
-                      fontSize: SizeConfig.fontSize10,
-                    ),
+               
                 textAlign: TextAlign.center,
               ),
             ),

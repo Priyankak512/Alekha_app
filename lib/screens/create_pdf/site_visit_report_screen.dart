@@ -14,8 +14,11 @@ import 'package:alekha/widget/common_material_button.dart';
 import 'package:alekha/widget/common_text_field.dart';
 import 'package:alekha/widget/get_date_function.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart' show rootBundle;
+import 'package:flutter/services.dart'
+    show FilteringTextInputFormatter, TextInputFormatter, rootBundle;
+import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
@@ -556,6 +559,10 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
+                  FormBuilderEditableDateFieldStyled(
+                    fieldKey: '',
+                    labelText: '',
+                  ),
                   CommonTextFieldWithFocus(
                     controller: clientNameController,
                     labelText: "Client Name",
@@ -904,3 +911,238 @@ pw.Widget buildMultilineField({
     ),
   );
 }
+
+
+
+class FormBuilderEditableDateFieldStyled extends FormBuilderField<DateTime> {
+  final String labelText;
+  final bool isRequired;
+  final bool isEnabled;
+  final DateTime? firstDate;
+  final DateTime? lastDate;
+
+  FormBuilderEditableDateFieldStyled({
+    super.key,
+    required String fieldKey,
+    required this.labelText,
+    this.isRequired = false,
+    this.isEnabled = true,
+    this.firstDate,
+    this.lastDate,
+    DateTime? initialValue,
+  }) : super(
+          name: fieldKey,
+          initialValue: initialValue,
+          validator: isRequired
+              ? (val) => val == null ? "$labelText is required" : null
+              : null,
+          builder: (field) {
+            final state = field as _FormBuilderEditableDateFieldStyledState;
+            return state.buildField();
+          },
+        );
+
+  @override
+  FormBuilderFieldState<FormBuilderEditableDateFieldStyled, DateTime>
+      createState() => _FormBuilderEditableDateFieldStyledState();
+}
+
+class _FormBuilderEditableDateFieldStyledState extends FormBuilderFieldState<
+    FormBuilderEditableDateFieldStyled, DateTime> {
+  late TextEditingController _controller;
+  final DateFormat fmt = DateFormat('dd/MM/yyyy');
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = TextEditingController();
+
+    if (value != null) {
+      _controller.text = fmt.format(value!);
+    }
+
+    _controller.addListener(() {
+      final text = _controller.text;
+      if (text.length == 10) {
+        try {
+          final parsed = fmt.parseStrict(text);
+          didChange(parsed);
+        } catch (_) {}
+      }
+    });
+  }
+
+  Future<void> _openCalendar() async {
+    FocusScope.of(context).unfocus();
+
+    final selected = await showDatePicker(
+      context: context,
+      initialDate: value ?? DateTime.now(),
+      firstDate: widget.firstDate ?? DateTime(1900),
+      lastDate: widget.lastDate ?? DateTime(2100),
+    );
+
+    if (selected != null) {
+      _controller.text = fmt.format(selected);
+      didChange(selected);
+    }
+  }
+
+  Widget buildField() {
+    return TextField(
+      controller: _controller,
+      enabled: widget.isEnabled,
+      keyboardType: TextInputType.number,
+      decoration: InputDecoration(
+        hintText: 'dd/MM/yyyy',
+        border: const OutlineInputBorder(),
+        suffixIcon: IconButton(
+          icon: const Icon(Icons.calendar_month),
+          onPressed: _openCalendar,
+        ),
+      ),
+      inputFormatters: [
+        DateMaskFormatter(),
+      ],
+    );
+  }
+}
+
+
+class DateMaskFormatter extends TextInputFormatter {
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    // allow delete
+    if (newValue.text.length < oldValue.text.length) {
+      return newValue;
+    }
+
+    String text = newValue.text.replaceAll(RegExp(r'[^0-9]'), '');
+
+    if (text.length > 8) {
+      text = text.substring(0, 8);
+    }
+
+    String formatted = '';
+    int selectionIndex = newValue.selection.end;
+
+    if (text.length >= 2) {
+      formatted = text.substring(0, 2);
+      if (text.length > 2) {
+        formatted += '/${text.substring(2)}';
+        if (selectionIndex > 2) selectionIndex++;
+      }
+    } else {
+      formatted = text;
+    }
+
+    if (text.length >= 4) {
+      formatted = '${formatted.substring(0, 5)}/${formatted.substring(5)}';
+      if (selectionIndex > 5) selectionIndex++;
+    }
+
+    return TextEditingValue(
+      text: formatted,
+      selection: TextSelection.collapsed(
+        offset: selectionIndex.clamp(0, formatted.length),
+      ),
+    );
+  }
+}
+
+// class EditableDateField extends StatefulWidget {
+//   const EditableDateField({super.key});
+
+//   @override
+//   State<EditableDateField> createState() => _EditableDateFieldState();
+// }
+
+// class _EditableDateFieldState extends State<EditableDateField> {
+//   final TextEditingController _controller =
+//       TextEditingController(text: '01/01/2025');
+
+//   String _lastValue = '01/01/2025';
+
+//   @override
+//   void initState() {
+//     super.initState();
+//     _controller.addListener(_handleYearTyping);
+//   }
+
+//   void _handleYearTyping() {
+//     final text = _controller.text;
+//     final cursor = _controller.selection.baseOffset;
+
+//     /// Cursor in YYYY area
+//     if (cursor >= 6 && cursor <= 10) {
+//       /// If user starts typing (value changed)
+//       if (_lastValue != text) {
+//         final newChar = text.replaceAll(_lastValue, '');
+
+//         /// Clear YYYY once
+//         final updated = text.substring(0, 6) + newChar;
+
+//         _controller.value = TextEditingValue(
+//           text: updated,
+//           selection: TextSelection.collapsed(offset: updated.length),
+//         );
+//       }
+//     }
+
+//     _lastValue = _controller.text;
+//   }
+
+//   @override
+//   Widget build(BuildContext context) {
+//     return TextField(
+//       controller: _controller,
+//       keyboardType: TextInputType.number,
+//       inputFormatters: [
+//         FilteringTextInputFormatter.digitsOnly,
+//         _DateFormatter(),
+//       ],
+//       decoration: const InputDecoration(
+//         labelText: 'Date (DD/MM/YYYY)',
+//         border: OutlineInputBorder(),
+//       ),
+//     );
+//   }
+// }
+
+// class _DateFormatter extends TextInputFormatter {
+//   @override
+//   TextEditingValue formatEditUpdate(
+//     TextEditingValue oldValue,
+//     TextEditingValue newValue,
+//   ) {
+//     String text = newValue.text.replaceAll('/', '');
+
+//     if (text.length > 8) return oldValue;
+
+//     String formatted = '';
+
+//     if (text.length >= 2) {
+//       formatted += text.substring(0, 2) + '/';
+//     } else {
+//       formatted += text;
+//     }
+
+//     if (text.length >= 4) {
+//       formatted += text.substring(2, 4) + '/';
+//     } else if (text.length > 2) {
+//       formatted += text.substring(2);
+//     }
+
+//     if (text.length > 4) {
+//       formatted += text.substring(4);
+//     }
+
+//     return TextEditingValue(
+//       text: formatted,
+//       selection: TextSelection.collapsed(offset: formatted.length),
+//     );
+//   }
+// }

@@ -46,6 +46,8 @@ class _ArchitectureOfferLetterScreenState
   String? _stdFeeStage2;
 
   String? _stdFeeStage3;
+  String? _stdFeeStage4;
+  String? _stdFeeStage5;
   TextEditingController clientNameController = TextEditingController();
   TextEditingController contactNoController = TextEditingController();
   TextEditingController locationController = TextEditingController();
@@ -58,6 +60,7 @@ class _ArchitectureOfferLetterScreenState
   TextEditingController premiumController = TextEditingController();
   TextEditingController noOfElevationController = TextEditingController();
   TextEditingController noOfRenderController = TextEditingController();
+  TextEditingController noteController = TextEditingController();
   TextEditingController noOfPremiumCategoryController = TextEditingController();
   TextEditingController noOfPremiumCategorySelectionController =
       TextEditingController();
@@ -75,16 +78,26 @@ class _ArchitectureOfferLetterScreenState
   TextEditingController dPremiumController = TextEditingController();
   TextEditingController ePremiumController = TextEditingController();
   TextEditingController fPremiumController = TextEditingController();
-
+  TextEditingController aOtherPremiumController = TextEditingController();
+  TextEditingController bOtherPremiumController = TextEditingController();
+  TextEditingController cOtherPremiumController = TextEditingController();
+  TextEditingController dOtherPremiumController = TextEditingController();
+  TextEditingController eOtherPremiumController = TextEditingController();
+  TextEditingController fOtherPremiumController = TextEditingController();
+  TextEditingController aStandardOtherController = TextEditingController();
+  TextEditingController bStandardOtherController = TextEditingController();
+  TextEditingController cStandardOtherController = TextEditingController();
+  TextEditingController dStandardOtherController = TextEditingController();
+  TextEditingController eStandardOtherController = TextEditingController();
   TextEditingController aStandardPremiumController = TextEditingController();
   TextEditingController bStandardPremiumController = TextEditingController();
   TextEditingController cStandardPremiumController = TextEditingController();
+  TextEditingController dStandardPremiumController = TextEditingController();
+  TextEditingController eStandardPremiumController = TextEditingController();
   TextEditingController clientRequirementsController = TextEditingController();
   TextEditingController noOfOptionsController = TextEditingController();
   TextEditingController noFRevisionController = TextEditingController();
-
   final ncp.FlutterContactPicker _contactPicker = ncp.FlutterContactPicker();
-
   List<Map<String, dynamic>> basicOptions = [];
   List<Map<String, dynamic>> standardOptions = [];
   List<Map<String, dynamic>> premiumOptions = [];
@@ -127,7 +140,7 @@ This quote is applicable only for ${monthController.text} month from the commenc
 
     // always last line
     text +=
-        "Structural changes are chargeable after final designs. Drawing for loan process is chargeable.";
+        "Structural changes are chargeable after final designs. Drawing for loan process is chargeable. \n${noteController.text.toString()}";
 
     return text;
   }
@@ -150,6 +163,8 @@ This quote is applicable only for ${monthController.text} month from the commenc
     aStandardPremiumController.addListener(_calculateStandardTotal);
     bStandardPremiumController.addListener(_calculateStandardTotal);
     cStandardPremiumController.addListener(_calculateStandardTotal);
+    dStandardPremiumController.addListener(_calculateStandardTotal);
+    eStandardPremiumController.addListener(_calculateStandardTotal);
   }
 
   double _getPremiumTotal() {
@@ -243,13 +258,12 @@ This quote is applicable only for ${monthController.text} month from the commenc
     double a = double.tryParse(aStandardPremiumController.text) ?? 0.0;
     double b = double.tryParse(bStandardPremiumController.text) ?? 0.0;
     double c = double.tryParse(cStandardPremiumController.text) ?? 0.0;
+    double d = double.tryParse(dStandardPremiumController.text) ?? 0.0;
+    double e = double.tryParse(eStandardPremiumController.text) ?? 0.0;
 
-    double sum = a + b + c;
+    double sum = a + b + c + d + e;
 
     if (sum > 100) {
-      // Prevent user from entering more
-      // Optionally show a warning
-      // You can reset last input here or show a dialog
       return;
     }
 
@@ -438,7 +452,6 @@ This quote is applicable only for ${monthController.text} month from the commenc
                           pw.Container(
                             width: double.infinity,
                             height: 300,
-                            // margin: const pw.EdgeInsets.only(bottom: 2),
                             decoration: pw.BoxDecoration(
                               image: pw.DecorationImage(
                                 image:
@@ -454,7 +467,6 @@ This quote is applicable only for ${monthController.text} month from the commenc
                               decoration: pw.TextDecoration.underline,
                               fontSize: 15,
                               font: calibriBoldFont,
-                              // color: PdfColor.fromHex("#000000"),
                             ),
                           ),
                           pw.SizedBox(
@@ -535,13 +547,6 @@ This quote is applicable only for ${monthController.text} month from the commenc
                                                     ),
                                                     alignment:
                                                         pw.Alignment.center,
-                                                    // child: pw.Text(
-                                                    //   chunk[colIndex]['title'],
-                                                    //   style: pw.TextStyle(
-                                                    //     font: calibriBoldFont,
-                                                    //     fontSize: 15,
-                                                    //   ),
-                                                    // ),
                                                     child: pw.FittedBox(
                                                         fit:
                                                             pw.BoxFit.scaleDown,
@@ -587,8 +592,6 @@ This quote is applicable only for ${monthController.text} month from the commenc
                               ),
                             ),
                           ),
-
-                          // pw.SizedBox(height: 5),
 
                           /// Full width divider
                           pw.Divider(
@@ -721,13 +724,10 @@ This quote is applicable only for ${monthController.text} month from the commenc
                             ],
                           ),
                         ),
-                        // pw.Text("${basicOptions}"),
                         pw.SizedBox(
                           height: 5,
                         ),
                         pw.Container(
-                          // padding: const pw.EdgeInsets.all(12),
-                          // padding:pw. EdgeInsets.only(top: 10,bottom: 10,left: 10),
                           decoration: pw.BoxDecoration(
                             // color: PdfColor.fromHex("#F5F5F5"),
                             borderRadius: pw.BorderRadius.circular(8),
@@ -795,7 +795,6 @@ This quote is applicable only for ${monthController.text} month from the commenc
                             fontWeight: pw.FontWeight.normal,
                           ),
                         ),
-
                         pw.SizedBox(height: 15),
                         pw.Text(
                           "04. SCHEDULE OF PAYMENT :",
@@ -803,7 +802,6 @@ This quote is applicable only for ${monthController.text} month from the commenc
                             decoration: pw.TextDecoration.underline,
                             fontSize: 15,
                             font: calibriBoldFont,
-                            // color: PdfColor.fromHex("#000000"),
                           ),
                         ),
                         pw.SizedBox(height: 5),
@@ -859,7 +857,6 @@ This quote is applicable only for ${monthController.text} month from the commenc
                               ),
                           ],
                         ),
-
                         pw.SizedBox(height: 15),
                         pw.Text(
                           "05. SCOPE DESCRIBED BY CLIENT : ",
@@ -882,17 +879,7 @@ This quote is applicable only for ${monthController.text} month from the commenc
                             fontWeight: pw.FontWeight.normal,
                           ),
                         ),
-
-                        // pw.Text(
-                        //   clientRequirementsController.text,
-                        //   style: pw.TextStyle(
-                        //     font: regularFont,
-                        //     fontSize: 11,
-                        //     fontWeight: pw.FontWeight.normal,
-                        //   ),
-                        // ),
                         pw.SizedBox(height: 15),
-
                         if (_images.isEmpty)
                           pw.Text(
                             "Thank You.",
@@ -1088,64 +1075,123 @@ This quote is applicable only for ${monthController.text} month from the commenc
           _feeStage1?.isNotEmpty == true) {
         selectedStages.add({
           "percentage": "${aPremiumController.text.trim()}%",
-          "label": _feeStage1!
+          "label": _feeStage1 == "Other"
+              ? aOtherPremiumController.text.trim().isNotEmpty
+                  ? aOtherPremiumController.text.trim()
+                  : "Other"
+              : _feeStage1!
         });
       }
       if (bPremiumController.text.trim().isNotEmpty &&
           _feeStage2?.isNotEmpty == true) {
         selectedStages.add({
           "percentage": "${bPremiumController.text.trim()}%",
-          "label": _feeStage2!
+          "label": _feeStage2 == "Other"
+              ? bOtherPremiumController.text.trim().isNotEmpty
+                  ? bOtherPremiumController.text.trim()
+                  : "Other"
+              : _feeStage2!
         });
       }
       if (cPremiumController.text.trim().isNotEmpty &&
           _feeStage3?.isNotEmpty == true) {
         selectedStages.add({
           "percentage": "${cPremiumController.text.trim()}%",
-          "label": _feeStage3!
+          "label": _feeStage3 == "Other"
+              ? cOtherPremiumController.text.trim().isNotEmpty
+                  ? cOtherPremiumController.text.trim()
+                  : "Other"
+              : _feeStage3!
         });
       }
       if (dPremiumController.text.trim().isNotEmpty &&
           _feeStage4?.isNotEmpty == true) {
         selectedStages.add({
           "percentage": "${dPremiumController.text.trim()}%",
-          "label": _feeStage4!
+          "label": _feeStage4 == "Other"
+              ? dOtherPremiumController.text.trim().isNotEmpty
+                  ? dOtherPremiumController.text.trim()
+                  : "Other"
+              : _feeStage4!
         });
       }
       if (ePremiumController.text.trim().isNotEmpty &&
           _feeStage5?.isNotEmpty == true) {
         selectedStages.add({
           "percentage": "${ePremiumController.text.trim()}%",
-          "label": _feeStage5!
+          "label": _feeStage5 == "Other"
+              ? eOtherPremiumController.text.trim().isNotEmpty
+                  ? eOtherPremiumController.text.trim()
+                  : "Other"
+              : _feeStage5!
         });
       }
       if (fPremiumController.text.trim().isNotEmpty &&
           _feeStage6?.isNotEmpty == true) {
         selectedStages.add({
           "percentage": "${fPremiumController.text.trim()}%",
-          "label": _feeStage6!
+          "label": _feeStage6 == "Other"
+              ? fOtherPremiumController.text.trim().isNotEmpty
+                  ? fOtherPremiumController.text.trim()
+                  : "Other"
+              : _feeStage6!
         });
       }
     } else {
+      // Standard stages
       if (aStandardPremiumController.text.trim().isNotEmpty &&
           _stdFeeStage1?.isNotEmpty == true) {
         selectedStages.add({
           "percentage": "${aStandardPremiumController.text.trim()}%",
-          "label": _stdFeeStage1!
+          "label": _stdFeeStage1 == "Other"
+              ? aStandardOtherController.text.trim().isNotEmpty
+                  ? aStandardOtherController.text.trim()
+                  : "Other"
+              : _stdFeeStage1!
         });
       }
       if (bStandardPremiumController.text.trim().isNotEmpty &&
           _stdFeeStage2?.isNotEmpty == true) {
         selectedStages.add({
           "percentage": "${bStandardPremiumController.text.trim()}%",
-          "label": _stdFeeStage2!
+          "label": _stdFeeStage2 == "Other"
+              ? bStandardOtherController.text.trim().isNotEmpty
+                  ? bStandardOtherController.text.trim()
+                  : "Other"
+              : _stdFeeStage2!
         });
       }
       if (cStandardPremiumController.text.trim().isNotEmpty &&
           _stdFeeStage3?.isNotEmpty == true) {
         selectedStages.add({
           "percentage": "${cStandardPremiumController.text.trim()}%",
-          "label": _stdFeeStage3!
+          "label": _stdFeeStage3 == "Other"
+              ? cStandardOtherController.text.trim().isNotEmpty
+                  ? cStandardOtherController.text.trim()
+                  : "Other"
+              : _stdFeeStage3!
+        });
+      }
+      if (dStandardPremiumController.text.trim().isNotEmpty &&
+          _stdFeeStage4?.isNotEmpty == true) {
+        selectedStages.add({
+          "percentage": "${dStandardPremiumController.text.trim()}%",
+          "label": _stdFeeStage4 == "Other"
+              ? dStandardOtherController.text.trim().isNotEmpty
+                  ? dStandardOtherController.text.trim()
+                  : "Other"
+              : _stdFeeStage4!
+        });
+      }
+      if (eStandardPremiumController.text.trim().isNotEmpty &&
+          _stdFeeStage5?.isNotEmpty == true) {
+        selectedStages.add({
+          "percentage": "${eStandardPremiumController.text.trim()}%",
+          "label": _stdFeeStage5 == "Other"
+              ? eStandardOtherController.text.trim().isNotEmpty
+                  ? eStandardOtherController.text.trim()
+                  : "Other"
+              : _stdFeeStage5!
         });
       }
     }
@@ -1270,9 +1316,9 @@ This quote is applicable only for ${monthController.text} month from the commenc
     String title,
     List<Map<String, dynamic>> items,
     pw.Font titleFont,
-    pw.Font itemFont, String extraValue,
+    pw.Font itemFont,
+    String extraValue,
     String amount,
-   
   ) {
     int baseIndex = items.length; // last alphabet index
 
@@ -1319,15 +1365,15 @@ This quote is applicable only for ${monthController.text} month from the commenc
               }).toList(),
 
               /// 🔥 EXTRA LINE IF CONTROLLER FILLED
-                if (extraValue.trim().isNotEmpty)
-                  pw.Text(
-                    "${String.fromCharCode(65 + baseIndex)}. ${extraValue.toUpperCase()}",
-                    style: pw.TextStyle(
-                      font: itemFont,
-                      fontSize: 12,
-                      color: PdfColor.fromHex("#424242"),
-                    ),
+              if (extraValue.trim().isNotEmpty)
+                pw.Text(
+                  "${String.fromCharCode(65 + baseIndex)}. ${extraValue.toUpperCase()}",
+                  style: pw.TextStyle(
+                    font: itemFont,
+                    fontSize: 12,
+                    color: PdfColor.fromHex("#424242"),
                   ),
+                ),
             ],
           ),
 
@@ -1389,25 +1435,6 @@ This quote is applicable only for ${monthController.text} month from the commenc
       return pw.SizedBox();
     }
   }
-
-  // Future<void> _getImage() async {
-  //   final pickedFile =
-  //       await ImagePicker().pickImage(source: ImageSource.gallery);
-  //   setState(
-  //     () {
-  //       if (pickedFile != null) {
-  //         _images.add(File(pickedFile.path));
-  //       } else {
-  //         debugPrint("No Image selected");
-  //       }
-  //     },
-  //   );
-  //   if (pickedFile != null) {
-  //     setState(() {
-  //       _image = File(pickedFile.path);
-  //     });
-  //   }
-  // }
 
   Future<void> _getImage() async {
     final List<File> pickedImages =
@@ -1573,18 +1600,6 @@ This quote is applicable only for ${monthController.text} month from the commenc
                                     .toList();
                               });
                             },
-
-                            // onChanged: (val) {
-                            //   setState(() {
-                            //     option['isChecked'] = val!;
-
-                            //     selectedOptions = GlobalList
-                            //         .scopOfWorksOfArchitectureOptions
-                            //         .where((item) => item['isChecked'] == true)
-                            //         .toList();
-                            //   });
-                            // },
-
                             controlAffinity: ListTileControlAffinity.leading,
                           ),
                         );
@@ -1629,9 +1644,8 @@ This quote is applicable only for ${monthController.text} month from the commenc
                     ),
                     CommonTextFieldWithFocus(
                       controller: basicController,
-                      labelText: "Basic",
-                      hintText: "Basic",
-                      keyboardType: TextInputType.number,
+                      labelText: "Other",
+                      hintText: "Other",
                     ),
                     PickHeightAndWidth.height10,
                     CommonTextFieldWithFocus(
@@ -1676,9 +1690,8 @@ This quote is applicable only for ${monthController.text} month from the commenc
                     ),
                     CommonTextFieldWithFocus(
                       controller: standardController,
-                      labelText: "Standard",
-                      hintText: "Standard",
-                      keyboardType: TextInputType.number,
+                      labelText: "Other",
+                      hintText: "Other",
                     ),
                     PickHeightAndWidth.height10,
                     CommonTextFieldWithFocus(
@@ -1723,9 +1736,8 @@ This quote is applicable only for ${monthController.text} month from the commenc
                     ),
                     CommonTextFieldWithFocus(
                       controller: premiumController,
-                      labelText: "Premium",
-                      hintText: "Premium",
-                      keyboardType: TextInputType.number,
+                      labelText: "Other",
+                      hintText: "Other",
                     ),
                     PickHeightAndWidth.height10,
                     CommonTextFieldWithFocus(
@@ -1867,6 +1879,14 @@ This quote is applicable only for ${monthController.text} month from the commenc
                       keyboardType: TextInputType.number,
                     ),
                     PickHeightAndWidth.height20,
+                    CommonTextFieldWithFocus(
+                      controller: noteController,
+                      labelText: "Note",
+                      hintText: "Note",
+                      maxLines: 2,
+                      keyboardType: TextInputType.name,
+                    ),
+                    PickHeightAndWidth.height20,
                     Text("Schedule of payment".toUpperCase(),
                         style: CommonTextStyle().offerLetterTopicNameTextStyle),
                     PickHeightAndWidth.height10,
@@ -1938,6 +1958,16 @@ This quote is applicable only for ${monthController.text} month from the commenc
                         ),
                       ],
                     ),
+                    if (_feeStage1 == "Other")
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: CommonTextFieldWithFocus(
+                          controller: aOtherPremiumController,
+                          labelText: "Enter Stage 01 Description",
+                          hintText: "Enter custom stage description",
+                          keyboardType: TextInputType.text,
+                        ),
+                      ),
                     PickHeightAndWidth.height10,
                     Row(
                       children: [
@@ -1987,6 +2017,16 @@ This quote is applicable only for ${monthController.text} month from the commenc
                         ),
                       ],
                     ),
+                    if (_feeStage2 == "Other")
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: CommonTextFieldWithFocus(
+                          controller: bOtherPremiumController,
+                          labelText: "Enter Stage 02 Description",
+                          hintText: "Enter custom stage description",
+                          keyboardType: TextInputType.text,
+                        ),
+                      ),
                     PickHeightAndWidth.height10,
                     Row(
                       children: [
@@ -2036,6 +2076,16 @@ This quote is applicable only for ${monthController.text} month from the commenc
                         ),
                       ],
                     ),
+                    if (_feeStage3 == "Other")
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: CommonTextFieldWithFocus(
+                          controller: cOtherPremiumController,
+                          labelText: "Enter Stage 03 Description",
+                          hintText: "Enter custom stage description",
+                          keyboardType: TextInputType.text,
+                        ),
+                      ),
                     PickHeightAndWidth.height10,
                     Row(
                       children: [
@@ -2085,6 +2135,16 @@ This quote is applicable only for ${monthController.text} month from the commenc
                         ),
                       ],
                     ),
+                    if (_feeStage4 == "Other")
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: CommonTextFieldWithFocus(
+                          controller: dOtherPremiumController,
+                          labelText: "Enter Stage 04 Description",
+                          hintText: "Enter custom stage description",
+                          keyboardType: TextInputType.text,
+                        ),
+                      ),
                     PickHeightAndWidth.height10,
                     Row(
                       children: [
@@ -2134,6 +2194,16 @@ This quote is applicable only for ${monthController.text} month from the commenc
                         ),
                       ],
                     ),
+                    if (_feeStage5 == "Other")
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: CommonTextFieldWithFocus(
+                          controller: eOtherPremiumController,
+                          labelText: "Enter Stage 05 Description",
+                          hintText: "Enter custom stage description",
+                          keyboardType: TextInputType.text,
+                        ),
+                      ),
                     PickHeightAndWidth.height10,
                     Row(
                       children: [
@@ -2183,6 +2253,16 @@ This quote is applicable only for ${monthController.text} month from the commenc
                         ),
                       ],
                     ),
+                    if (_feeStage6 == "Other")
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: CommonTextFieldWithFocus(
+                          controller: fOtherPremiumController,
+                          labelText: "Enter Stage 06 Description",
+                          hintText: "Enter custom stage description",
+                          keyboardType: TextInputType.text,
+                        ),
+                      ),
                     PickHeightAndWidth.height10,
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -2204,6 +2284,152 @@ This quote is applicable only for ${monthController.text} month from the commenc
                       ],
                     ),
                     PickHeightAndWidth.height10,
+                    // Row(
+                    //   children: [
+                    //     Expanded(
+                    //       child: CommonTextFieldWithFocus(
+                    //         controller: aStandardPremiumController,
+                    //         labelText: "Stage 01 %",
+                    //         hintText: 'Stage 01 %',
+                    //         inputFormatters: [
+                    //           FilteringTextInputFormatter.allow(
+                    //               RegExp(r'^\d+\.?\d{0,2}')),
+                    //           limitInputBasedOnTotal(aStandardPremiumController,
+                    //               () => _getStandardTotal()),
+                    //         ],
+                    //         labelTextStyle: CommonTextStyle()
+                    //             .fillableTextFieldTextStyle
+                    //             .copyWith(fontSize: SizeConfig.fontSize12),
+                    //       ),
+                    //     ),
+                    //     SizedBox(width: 5),
+                    //     Expanded(
+                    //       flex: 2,
+                    //       child: CommonDropDownWithoutSearch(
+                    //         borderColor: PickColors.primaryColor,
+                    //         hintText: "Stage",
+                    //         name: 'Stage',
+                    //         items: GlobalList.standardFeesStage
+                    //             .map((category) => DropdownMenuItem<String>(
+                    //                   value: category,
+                    //                   child: Text(
+                    //                     category,
+                    //                     overflow: TextOverflow
+                    //                         .ellipsis, // to avoid internal overflow
+                    //                     style: CommonTextStyle()
+                    //                         .textFieldTitleTextStyle,
+                    //                   ),
+                    //                 ))
+                    //             .toList(),
+                    //         isExpanded: true, // <- very important
+                    //         initialValue: _stdFeeStage1,
+                    //         onChanged: (newValue) {
+                    //           setState(() {
+                    //             _stdFeeStage1 = newValue.toString();
+                    //           });
+                    //         },
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
+                    // PickHeightAndWidth.height10,
+                    // Row(
+                    //   children: [
+                    //     Expanded(
+                    //       child: CommonTextFieldWithFocus(
+                    //         controller: bStandardPremiumController,
+                    //         labelText: "Stage 02 %",
+                    //         hintText: 'Stage 02 %',
+                    //         inputFormatters: [
+                    //           FilteringTextInputFormatter.allow(
+                    //               RegExp(r'^\d+\.?\d{0,2}')),
+                    //           limitInputBasedOnTotal(bStandardPremiumController,
+                    //               () => _getStandardTotal()),
+                    //         ],
+                    //         labelTextStyle: CommonTextStyle()
+                    //             .fillableTextFieldTextStyle
+                    //             .copyWith(fontSize: SizeConfig.fontSize12),
+                    //       ),
+                    //     ),
+                    //     SizedBox(width: 5),
+                    //     Expanded(
+                    //       flex: 2,
+                    //       child: CommonDropDownWithoutSearch(
+                    //         borderColor: PickColors.primaryColor,
+                    //         hintText: "Stage",
+                    //         name: 'Stage',
+                    //         items: GlobalList.standardFeesStage
+                    //             .map((category) => DropdownMenuItem<String>(
+                    //                   value: category,
+                    //                   child: Text(
+                    //                     category,
+                    //                     overflow: TextOverflow
+                    //                         .ellipsis, // to avoid internal overflow
+                    //                     style: CommonTextStyle()
+                    //                         .textFieldTitleTextStyle,
+                    //                   ),
+                    //                 ))
+                    //             .toList(),
+                    //         isExpanded: true, // <- very important
+                    //         initialValue: _stdFeeStage2,
+                    //         onChanged: (newValue) {
+                    //           setState(() {
+                    //             _stdFeeStage2 = newValue.toString();
+                    //           });
+                    //         },
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
+                    // PickHeightAndWidth.height10,
+                    // Row(
+                    //   children: [
+                    //     Expanded(
+                    //       child: CommonTextFieldWithFocus(
+                    //         controller: cStandardPremiumController,
+                    //         labelText: "Stage 03 %",
+                    //         hintText: 'Stage 03 %',
+                    //         inputFormatters: [
+                    //           FilteringTextInputFormatter.allow(
+                    //               RegExp(r'^\d+\.?\d{0,2}')),
+                    //           limitInputBasedOnTotal(cStandardPremiumController,
+                    //               () => _getStandardTotal()),
+                    //         ],
+                    //         labelTextStyle: CommonTextStyle()
+                    //             .fillableTextFieldTextStyle
+                    //             .copyWith(fontSize: SizeConfig.fontSize12),
+                    //       ),
+                    //     ),
+                    //     SizedBox(width: 5),
+                    //     Expanded(
+                    //       flex: 2,
+                    //       child: CommonDropDownWithoutSearch(
+                    //         borderColor: PickColors.primaryColor,
+                    //         hintText: "Stage",
+                    //         name: 'Stage',
+                    //         items: GlobalList.standardFeesStage
+                    //             .map((category) => DropdownMenuItem<String>(
+                    //                   value: category,
+                    //                   child: Text(
+                    //                     category,
+                    //                     overflow: TextOverflow
+                    //                         .ellipsis, // to avoid internal overflow
+                    //                     style: CommonTextStyle()
+                    //                         .textFieldTitleTextStyle,
+                    //                   ),
+                    //                 ))
+                    //             .toList(),
+                    //         isExpanded: true, // <- very important
+                    //         initialValue: _stdFeeStage3,
+                    //         onChanged: (newValue) {
+                    //           setState(() {
+                    //             _stdFeeStage3 = newValue.toString();
+                    //           });
+                    //         },
+                    //       ),
+                    //     ),
+                    //   ],
+                    // ),
                     Row(
                       children: [
                         Expanded(
@@ -2234,14 +2460,13 @@ This quote is applicable only for ${monthController.text} month from the commenc
                                       value: category,
                                       child: Text(
                                         category,
-                                        overflow: TextOverflow
-                                            .ellipsis, // to avoid internal overflow
+                                        overflow: TextOverflow.ellipsis,
                                         style: CommonTextStyle()
                                             .textFieldTitleTextStyle,
                                       ),
                                     ))
                                 .toList(),
-                            isExpanded: true, // <- very important
+                            isExpanded: true,
                             initialValue: _stdFeeStage1,
                             onChanged: (newValue) {
                               setState(() {
@@ -2252,6 +2477,17 @@ This quote is applicable only for ${monthController.text} month from the commenc
                         ),
                       ],
                     ),
+// Add text field if "Other" is selected
+                    if (_stdFeeStage1 == "Other")
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: CommonTextFieldWithFocus(
+                          controller: aStandardOtherController,
+                          labelText: "Enter Stage 01 Description",
+                          hintText: "Enter custom stage description",
+                          keyboardType: TextInputType.text,
+                        ),
+                      ),
                     PickHeightAndWidth.height10,
                     Row(
                       children: [
@@ -2283,14 +2519,13 @@ This quote is applicable only for ${monthController.text} month from the commenc
                                       value: category,
                                       child: Text(
                                         category,
-                                        overflow: TextOverflow
-                                            .ellipsis, // to avoid internal overflow
+                                        overflow: TextOverflow.ellipsis,
                                         style: CommonTextStyle()
                                             .textFieldTitleTextStyle,
                                       ),
                                     ))
                                 .toList(),
-                            isExpanded: true, // <- very important
+                            isExpanded: true,
                             initialValue: _stdFeeStage2,
                             onChanged: (newValue) {
                               setState(() {
@@ -2301,6 +2536,17 @@ This quote is applicable only for ${monthController.text} month from the commenc
                         ),
                       ],
                     ),
+// Add text field if "Other" is selected
+                    if (_stdFeeStage2 == "Other")
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: CommonTextFieldWithFocus(
+                          controller: bStandardOtherController,
+                          labelText: "Enter Stage 02 Description",
+                          hintText: "Enter custom stage description",
+                          keyboardType: TextInputType.text,
+                        ),
+                      ),
                     PickHeightAndWidth.height10,
                     Row(
                       children: [
@@ -2332,14 +2578,13 @@ This quote is applicable only for ${monthController.text} month from the commenc
                                       value: category,
                                       child: Text(
                                         category,
-                                        overflow: TextOverflow
-                                            .ellipsis, // to avoid internal overflow
+                                        overflow: TextOverflow.ellipsis,
                                         style: CommonTextStyle()
                                             .textFieldTitleTextStyle,
                                       ),
                                     ))
                                 .toList(),
-                            isExpanded: true, // <- very important
+                            isExpanded: true,
                             initialValue: _stdFeeStage3,
                             onChanged: (newValue) {
                               setState(() {
@@ -2349,7 +2594,141 @@ This quote is applicable only for ${monthController.text} month from the commenc
                           ),
                         ),
                       ],
+                    ), // Add text field if "Other" is selected
+                    if (_stdFeeStage3 == "Other")
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: CommonTextFieldWithFocus(
+                          controller: cStandardOtherController,
+                          labelText: "Enter Stage 03 Description",
+                          hintText: "Enter custom stage description",
+                          keyboardType: TextInputType.text,
+                        ),
+                      ),
+                    PickHeightAndWidth.height10,
+                    ////////========/////////////////////////////////////
+                    // Add text field if "Other" is selected
+
+                    Row(
+                      children: [
+                        Expanded(
+                          child: CommonTextFieldWithFocus(
+                            controller: dStandardPremiumController,
+                            labelText: "Stage 04 %",
+                            hintText: 'Stage 04 %',
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                  RegExp(r'^\d+\.?\d{0,2}')),
+                              limitInputBasedOnTotal(dStandardPremiumController,
+                                  () => _getStandardTotal()),
+                            ],
+                            labelTextStyle: CommonTextStyle()
+                                .fillableTextFieldTextStyle
+                                .copyWith(fontSize: SizeConfig.fontSize12),
+                          ),
+                        ),
+                        SizedBox(width: 5),
+                        Expanded(
+                          flex: 2,
+                          child: CommonDropDownWithoutSearch(
+                            borderColor: PickColors.primaryColor,
+                            hintText: "Stage",
+                            name: 'Stage',
+                            items: GlobalList.standardFeesStage
+                                .map((category) => DropdownMenuItem<String>(
+                                      value: category,
+                                      child: Text(
+                                        category,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: CommonTextStyle()
+                                            .textFieldTitleTextStyle,
+                                      ),
+                                    ))
+                                .toList(),
+                            isExpanded: true,
+                            initialValue: _stdFeeStage4,
+                            onChanged: (newValue) {
+                              setState(() {
+                                _stdFeeStage4 = newValue.toString();
+                              });
+                            },
+                          ),
+                        ),
+                      ],
                     ),
+                    PickHeightAndWidth.height10,
+                    if (_stdFeeStage4 == "Other")
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: CommonTextFieldWithFocus(
+                          controller: dStandardOtherController,
+                          labelText: "Enter Stage 04 Description",
+                          hintText: "Enter custom stage description",
+                          keyboardType: TextInputType.text,
+                        ),
+                      ),
+
+                    PickHeightAndWidth.height10,
+
+                    Row(
+                      children: [
+                        Expanded(
+                          child: CommonTextFieldWithFocus(
+                            controller: eStandardPremiumController,
+                            labelText: "Stage 05 %",
+                            hintText: 'Stage 05 %',
+                            inputFormatters: [
+                              FilteringTextInputFormatter.allow(
+                                  RegExp(r'^\d+\.?\d{0,2}')),
+                              limitInputBasedOnTotal(eStandardPremiumController,
+                                  () => _getStandardTotal()),
+                            ],
+                            labelTextStyle: CommonTextStyle()
+                                .fillableTextFieldTextStyle
+                                .copyWith(fontSize: SizeConfig.fontSize12),
+                          ),
+                        ),
+                        SizedBox(width: 5),
+                        Expanded(
+                          flex: 2,
+                          child: CommonDropDownWithoutSearch(
+                            borderColor: PickColors.primaryColor,
+                            hintText: "Stage",
+                            name: 'Stage',
+                            items: GlobalList.standardFeesStage
+                                .map((category) => DropdownMenuItem<String>(
+                                      value: category,
+                                      child: Text(
+                                        category,
+                                        overflow: TextOverflow.ellipsis,
+                                        style: CommonTextStyle()
+                                            .textFieldTitleTextStyle,
+                                      ),
+                                    ))
+                                .toList(),
+                            isExpanded: true,
+                            initialValue: _stdFeeStage5,
+                            onChanged: (newValue) {
+                              setState(() {
+                                _stdFeeStage5 = newValue.toString();
+                              });
+                            },
+                          ),
+                        ),
+                      ],
+                    ),
+                    PickHeightAndWidth.height10,
+                    if (_stdFeeStage5 == "Other")
+                      Padding(
+                        padding: const EdgeInsets.only(top: 10),
+                        child: CommonTextFieldWithFocus(
+                          controller: eStandardOtherController,
+                          labelText: "Enter Stage 05 Description",
+                          hintText: "Enter custom stage description",
+                          keyboardType: TextInputType.text,
+                        ),
+                      ),
+
                     PickHeightAndWidth.height20,
                     Text("SCOPE DESCRIBED BY CLIENT",
                         style: CommonTextStyle().offerLetterTopicNameTextStyle),

@@ -3,6 +3,7 @@ import 'package:alekha/constant/global_list.dart';
 import 'package:alekha/constant/hight_width_picker.dart';
 import 'package:alekha/constant/images_route.dart';
 import 'package:alekha/constant/navigation_route.dart';
+import 'package:alekha/constant/size_config.dart';
 import 'package:alekha/constant/text_style.dart';
 import 'package:alekha/services/general_helper.dart';
 import 'package:alekha/widget/common_dialog_box.dart';
@@ -80,7 +81,7 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                                             backToScreen(context: context);
                                             backToScreen(context: context);
                                           },
-                                          isCancel: true,
+                                          isCancel: true, 
                                         );
                                       });
                                     },
@@ -113,9 +114,16 @@ class _DrawerWidgetState extends State<DrawerWidget> {
                       ],
                     ),
                   ),
-                  const SizedBox(
-                    height: 25,
-                  )
+                  SizedBox(height: SizeConfig.screenHeight! * 0.4),
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 15),
+                    child: Text(
+                      "developed by Priyanka Kachhadiya",
+                      style: CommonTextStyle().buttonTextStyle.copyWith(
+                            fontSize: SizeConfig.fontSize10,
+                          ),
+                    ),
+                  ),
                 ],
               ),
             ),

@@ -126,13 +126,15 @@ class GlobalList {
     "Stage 1 Working drgs.",
     "Stage 2 Working drgs.",
     "Stage 3 Working drgs.",
-    "Final Completion."
+    "Final Completion.",
+    "Other"
   ];
 
   static List<String> standardFeesStage = [
     "Advance",
     "Final Designs",
     "All Working drgs.",
+    "Other"
   ];
 
   static List<String> scopOfWorkList = [
@@ -318,9 +320,8 @@ class GlobalList {
       "id": "7",
       "title": "Basic",
       "icon": PickImages.interiorOfferLetterIcon,
-      "screen": const BasicOfferLatter  (),
+      "screen": const BasicOfferLatter(),
     },
-    
   ];
 
   //Share List =======================

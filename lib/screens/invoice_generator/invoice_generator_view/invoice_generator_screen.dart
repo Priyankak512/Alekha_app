@@ -31,6 +31,8 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
   String? _selectedOption;
   String? _selectedRegardsType;
   String? _selectedProjectCategory;
+  bool isNewProject = false;
+  bool isExistingProject = false;
 
   TextEditingController clientNameController = TextEditingController();
   TextEditingController contactNoController = TextEditingController();
@@ -64,6 +66,7 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
   TextEditingController noteController = TextEditingController();
 
   final ncp.FlutterContactPicker _contactPicker = ncp.FlutterContactPicker();
+
 
   Future<void> _pickContact(TextEditingController controller) async {
     try {
@@ -232,10 +235,11 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
                     ),
                     pw.Divider(height: 3, color: PdfColor.fromHex("#BDBDBD")),
                     pw.SizedBox(height: 5),
-                    pw.Text(
-                        "Project No. : ${projectNoController.text} ${_selectedProjectCategory == 'Architecture - A' ? 'A' : _selectedProjectCategory == 'Interior - I' ? 'I' : _selectedProjectCategory == 'Architecture Interior - AI' ? 'AI' : ''}"
-                        // $_selectedProjectCategory",
-                        ),
+                    if (projectNoController.text.trim().isNotEmpty)
+                      pw.Text(
+                          "Project No. : ${projectNoController.text} ${_selectedProjectCategory == 'Architecture - A' ? 'A' : _selectedProjectCategory == 'Interior - I' ? 'I' : _selectedProjectCategory == 'Architecture Interior - AI' ? 'AI' : ''}"
+                          // $_selectedProjectCategory",
+                          ),
                     pw.Text(
                         "Invoice No. : ${invoiceNoController.text.toUpperCase()}"),
                     if (invoiceReferenceNoController.text.trim().isNotEmpty)
@@ -547,6 +551,41 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
+                    Row(
+                      children: [
+                        Checkbox(
+                          value: isNewProject,
+                          onChanged: (value) {
+                            setState(() {
+                              isNewProject = value ?? false;
+                              if (isNewProject) {
+                                isExistingProject = false;
+                                projectNoController.clear();
+                                _selectedProjectCategory = null;
+                              }
+                            });
+                          },
+                        ),
+                        const Text("New"),
+                        const SizedBox(width: 20),
+                        Checkbox(
+                          value: isExistingProject,
+                          onChanged: (value) {
+                            setState(() {
+                              isExistingProject = value ?? false;
+                              if (isExistingProject) {
+                                isNewProject = false;
+                              } else {
+                                projectNoController.clear();
+                                _selectedProjectCategory = null;
+                              }
+                            });
+                          },
+                        ),
+                        const Text("Existing"),
+                      ],
+                    ),
+                    PickHeightAndWidth.height20,
                     CommonTextFieldWithBorder(
                       fillColor: Colors.transparent,
                       filled: true,
@@ -583,43 +622,47 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
                     const SizedBox(
                       height: 20,
                     ),
-                    CommonTextFieldWithFocus(
-                      controller: projectNoController,
-                      labelText: "Project No.",
-                      hintText: "Project No.",
-                      keyboardType: TextInputType.number,
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
-                    CommonDropDownWithoutSearch(
-                      borderColor: PickColors.primaryColor,
-                      hintText: "Select project category",
-                      name: 'Project Category',
-                      items: GlobalList.projectCategory
-                          .map((category) => DropdownMenuItem<String>(
-                                value: category,
-                                child: Text(
-                                  category,
-                                  style:
-                                      CommonTextStyle().textFieldTitleTextStyle,
-                                ),
-                              ))
-                          .toList(),
-                      isExpanded: false,
-                      initialValue: _selectedProjectCategory,
-                      onChanged: (newValue) {
-                        setState(
-                          () {
-                            _selectedProjectCategory = newValue.toString();
-                          },
-                        );
-                        debugPrint("----------$_selectedProjectCategory");
-                      },
-                    ),
-                    const SizedBox(
-                      height: 20,
-                    ),
+                    if (isExistingProject)
+                      CommonTextFieldWithFocus(
+                        controller: projectNoController,
+                        labelText: "Project No.",
+                        hintText: "Project No.",
+                        keyboardType: TextInputType.number,
+                      ),
+                    if (isExistingProject)
+                      const SizedBox(
+                        height: 20,
+                      ),
+                    if (isExistingProject)
+                      CommonDropDownWithoutSearch(
+                        borderColor: PickColors.primaryColor,
+                        hintText: "Select project category",
+                        name: 'Project Category',
+                        items: GlobalList.projectCategory
+                            .map((category) => DropdownMenuItem<String>(
+                                  value: category,
+                                  child: Text(
+                                    category,
+                                    style: CommonTextStyle()
+                                        .textFieldTitleTextStyle,
+                                  ),
+                                ))
+                            .toList(),
+                        isExpanded: false,
+                        initialValue: _selectedProjectCategory,
+                        onChanged: (newValue) {
+                          setState(
+                            () {
+                              _selectedProjectCategory = newValue.toString();
+                            },
+                          );
+                          debugPrint("----------$_selectedProjectCategory");
+                        },
+                      ),
+                    if (isExistingProject)
+                      const SizedBox(
+                        height: 20,
+                      ),
                     CommonTextFieldWithFocus(
                       controller: invoiceNoController,
                       labelText: "Invoice No.",
@@ -873,7 +916,8 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
                       height: 20,
                     ),
                     Text("Total Amount: ₹${totalPrice.toStringAsFixed(2)}"),
-                    Text("In Words: ${totalInWords.isNotEmpty ? totalInWords[0].toUpperCase() + totalInWords.substring(1) : ""}only"),
+                    Text(
+                        "In Words: ${totalInWords.isNotEmpty ? totalInWords[0].toUpperCase() + totalInWords.substring(1) : ""}only"),
                     CommonDropDownWithoutSearch(
                       borderColor: PickColors.primaryColor,
                       hintText: "Regards",
