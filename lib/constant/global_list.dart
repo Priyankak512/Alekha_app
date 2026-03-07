@@ -11,6 +11,7 @@ import 'package:alekha/screens/forms_module/form_view/form_screen.dart';
 import 'package:alekha/screens/forms_module/form_view/interior_screen.dart';
 import 'package:alekha/screens/forms_module/form_view/offer_latter_basic.dart';
 import 'package:alekha/screens/forms_module/form_view/other_forn_screen.dart';
+import 'package:alekha/screens/invoice_generator/gst_invoice_screen.dart';
 import 'package:alekha/screens/invoice_generator/invoice_generator_view/invoice_generator_screen.dart';
 import 'package:alekha/screens/meeting_module/meeting_view/meeting_screen.dart';
 import 'package:alekha/screens/notes_module/notes_view/notes_screen.dart';
@@ -420,6 +421,11 @@ class GlobalList {
       "icon": PickImages.invoiceIcon,
       "screen": const InvoiceGeneratorScreen(),
     },
+    {
+      "id": "4",
+      "title": "GST Invoice",
+      "icon": PickImages.gstInvoiceIcon,
+      "screen": const GstInvoiceGeneratorScreen(),
     {
       "id": "2",
       "title": "Fee Reminder",

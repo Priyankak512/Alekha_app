@@ -61,6 +61,7 @@ dependencies:
   flutter_form_builder: ^9.2.1
   number_to_words:
   intl:
+  image_editor_plus:
   # image_cropper: ^7.1.0
   
 

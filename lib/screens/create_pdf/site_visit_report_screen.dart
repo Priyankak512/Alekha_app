@@ -994,7 +994,7 @@ class _FormBuilderEditableDateFieldStyledState extends FormBuilderFieldState<
       enabled: widget.isEnabled,
       keyboardType: TextInputType.number,
       decoration: InputDecoration(
-        hintText: 'dd/MM/yyyy',
+        hintText: 'dd/mm/yyyy',
         border: const OutlineInputBorder(),
         suffixIcon: IconButton(
           icon: const Icon(Icons.calendar_month),

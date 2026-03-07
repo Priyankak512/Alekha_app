@@ -21,6 +21,8 @@ class PickImages {
   static const offerLaterFooterImage = "assets/images/offer_later_footer_image.png";
   static const offerLetterFooterProfileLinkImage = "assets/images/offer_letter_footer_profile_link.png";
   static const offerLetterFeesImage = "assets/images/offer_letter_fees_image.png";
+  static const  gstDesignStudioInvoiceImage = "assets/images/gst_design_studio_invoice_image.png";
+  static const  gstContactInvoiceImage = "assets/images/gst_contact_invoice_image.png";
 
 
   //Home screen
@@ -63,5 +65,6 @@ class PickImages {
   static const areaLengthIcon = "assets/icons/area_length_icon.svg";
   static const mailReplyIcon = "assets/icons/mail_reply_icon.svg";
   static const messageReplyIcon = "assets/icons/message_reply_icon.svg";
+  static const gstInvoiceIcon = "assets/icons/gst_invoice_icon.svg";
  
 }
