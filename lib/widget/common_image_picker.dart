@@ -1,5 +1,4 @@
 import 'dart:io';
-
 import 'package:alekha/constant/colors.dart';
 import 'package:alekha/constant/get_platform.dart';
 import 'package:alekha/services/general_helper.dart';
@@ -7,7 +6,6 @@ import 'package:alekha/constant/image_picker_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
-
 import 'package:image_picker/image_picker.dart';
 import 'package:provider/provider.dart';
 
@@ -64,7 +62,6 @@ class ImagePickerControl extends StatefulWidget {
 //   if (croppedFile == null) return null;
 //   return XFile(croppedFile.path);
 // }
-
 
 class _ImagePickerControlState extends State<ImagePickerControl> {
   @override
@@ -204,9 +201,6 @@ class _ImagePickerControlState extends State<ImagePickerControl> {
     });
   }
 }
-
-
-
 
 class CommonMultipleImagePicker {
   static final ImagePicker _picker = ImagePicker();

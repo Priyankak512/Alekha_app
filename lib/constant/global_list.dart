@@ -11,7 +11,9 @@ import 'package:alekha/screens/forms_module/form_view/form_screen.dart';
 import 'package:alekha/screens/forms_module/form_view/interior_screen.dart';
 import 'package:alekha/screens/forms_module/form_view/offer_latter_basic.dart';
 import 'package:alekha/screens/forms_module/form_view/other_forn_screen.dart';
-import 'package:alekha/screens/invoice_generator/gst_invoice_screen.dart';
+import 'package:alekha/screens/invoice_generator/invoice_generator_view/alekha_invoice_screen.dart';
+import 'package:alekha/screens/invoice_generator/invoice_generator_view/art_o_shophy_invoice_screen.dart';
+import 'package:alekha/screens/invoice_generator/invoice_generator_view/gst_invoice_screen.dart';
 import 'package:alekha/screens/invoice_generator/invoice_generator_view/invoice_generator_screen.dart';
 import 'package:alekha/screens/meeting_module/meeting_view/meeting_screen.dart';
 import 'package:alekha/screens/notes_module/notes_view/notes_screen.dart';
@@ -426,6 +428,19 @@ class GlobalList {
       "title": "GST Invoice",
       "icon": PickImages.gstInvoiceIcon,
       "screen": const GstInvoiceGeneratorScreen(),
+    },
+     {
+      "id": "5",
+      "title": "Art O Sophy Invoice",
+      "icon": PickImages.invoiceIcon,
+      "screen": const ArtOShophyInvoiceScreen(),
+    },
+      {
+      "id": "6",
+      "title": "Alekha Invoice",
+      "icon": PickImages.invoiceIcon,
+      "screen": const AlekhaArchitectsInvoiceScreen(),
+    },
     {
       "id": "2",
       "title": "Fee Reminder",

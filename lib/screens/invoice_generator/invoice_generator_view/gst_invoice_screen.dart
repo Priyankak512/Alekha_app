@@ -1373,12 +1373,12 @@ class _GstInvoiceGeneratorScreenState extends State<GstInvoiceGeneratorScreen> {
           return pw.FullPage(
             ignoreMargins: true,
             child: pw.Container(
-              decoration: pw.BoxDecoration(
-                image: pw.DecorationImage(
-                  image: pw.MemoryImage(a4PdfBgImage),
-                  fit: pw.BoxFit.contain,
-                ),
-              ),
+              // decoration: pw.BoxDecoration(
+              //   image: pw.DecorationImage(
+              //     image: pw.MemoryImage(a4PdfBgImage),
+              //     fit: pw.BoxFit.contain,
+              //   ),
+              // ),
               child: pw.Padding(
                 padding: const pw.EdgeInsets.all(20),
                 child: pw.Column(

@@ -23,6 +23,9 @@ class PickImages {
   static const offerLetterFeesImage = "assets/images/offer_letter_fees_image.png";
   static const  gstDesignStudioInvoiceImage = "assets/images/gst_design_studio_invoice_image.png";
   static const  gstContactInvoiceImage = "assets/images/gst_contact_invoice_image.png";
+  static const  artOShophyLogoImage = "assets/images/art_o_shophy_logo_image.png";
+  static const  artosophyDesignersTusharImage = "assets/images/artosophy_designers_tushar_image.png";
+  static const  alekhaArchitectsRonakImage = "assets/images/alekha_architects_ronak_image.png";
 
 
   //Home screen
