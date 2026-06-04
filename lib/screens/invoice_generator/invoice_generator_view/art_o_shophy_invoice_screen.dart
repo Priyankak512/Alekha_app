@@ -19,6 +19,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:provider/provider.dart';
 import 'package:number_to_words/number_to_words.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class ArtOShophyInvoiceScreen extends StatefulWidget {
   const ArtOShophyInvoiceScreen({super.key});
@@ -447,8 +448,9 @@ class _ArtOShophyInvoiceScreenState extends State<ArtOShophyInvoiceScreen> {
                                     pw.Text("A/C NAME - ART O SOPHY DESIGNERS"),
                                     pw.Text(
                                         "BANK NAME - SURAT NATIONAL CO. OP. BANK"),
-                                    pw.Text("A/C NO. - 008120100004535"),
-                                    pw.Text("IFS CODE - SUNB0000008"),
+                                    pw.Text("A/C NO. - 016120100001446"),
+                                    // pw.Text("A/C NO. - 008120100004535"),
+                                    pw.Text("IFSC CODE - SUNB0000016"),
                                   ]),
                               if (_selectedOption == 'Fees Paid')
                                 pw.Container(
@@ -517,6 +519,46 @@ class _ArtOShophyInvoiceScreenState extends State<ArtOShophyInvoiceScreen> {
           price1 + price2 + price3 + price4 + price5 + price6 + price7 + price8;
     });
   }
+
+    // Future<void> _shareViaWhatsApp(BuildContext context) async {
+    //   final message ='Hello';
+    //       // 'Invoice from ${clientNameController.text}\nAmount: ₹${totalPrice.toStringAsFixed(2)}';
+    //   final whatsappAppUrl =
+    //       Uri.parse('whatsapp://send?text=${Uri.encodeComponent(message)}');
+    //   final whatsappWebUrl =
+    //       Uri.parse('https://wa.me/?text=${Uri.encodeComponent(message)}');
+
+    //   bool launched = false;
+    //   try {
+    //     launched = await launchUrl(
+    //       whatsappAppUrl,
+    //       mode: LaunchMode.externalApplication,
+    //     );
+    //   } catch (_) {
+    //     launched = false;
+    //   }
+
+    //   if (!launched) {
+    //     try {
+    //       launched = await launchUrl(
+    //         whatsappWebUrl,
+    //         mode: LaunchMode.externalApplication,
+    //       );
+    //     } catch (_) {
+    //       launched = false;
+    //     }
+    //   }
+
+    //   if (!launched) {
+    //     if (mounted) {
+    //       ScaffoldMessenger.of(context).showSnackBar(
+    //         const SnackBar(
+    //           content: Text('WhatsApp is not installed'),
+    //         ),
+    //       );
+    //     }
+    //   }
+    // }
 
   @override
   Widget build(BuildContext context) {
@@ -985,7 +1027,7 @@ class _ArtOShophyInvoiceScreenState extends State<ArtOShophyInvoiceScreen> {
                         borderRadius: BorderRadius.circular(10),
                       ),
                       child: Text(
-                        "A/c Name : Art O Sophy Designers\n Bank Name : Surat National Co.Op. Bank\n A/c No. : 008 1201 0000 4535\n IFS Code : SUNB0000008",
+                        "A/c Name : Art O Sophy Designers\n Bank Name : Surat National Co.Op. Bank\n A/c No. : 016 1201 0000 1446\n IFSC Code : SUNB0000016",
                         style: CommonTextStyle()
                             .hintTextStyle
                             .copyWith(fontSize: 8),
@@ -1020,7 +1062,9 @@ class _ArtOShophyInvoiceScreenState extends State<ArtOShophyInvoiceScreen> {
                             suffixIcon: PickImages.whatsAppIcon,
                             style: CommonTextStyle().buttonTextStyle,
                             color: PickColors.successColor,
-                            onPressed: () async {},
+                            onPressed: () async {
+                              await helper.shareViaWhatsApp(context);
+                            },
                           ),
                         )
                       ],

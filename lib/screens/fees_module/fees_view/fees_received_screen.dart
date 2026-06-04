@@ -280,8 +280,8 @@ class _FeesReceivedScreenState extends State<FeesReceivedScreen> {
                         color: PickColors.successColor,
                         title: "Share",
                         suffixIcon: PickImages.whatsAppIcon,
-                        onPressed: () {
-                          // _launchWhatsapp();
+                        onPressed: () async {
+                          await helper.shareViaWhatsApp(context);
                         },
                       ),
                     ),

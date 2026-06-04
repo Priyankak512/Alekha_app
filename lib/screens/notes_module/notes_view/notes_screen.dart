@@ -68,9 +68,9 @@ class _NotesScreenState extends State<NotesScreen> {
                           color: PickColors.successColor,
                           title: "Share",
                           prefixIcon: PickImages.whatsAppIcon,
-                          onPressed: () {
-                            // _launchWhatsapp();
-                          },
+                         onPressed: () async {
+                          await helper.shareViaWhatsApp(context);
+                        },
                         ),
                       ),
                       const SizedBox(

@@ -7,11 +7,52 @@ import 'package:flutter/services.dart';
 import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart';
 import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart'
     as ncp;
+import 'package:url_launcher/url_launcher.dart';
 
 final ncp.FlutterContactPicker _contactPicker = ncp.FlutterContactPicker();
 
 class GeneralHelper with ChangeNotifier {
   double textScaleFactor = 1.0;
+
+    Future<void> shareViaWhatsApp(BuildContext context) async {
+    final message = 'Hello';
+    // 'Invoice from ${clientNameController.text}\nAmount: ₹${totalPrice.toStringAsFixed(2)}';
+    final whatsappAppUrl =
+        Uri.parse('whatsapp://send?text=${Uri.encodeComponent(message)}');
+    final whatsappWebUrl =
+        Uri.parse('https://wa.me/?text=${Uri.encodeComponent(message)}');
+
+    bool launched = false;
+    try {
+      launched = await launchUrl(
+        whatsappAppUrl,
+        mode: LaunchMode.externalApplication,
+      );
+    } catch (_) {
+      launched = false;
+    }
+
+    if (!launched) {
+      try {
+        launched = await launchUrl(
+          whatsappWebUrl,
+          mode: LaunchMode.externalApplication,
+        );
+      } catch (_) {
+        launched = false;
+      }
+    }
+
+    if (!launched) {
+      // if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('WhatsApp is not installed'),
+          ),
+        );
+      // }
+    }
+  }
   Future<void> pickContact(TextEditingController controller) async {
     try {
       // Open the contact picker and get the selected contact

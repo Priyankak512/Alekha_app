@@ -314,9 +314,8 @@ ${clientRequirementsController.text.isNotEmpty ? clientRequirementsController.te
                           color: PickColors.successColor,
                           title: "Share",
                           suffixIcon: PickImages.whatsAppIcon,
-                          onPressed: () {
-                            // final message = getDiscussionMessage();
-                            // shareOnWhatsApp(message);
+                          onPressed: () async {
+                            await helper.shareViaWhatsApp(context);
                           },
                         ),
                       ),

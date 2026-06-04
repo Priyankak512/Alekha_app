@@ -1018,7 +1018,9 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
                             suffixIcon: PickImages.whatsAppIcon,
                             style: CommonTextStyle().buttonTextStyle,
                             color: PickColors.successColor,
-                            onPressed: () async {},
+                            onPressed: () async {
+                              await helper.shareViaWhatsApp(context);
+                            },
                           ),
                         )
                       ],

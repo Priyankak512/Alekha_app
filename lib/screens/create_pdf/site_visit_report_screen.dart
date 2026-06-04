@@ -793,21 +793,25 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
                     suffixIcon: PickImages.whatsAppIcon,
                     // onPressed: () {},
 
-                    onPressed: () async {
-                      // WhatsApp ko open karne ke liye URL scheme
-                      var whatsappUrl = Uri.parse("whatsapp://app");
+                    // onPressed: () async {
+                    //   // WhatsApp ko open karne ke liye URL scheme
+                    //   var whatsappUrl = Uri.parse("whatsapp://app");
 
-                      if (await canLaunchUrl(whatsappUrl)) {
-                        await launchUrl(
-                          whatsappUrl,
-                          mode: LaunchMode.externalApplication,
-                        );
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                              content: Text("WhatsApp is not installed")),
-                        );
-                      }
+                    //   if (await canLaunchUrl(whatsappUrl)) {
+                    //     await launchUrl(
+                    //       whatsappUrl,
+                    //       mode: LaunchMode.externalApplication,
+                    //     );
+                    //   } else {
+                    //     ScaffoldMessenger.of(context).showSnackBar(
+                    //       const SnackBar(
+                    //           content: Text("WhatsApp is not installed")),
+                    //     );
+                    //   }
+                    // },
+
+                    onPressed: () async {
+                      await helper.shareViaWhatsApp(context);
                     },
                   ),
                 ],
@@ -912,8 +916,6 @@ pw.Widget buildMultilineField({
   );
 }
 
-
-
 class FormBuilderEditableDateFieldStyled extends FormBuilderField<DateTime> {
   final String labelText;
   final bool isRequired;
@@ -1007,7 +1009,6 @@ class _FormBuilderEditableDateFieldStyledState extends FormBuilderFieldState<
     );
   }
 }
-
 
 class DateMaskFormatter extends TextInputFormatter {
   @override

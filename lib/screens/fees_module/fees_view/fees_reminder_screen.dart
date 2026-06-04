@@ -316,9 +316,8 @@ alekha architects
                         color: PickColors.successColor,
                         title: "Share",
                         suffixIcon: PickImages.whatsAppIcon,
-                        onPressed: () {
-                          // String message = generateMessage();
-                          // shareOnWhatsApp(message);
+                         onPressed: () async {
+                          await helper.shareViaWhatsApp(context);
                         },
                       ),
                     ),

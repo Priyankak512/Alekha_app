@@ -189,8 +189,8 @@ https://www.instagram.com/alekha_architects
                         color: PickColors.successColor,
                         title: "Share",
                         prefixIcon: PickImages.whatsAppIcon,
-                        onPressed: () {
-                          // _launchWhatsapp();
+                        onPressed: () async {
+                          await helper.shareViaWhatsApp(context);
                         },
                       ),
                     ),
