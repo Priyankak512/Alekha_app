@@ -82,8 +82,8 @@ Widget build(BuildContext context) {
                           color: PickColors.successColor,
                           title: "Whatsapp",
                           prefixIcon: PickImages.whatsAppIcon,
-                          onPressed: () {
-                            // _launchWhatsapp();
+                         onPressed: () async {
+                            await helper.shareViaWhatsApp(context);
                           },
                         ),
                       ),

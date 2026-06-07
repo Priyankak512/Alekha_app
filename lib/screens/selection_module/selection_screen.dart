@@ -88,7 +88,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
         "${projectNumberController.text} ${_selectedProjectType == 'Architecture - A' ? 'A' : _selectedProjectType == 'Interior - I' ? 'I' : _selectedProjectType == 'Architecture Interior - AI' ? 'AI' : ''}";
 
     // Descriptions list
-    final descriptions = [
+    final rawDescriptions = [
       description1Controller.text,
       description2Controller.text,
       description3Controller.text,
@@ -98,6 +98,31 @@ class _SelectionScreenState extends State<SelectionScreen> {
       description7Controller.text,
       description8Controller.text,
     ];
+    final rawImages = [
+      image1, image2, image3, image4, image5, image6, image7, image8
+    ];
+
+    final validPairs = <Map<String, dynamic>>[];
+
+    // First, add all defined pairs
+    for (int i = 0; i < 8; i++) {
+      if (rawDescriptions[i].trim().isNotEmpty || rawImages[i] != null) {
+        validPairs.add({
+          'desc': rawDescriptions[i].trim(),
+          'img': rawImages[i],
+        });
+      }
+    }
+
+    // Find any extra images in _images that are not in rawImages
+    for (var img in _images) {
+      if (!rawImages.contains(img)) {
+        validPairs.add({
+          'desc': '',
+          'img': img,
+        });
+      }
+    }
 
 // --- Full Header (Page 1 only)
     pw.Widget _buildFullHeader() {
@@ -257,13 +282,12 @@ class _SelectionScreenState extends State<SelectionScreen> {
     // --- Image + Description (single box)
 
     pw.Widget _buildImageWithDescription(int index) {
-      if (index >= _images.length && index >= descriptions.length) {
-        return pw.SizedBox();
+      if (index >= validPairs.length) {
+        return pw.Expanded(child: pw.SizedBox());
       }
 
-      final File? imageFile = index < _images.length ? _images[index] : null;
-      final String description =
-          index < descriptions.length ? descriptions[index] : "";
+      final File? imageFile = validPairs[index]['img'];
+      final String description = validPairs[index]['desc'];
 
       return pw.Expanded(
         child: pw.Column(
@@ -303,17 +327,9 @@ class _SelectionScreenState extends State<SelectionScreen> {
       );
     }
 
-    // ✅ केवल non-empty descriptions count करो
-    final nonEmptyDescriptions =
-        descriptions.where((d) => d.trim().isNotEmpty).toList();
-
-// ✅ total items = max(images, nonEmptyDescriptions)
-    int totalItems = _images.length > nonEmptyDescriptions.length
-        ? _images.length
-        : nonEmptyDescriptions.length;
-
-// ✅ कितने total pages चाहिए (हर page पर max 4 items)
+    int totalItems = validPairs.length;
     int totalPages = (totalItems / 4).ceil();
+    if (totalPages == 0) totalPages = 1;
     // for (int pageIndex = 0; pageIndex < totalPages; pageIndex++) {
     //   pdf.addPage(
     //     pw.Page(
@@ -442,9 +458,11 @@ class _SelectionScreenState extends State<SelectionScreen> {
     }
 
     // Print the PDF
+    String pdfName = '${projectNumberController.text} SELECTION ${dateMeetingController.text} ${clientNameController.text.toUpperCase()}';
+    pdfName = pdfName.replaceAll('/', '-').replaceAll('\\', '-').replaceAll('_', '-');
+
     await Printing.layoutPdf(
-      name:
-          '${projectNumberController.text} SELECTION ${dateMeetingController.text.replaceAll('_', '/')} ${clientNameController.text.toUpperCase()}',
+      name: pdfName,
       onLayout: (PdfPageFormat format) async => pdf.save(),
     );
   }

@@ -519,9 +519,9 @@ class _LocationScreenState extends State<LocationScreen> {
                           color: PickColors.successColor,
                           title: "Whatsapp",
                           prefixIcon: PickImages.whatsAppIcon,
-                          onPressed: () {
-                            // _launchWhatsapp();
-                          },
+                           onPressed: () async {
+                              await helper.shareViaWhatsApp(context);
+                            },
                         ),
                       ),
                       const SizedBox(width: 10),
