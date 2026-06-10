@@ -211,7 +211,7 @@ class _CommonTextFieldWithBorderState extends State<CommonTextFieldWithBorder> {
   }
 }
 
-String? validateTextFieldByKey({
+String? validateTextFieldByKey({      
   required String textKey,
   required String? textFieldValue,
   required bool isRequired,
@@ -242,7 +242,7 @@ String? validateTextFieldByKey({
   RegExp ifscCodeExpression = RegExp("^[A-Z]{4}[0][A-Z0-9]{6}");
 }
 
-class CommonTextFieldWithFocus extends StatelessWidget {
+class CommonTextFieldWithFocus extends StatefulWidget {
   final TextEditingController controller;
   final String hintText;
   final String labelText;
@@ -254,8 +254,8 @@ class CommonTextFieldWithFocus extends StatelessWidget {
   final void Function(String)? onSubmitted;
   final void Function(bool)? onFocusChange;
   final List<TextInputFormatter>? inputFormatters;
-  final Widget? prefixIcon; // New parameter
-  final Widget? suffixIcon; // New parameter
+  final Widget? prefixIcon;
+  final Widget? suffixIcon;
 
   const CommonTextFieldWithFocus({
     Key? key,
@@ -269,30 +269,99 @@ class CommonTextFieldWithFocus extends StatelessWidget {
     this.onFocusChange,
     this.keyboardType,
     this.inputFormatters,
-    this.prefixIcon, // Initialize optional parameter
+    this.prefixIcon,
     this.suffixIcon,
-    this.labelTextStyle, // Initialize optional parameter
+    this.labelTextStyle,
   }) : super(key: key);
+
+  @override
+  State<CommonTextFieldWithFocus> createState() =>
+      _CommonTextFieldWithFocusState();
+}
+
+class _CommonTextFieldWithFocusState extends State<CommonTextFieldWithFocus> {
+  late TextEditingController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = widget.controller;
+    if (widget.maxLines > 1) {
+      _controller.addListener(_handleTextChange);
+    }
+  }
+
+  void _handleTextChange() {
+    final text = _controller.text;
+    final selection = _controller.selection;
+
+    if (selection.baseOffset != text.length) return;
+
+    if (text.length >= 2 &&
+        (text.endsWith('- ') || text.endsWith('* ')) &&
+        selection.baseOffset == text.length) {
+      final newText = text.substring(0, text.length - 2) + '• ';
+      _controller.value = TextEditingValue(
+        text: newText,
+        selection: TextSelection.collapsed(offset: newText.length),
+      );
+      return;
+    }
+
+    if (text.endsWith('\n') && selection.baseOffset == text.length) {
+      final lines = text.split('\n');
+      if (lines.length >= 2) {
+        final previousLine = lines[lines.length - 2];
+        
+        if (previousLine.trim() == '•') {
+          lines.removeAt(lines.length - 2); 
+          lines[lines.length - 1] = ''; 
+          final newText = lines.join('\n').trimRight() + '\n';
+          _controller.value = TextEditingValue(
+            text: newText,
+            selection: TextSelection.collapsed(offset: newText.length),
+          );
+          return;
+        } 
+        else if (previousLine.trimLeft().startsWith('•')) {
+          final newText = text + '• ';
+          _controller.value = TextEditingValue(
+            text: newText,
+            selection: TextSelection.collapsed(offset: newText.length),
+          );
+          return;
+        }
+      }
+    }
+  }
+
+  @override
+  void dispose() {
+    if (widget.maxLines > 1) {
+      _controller.removeListener(_handleTextChange);
+    }
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Focus(
-      onFocusChange: onFocusChange,
+      onFocusChange: widget.onFocusChange,
       child: TextField(
-        maxLines: maxLines,
-        controller: controller,
-        readOnly: readOnly ?? false,
-        keyboardType: keyboardType,
+        maxLines: widget.maxLines,
+        controller: _controller,
+        readOnly: widget.readOnly ?? false,
+        keyboardType: widget.keyboardType,
         cursorColor: PickColors.questionTextColor,
         style: CommonTextStyle().textFieldTitleTextStyle,
         decoration: InputDecoration(
           contentPadding:
               const EdgeInsets.symmetric(horizontal: 10, vertical: 20),
-          hintText: hintText,
+          hintText: widget.hintText,
           hintStyle: CommonTextStyle().textFieldTitleTextStyle,
           label: Text(
-            labelText,
-            style: labelTextStyle ?? CommonTextStyle().textFieldTitleTextStyle,
+            widget.labelText,
+            style: widget.labelTextStyle ?? CommonTextStyle().textFieldTitleTextStyle,
           ),
           border: const OutlineInputBorder(),
           errorBorder: OutlineInputBorder(
@@ -315,12 +384,12 @@ class CommonTextFieldWithFocus extends StatelessWidget {
             borderRadius: BorderRadius.circular(10),
             borderSide: BorderSide(color: PickColors.textfieldBorderColor),
           ),
-          prefixIcon: prefixIcon, // Add prefixIcon
-          suffixIcon: suffixIcon, // Add suffixIcon
+          prefixIcon: widget.prefixIcon,
+          suffixIcon: widget.suffixIcon,
         ),
-        onSubmitted: onSubmitted,
-        textInputAction: textInputAction,
-        inputFormatters: inputFormatters,
+        onSubmitted: widget.onSubmitted,
+        textInputAction: widget.textInputAction,
+        inputFormatters: widget.inputFormatters,
       ),
     );
   }
@@ -367,34 +436,62 @@ class _CommonTextFieldWithBulletsState
   void initState() {
     super.initState();
     _controller = widget.controller;
-    _controller.addListener(() {
-      final text = _controller.text;
-      final selection = _controller.selection;
+    _controller.addListener(_handleTextChange);
+  }
 
-      // Auto convert '- ' to '• '
-      if (text.length >= 2 &&
-          text.endsWith('- ') &&
-          selection.baseOffset == text.length) {
-        final newText = text.substring(0, text.length - 2) + '• ';
-        _controller.value = TextEditingValue(
-          text: newText,
-          selection: TextSelection.collapsed(offset: newText.length),
-        );
-      }
+  void _handleTextChange() {
+    final text = _controller.text;
+    final selection = _controller.selection;
 
-      // Auto bullet on Enter key (newline)
-      else if (text.endsWith('\n') && selection.baseOffset == text.length) {
-        final lines = text.split('\n');
-        if (lines.length >= 2 &&
-            lines[lines.length - 2].trim().startsWith('•')) {
+    if (selection.baseOffset != text.length) return; // Only process if typing at the end
+
+    // Auto convert '- ' or '* ' to '• '
+    if (text.length >= 2 &&
+        (text.endsWith('- ') || text.endsWith('* ')) &&
+        selection.baseOffset == text.length) {
+      final newText = text.substring(0, text.length - 2) + '• ';
+      _controller.value = TextEditingValue(
+        text: newText,
+        selection: TextSelection.collapsed(offset: newText.length),
+      );
+      return;
+    }
+
+    // Auto bullet on Enter key (newline)
+    if (text.endsWith('\n') && selection.baseOffset == text.length) {
+      final lines = text.split('\n');
+      if (lines.length >= 2) {
+        final previousLine = lines[lines.length - 2];
+        
+        // If the previous line was JUST a bullet (empty item) and we pressed enter again
+        if (previousLine.trim() == '•') {
+          // Remove the empty bullet line and the newline, leaving a clean newline
+          lines.removeAt(lines.length - 2); 
+          lines[lines.length - 1] = ''; // clear the last newline item
+          final newText = lines.join('\n').trimRight() + '\n';
+          _controller.value = TextEditingValue(
+            text: newText,
+            selection: TextSelection.collapsed(offset: newText.length),
+          );
+          return;
+        } 
+        // If the previous line started with a bullet and had text
+        else if (previousLine.trimLeft().startsWith('•')) {
           final newText = text + '• ';
           _controller.value = TextEditingValue(
             text: newText,
             selection: TextSelection.collapsed(offset: newText.length),
           );
+          return;
         }
       }
-    });
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.removeListener(_handleTextChange);
+    super.dispose();
   }
 
   @override
@@ -661,4 +758,22 @@ class _CommonTimePickerFieldState extends State<CommonTimePickerField> {
       ),
     );
   }
+}
+
+Widget buildMultilineField({
+  required TextEditingController controller,
+  required String labelText,
+  required String hintText,
+  int maxLines = 1,
+  List<TextInputFormatter>? inputFormatters,
+  dynamic keyboardType,
+}) {
+  return CommonTextFieldWithBullets(
+    controller: controller,
+    labelText: labelText,
+    hintText: hintText,
+    maxLines: maxLines,
+    inputFormatters: inputFormatters,
+    keyboardType: keyboardType,
+  );
 }

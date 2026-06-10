@@ -219,34 +219,34 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
                                   siteVisitNumber.text,
                                 ),
                               ),
-                            ],
+                            ],  
                           ),
 
                           // Work Stage On Site
-                          buildMultilineField(
+                          buildPdfMultilineField(
                               label: "Work Stage On Site :",
                               value: workStageOnSiteController.text),
 
                           // Decision
-                          buildMultilineField(
+                          buildPdfMultilineField(
                             label: 'Decision :',
                             value: decisionController.text,
                           ),
 
                           // Changes On Site
-                          buildMultilineField(
+                          buildPdfMultilineField(
                             label: 'Decision Pending :',
                             value: decisionPendingController.text,
                           ),
 
                           // Decision Pending
-                          buildMultilineField(
+                          buildPdfMultilineField(
                             label: 'Changes On Site : ',
                             value: changesOnSiteController.text,
                           ),
 
                           // Next On Site
-                          buildMultilineField(
+                          buildPdfMultilineField(
                             label: 'Next On Site : ',
                             value: nextOnSiteController.text,
                           ),
@@ -663,7 +663,7 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
                   const SizedBox(
                     height: 20,
                   ),
-                  CommonTextFieldWithFocus(
+                  buildMultilineField(
                     controller: workStageOnSiteController,
                     labelText: "Work Stage on Site",
                     hintText: "Work Stage on Site",
@@ -672,7 +672,7 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
                   const SizedBox(
                     height: 20,
                   ),
-                  CommonTextFieldWithFocus(
+                  buildMultilineField(
                     controller: decisionController,
                     labelText: "Decisions",
                     hintText: "Decisions",
@@ -681,7 +681,7 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
                   const SizedBox(
                     height: 20,
                   ),
-                  CommonTextFieldWithFocus(
+                  buildMultilineField(
                     controller: decisionPendingController,
                     labelText: "Decisions pending",
                     hintText: "Decisions pending",
@@ -690,7 +690,7 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
                   const SizedBox(
                     height: 20,
                   ),
-                  CommonTextFieldWithFocus(
+                  buildMultilineField(
                     controller: changesOnSiteController,
                     labelText: "Changes on site",
                     hintText: "Changes on site",
@@ -699,7 +699,7 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
                   const SizedBox(
                     height: 20,
                   ),
-                  CommonTextFieldWithFocus(
+                  buildMultilineField(
                     controller: nextOnSiteController,
                     labelText: "Next on site",
                     hintText: "Next on site",
@@ -879,13 +879,15 @@ pw.Widget buildInlineTextFieldRow(String label, String value) {
   }
 }
 
-pw.Widget buildMultilineField({
+pw.Widget buildPdfMultilineField({
   required String label,
   required String value,
   double fontSize = 15,
   double spacing = 3,
   double indent = 15,
   bool showIfEmpty = false,
+  pw.Font? labelFont,
+  pw.Font? textFont,
 }) {
   if (value.isEmpty && !showIfEmpty) {
     return pw.SizedBox();
@@ -896,19 +898,61 @@ pw.Widget buildMultilineField({
     child: pw.Column(
       crossAxisAlignment: pw.CrossAxisAlignment.start,
       children: [
-        pw.Text(
-          label,
-          style: pw.TextStyle(
-            fontWeight: pw.FontWeight.bold,
-            fontSize: fontSize,
+        if (label.isNotEmpty) ...[
+          pw.Text(
+            label,
+            style: pw.TextStyle(
+              fontWeight: labelFont == null ? pw.FontWeight.bold : null,
+              font: labelFont,
+              fontSize: fontSize,
+            ),
           ),
-        ),
-        pw.SizedBox(height: spacing),
+          pw.SizedBox(height: spacing),
+        ],
         pw.Container(
           margin: pw.EdgeInsets.only(left: indent),
-          child: pw.Text(
-            value,
-            style: pw.TextStyle(fontSize: fontSize),
+          child: pw.Column(
+            crossAxisAlignment: pw.CrossAxisAlignment.start,
+            children: value.split('\n').map((line) {
+              final trimmedLine = line.trimLeft();
+              if (trimmedLine.startsWith('•') || trimmedLine.startsWith('- ')) {
+                final textPart = trimmedLine.startsWith('•')
+                    ? trimmedLine.substring(1).trimLeft()
+                    : trimmedLine.substring(2).trimLeft();
+
+                return pw.Padding(
+                  padding: const pw.EdgeInsets.only(bottom: 2),
+                  child: pw.Row(
+                    crossAxisAlignment: pw.CrossAxisAlignment.start,
+                    children: [
+                      pw.Container(
+                        margin: pw.EdgeInsets.only(top: fontSize * 0.4, right: 6),
+                        width: fontSize * 0.3,
+                        height: fontSize * 0.3,
+                        decoration: const pw.BoxDecoration(
+                          color: PdfColors.black,
+                          shape: pw.BoxShape.circle,
+                        ),
+                      ),
+                      pw.Expanded(
+                        child: pw.Text(
+                          textPart,
+                          style: pw.TextStyle(fontSize: fontSize, font: textFont),
+                        ),
+                      ),
+                    ],
+                  ),
+                );
+              } else {
+                return pw.Padding(
+                  padding: const pw.EdgeInsets.only(bottom: 2),
+                  child: pw.Text(
+                    line,
+                    style: pw.TextStyle(fontSize: fontSize, font: textFont),
+                  ),
+                );
+              }
+            }).toList(),
           ),
         ),
       ],
