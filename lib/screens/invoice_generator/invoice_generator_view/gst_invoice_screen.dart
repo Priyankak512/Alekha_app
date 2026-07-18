@@ -1175,10 +1175,13 @@ class _GstInvoiceGeneratorScreenState extends State<GstInvoiceGeneratorScreen> {
 
   TextEditingController otherSecondGstRateController = TextEditingController();
   TextEditingController otherSecondGstNameController = TextEditingController();
+  TextEditingController igstRateController = TextEditingController();
 
+  double igstAmount = 0.0;
   double totalPrice = 0.0;
   double cgstAmount = 0.0;
   double sgstAmount = 0.0;
+
   double other1stGstAmount = 0.0;
   double other2ndGstAmount = 0.0;
   double grandTotal = 0.0;
@@ -1198,8 +1201,11 @@ class _GstInvoiceGeneratorScreenState extends State<GstInvoiceGeneratorScreen> {
     priceController8.addListener(calculateTotal);
     cgstRateController.addListener(calculateTotal);
     sgstRateController.addListener(calculateTotal);
+    igstRateController.addListener(calculateTotal);
     otherFirstGstRateController.addListener(calculateTotal);
+    otherFirstGstNameController.addListener(calculateTotal);
     otherSecondGstRateController.addListener(calculateTotal);
+    otherSecondGstNameController.addListener(calculateTotal);
   }
 
   void calculateTotal() {
@@ -1215,6 +1221,7 @@ class _GstInvoiceGeneratorScreenState extends State<GstInvoiceGeneratorScreen> {
     double subtotal = p1 + p2 + p3 + p4 + p5 + p6 + p7 + p8;
     double cgstRate = double.tryParse(cgstRateController.text) ?? 0.0;
     double sgstRate = double.tryParse(sgstRateController.text) ?? 0.0;
+    double igstRate = double.tryParse(igstRateController.text) ?? 0.0;
     double other1stGstRate =
         double.tryParse(otherFirstGstRateController.text) ?? 0.0;
     double other2ndGstRate =
@@ -1222,6 +1229,7 @@ class _GstInvoiceGeneratorScreenState extends State<GstInvoiceGeneratorScreen> {
 
     double cgst = subtotal * cgstRate / 100;
     double sgst = subtotal * sgstRate / 100;
+    double igst = subtotal * igstRate / 100;
     double other1stGst = subtotal * other1stGstRate / 100;
     double other2ndGst = subtotal * other2ndGstRate / 100;
 
@@ -1229,9 +1237,10 @@ class _GstInvoiceGeneratorScreenState extends State<GstInvoiceGeneratorScreen> {
       totalPrice = subtotal;
       cgstAmount = cgst;
       sgstAmount = sgst;
+      igstAmount = igst;
       other1stGstAmount = other1stGst;
       other2ndGstAmount = other2ndGst;
-      grandTotal = subtotal + cgst + sgst + other1stGst + other2ndGst;
+      grandTotal = subtotal + cgst + sgst + igst + other1stGst + other2ndGst;
     });
   }
 
@@ -1257,6 +1266,7 @@ class _GstInvoiceGeneratorScreenState extends State<GstInvoiceGeneratorScreen> {
 
     double cgstRate = double.tryParse(cgstRateController.text) ?? 0.0;
     double sgstRate = double.tryParse(sgstRateController.text) ?? 0.0;
+    double igstRate = double.tryParse(igstRateController.text) ?? 0.0;
     double other1stGstRate =
         double.tryParse(otherFirstGstRateController.text) ?? 0.0;
     double other2ndGstRate =
@@ -1312,7 +1322,7 @@ class _GstInvoiceGeneratorScreenState extends State<GstInvoiceGeneratorScreen> {
           children: [
             _cell('NO.', style: bold()),
             _cell('DESCRIPTION', style: bold(), align: pw.Alignment.centerLeft),
-            _cell('SAC', style: bold()),
+            _cell('SAC/HSN', style: bold()),
             _cell('AMOUNT', style: bold()),
           ],
         );
@@ -1473,6 +1483,10 @@ class _GstInvoiceGeneratorScreenState extends State<GstInvoiceGeneratorScreen> {
                           gstRow(
                               'SGST @ ${sgstRate % 1 == 0 ? sgstRate.toInt() : sgstRate}%',
                               sgstAmount),
+                        if (igstRate > 0)
+                          gstRow(
+                              'IGST @ ${igstRate % 1 == 0 ? igstRate.toInt() : igstRate}%',
+                              igstAmount),
                         if (other1stGstRate > 0)
                           gstRow(
                               '${otherFirstGstNameController.text} @ ${other1stGstRate % 1 == 0 ? other1stGstRate.toInt() : other1stGstRate}%',
@@ -1860,6 +1874,15 @@ class _GstInvoiceGeneratorScreenState extends State<GstInvoiceGeneratorScreen> {
                           ),
                         ),
                         const SizedBox(width: 10),
+                         Expanded(
+                          child: CommonTextFieldWithFocus(
+                            controller: igstRateController,
+                            labelText: "IGST %",
+                            hintText: "IGST %",
+                            keyboardType: TextInputType.number,
+                          ),
+                        ),
+                        SizedBox(width: 10),
                       ],
                     ),
                     const SizedBox(height: 20),
@@ -1870,7 +1893,7 @@ class _GstInvoiceGeneratorScreenState extends State<GstInvoiceGeneratorScreen> {
                             controller: otherFirstGstNameController,
                             labelText: "Other",
                             hintText: "Other",
-                            keyboardType: TextInputType.number,
+                            keyboardType: TextInputType.text,
                           ),
                         ),
                         const SizedBox(width: 10),
@@ -1925,6 +1948,9 @@ class _GstInvoiceGeneratorScreenState extends State<GstInvoiceGeneratorScreen> {
                           if (sgstAmount > 0)
                             _summaryRow("SGST @ ${sgstRateController.text}%",
                                 "₹${sgstAmount.toStringAsFixed(2)}"),
+                          if (igstAmount > 0)
+                            _summaryRow("IGST @ ${igstRateController.text}%",
+                                "₹${igstAmount.toStringAsFixed(2)}"),
                           if (other1stGstAmount > 0)
                             _summaryRow(
                                 "${otherFirstGstNameController.text} ${otherFirstGstRateController.text}%",
@@ -2100,7 +2126,7 @@ class _GstInvoiceGeneratorScreenState extends State<GstInvoiceGeneratorScreen> {
                             suffixIcon: PickImages.whatsAppIcon,
                             style: CommonTextStyle().buttonTextStyle,
                             color: PickColors.successColor,
-                             onPressed: () async {
+                            onPressed: () async {
                               await helper.shareViaWhatsApp(context);
                             },
                           ),
@@ -2141,8 +2167,8 @@ class _GstInvoiceGeneratorScreenState extends State<GstInvoiceGeneratorScreen> {
           Expanded(
             child: CommonTextFieldWithFocus(
               controller: sacCtrl,
-              labelText: "SAC",
-              hintText: "SAC",
+              labelText: "SAC/HSN",
+              hintText: "SAC/HSN",
               keyboardType: TextInputType.number,
             ),
           ),
