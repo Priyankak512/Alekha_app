@@ -12,8 +12,8 @@ import 'package:alekha/widget/get_date_function.dart';
 import 'package:alekha/constant/images_route.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart'
-    as ncp;
+import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart' as ncp;
+import 'package:flutter_native_contact_picker/model/contact.dart' as ncp;
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
@@ -65,7 +65,7 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
   TextEditingController amountController = TextEditingController();
   TextEditingController noteController = TextEditingController();
 
-  final ncp.FlutterContactPicker _contactPicker = ncp.FlutterContactPicker();
+  final ncp.FlutterNativeContactPicker _contactPicker = ncp.FlutterNativeContactPicker();
 
 
   Future<void> _pickContact(TextEditingController controller) async {
