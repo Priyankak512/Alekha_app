@@ -88,11 +88,11 @@ class _HomeScreenState extends State<HomeScreen> {
                 },
               ),
             ), // Add Floating Action Button
-            floatingActionButton: FloatingActionButton(
-              onPressed: _launchWhatsApp, // When tapped, it opens WhatsApp
-              backgroundColor: PickColors.successColor,
-              child: const Icon(Icons.chat_rounded), // WhatsApp icon
-            ),
+            // floatingActionButton: FloatingActionButton(
+            //   onPressed: _launchWhatsApp, // When tapped, it opens WhatsApp
+            //   backgroundColor: PickColors.successColor,
+            //   child: const Icon(Icons.chat_rounded), // WhatsApp icon
+            // ),
           );
         },
       ),

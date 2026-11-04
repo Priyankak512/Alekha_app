@@ -21,6 +21,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart'
     as ncp;
+import 'package:flutter_native_contact_picker/model/contact.dart' as ncp;
 import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
 import 'package:provider/provider.dart';
@@ -98,7 +99,8 @@ class _InteriorOfferLetterScreenState extends State<InteriorOfferLetterScreen> {
   TextEditingController noOfOptionsController = TextEditingController();
   TextEditingController noFRevisionController = TextEditingController();
 
-  final ncp.FlutterContactPicker _contactPicker = ncp.FlutterContactPicker();
+  final ncp.FlutterNativeContactPicker _contactPicker =
+      ncp.FlutterNativeContactPicker();
 
   List<Map<String, dynamic>> interiorBasicOptions = [];
   List<Map<String, dynamic>> interiorStandardOptions = [];

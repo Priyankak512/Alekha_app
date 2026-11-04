@@ -2,7 +2,7 @@ import 'dart:io';
 
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:open_file/open_file.dart';
+import 'package:open_filex/open_filex.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:syncfusion_flutter_pdf/pdf.dart';
 
@@ -144,7 +144,7 @@ class _PdfScreenState extends State<PdfScreen> {
       await file.writeAsBytes(await document.save(), flush: true);
 
       // Open the PDF document in mobile
-      OpenFile.open('$path/After_site_visit.pdf');
+      OpenFilex.open('$path/After_site_visit.pdf');
 
       // Dispose the document
       document.dispose();

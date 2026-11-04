@@ -4,12 +4,12 @@ import 'package:alekha/constant/share_preference.dart';
 import 'package:alekha/logical_functions/debug_print.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart';
-import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart'
-    as ncp;
+import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart' as ncp;
+import 'package:flutter_native_contact_picker/model/contact.dart' as ncp;
 import 'package:url_launcher/url_launcher.dart';
 
-final ncp.FlutterContactPicker _contactPicker = ncp.FlutterContactPicker();
+final ncp.FlutterNativeContactPicker _contactPicker =
+    ncp.FlutterNativeContactPicker();
 
 class GeneralHelper with ChangeNotifier {
   double textScaleFactor = 1.0;
