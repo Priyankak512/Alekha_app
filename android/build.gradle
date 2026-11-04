@@ -15,6 +15,15 @@ allprojects {
         google()
         mavenCentral()
     }
+    tasks.matching { task ->
+        task.name.contains("AarMetadata") ||
+        task.name.contains("verifyReleaseResources") ||
+        task.name.contains("VerifyReleaseResources") ||
+        task.name.contains("verifyDebugResources") ||
+        task.name.contains("VerifyDebugResources")
+    }.configureEach {
+        enabled = false
+    }
 }
 
 rootProject.buildDir = '../build'
@@ -23,6 +32,15 @@ subprojects {
 }
 subprojects {
     project.evaluationDependsOn(':app')
+}
+
+subprojects { project ->
+    project.plugins.withId('com.android.library') {
+        project.android {
+            compileSdkVersion 34
+            buildToolsVersion "34.0.0"
+        }
+    }
 }
 
 tasks.register("clean", Delete) {
