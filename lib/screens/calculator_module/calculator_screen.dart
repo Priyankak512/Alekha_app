@@ -54,6 +54,10 @@ class _CalculatorScreenState extends State<CalculatorScreen> {
                     const url =
                         'https://www.civil-engineering-calculators.com/Quantity-estimator/Cement-Concrete-Calculator#google_vignette';
                     await openUrl(url, context);
+                  } if (GlobalList.calculatorList[index]["id"] == "2") {
+                    const url =
+                        'https://www.calculatorsoup.com/calculators/construction/tank.php';
+                    await openUrl(url, context);
                   } else {
                     changeScreen(
                       context: context,

@@ -10,6 +10,7 @@ import 'package:alekha/screens/create_pdf/site_visit_report_screen.dart';
 import 'package:alekha/services/general_helper.dart';
 import 'package:alekha/widget/common_dropdown.dart';
 import 'package:alekha/widget/common_image_picker.dart';
+import 'package:alekha/constant/image_picker_helper.dart';
 import 'package:alekha/widget/common_material_button.dart';
 import 'package:alekha/widget/common_text_field.dart';
 import 'package:alekha/widget/get_date_function.dart';
@@ -311,14 +312,48 @@ class _SelectionScreenState extends State<SelectionScreen> {
             if (description.isNotEmpty) ...[
               pw.SizedBox(height: 6),
               pw.Container(
-                alignment: pw.Alignment.center,
                 padding: const pw.EdgeInsets.symmetric(horizontal: 15),
-                child: pw.Text(
-                  description,
-                  maxLines: 8,
-                  // overflow: pw.TextOverflow.ellips,
-                  style: const pw.TextStyle(fontSize: 10),
-                  textAlign: pw.TextAlign.center,
+                child: pw.Column(
+                  crossAxisAlignment: pw.CrossAxisAlignment.start,
+                  children: description.split('\n').map((line) {
+                    final trimmedLine = line.trimLeft();
+                    if (trimmedLine.startsWith('•') || trimmedLine.startsWith('- ') || trimmedLine.startsWith('* ')) {
+                      final textPart = trimmedLine.startsWith('•')
+                          ? trimmedLine.substring(1).trimLeft()
+                          : trimmedLine.substring(2).trimLeft();
+                      return pw.Padding(
+                        padding: const pw.EdgeInsets.only(bottom: 2),
+                        child: pw.Row(
+                          crossAxisAlignment: pw.CrossAxisAlignment.start,
+                          children: [
+                            pw.Container(
+                              margin: const pw.EdgeInsets.only(top: 4, right: 5),
+                              width: 3.5,
+                              height: 3.5,
+                              decoration: const pw.BoxDecoration(
+                                color: PdfColors.black,
+                                shape: pw.BoxShape.circle,
+                              ),
+                            ),
+                            pw.Expanded(
+                              child: pw.Text(
+                                textPart,
+                                style: const pw.TextStyle(fontSize: 10),
+                              ),
+                            ),
+                          ],
+                        ),
+                      );
+                    } else {
+                      return pw.Padding(
+                        padding: const pw.EdgeInsets.only(bottom: 2),
+                        child: pw.Text(
+                          line,
+                          style: const pw.TextStyle(fontSize: 10),
+                        ),
+                      );
+                    }
+                  }).toList(),
                 ),
               ),
             ]
@@ -468,21 +503,14 @@ class _SelectionScreenState extends State<SelectionScreen> {
   }
 
   Future<void> _getImage() async {
-    final pickedFile =
-        await ImagePicker().pickImage(source: ImageSource.gallery);
-    setState(
-      () {
-        if (pickedFile != null) {
-          _images.add(File(pickedFile.path));
-        } else {
-          debugPrint("No Image selected");
-        }
-      },
-    );
-    if (pickedFile != null) {
+    final pickedImages = await CommonMultipleImagePicker.pickMultipleImagesWithDialog(context);
+    if (pickedImages.isNotEmpty) {
       setState(() {
-        _image = File(pickedFile.path);
+        _images.addAll(pickedImages);
+        _image = pickedImages.last;
       });
+    } else {
+      debugPrint("No Image selected");
     }
   }
 
@@ -1116,3 +1144,6 @@ class _SelectionScreenState extends State<SelectionScreen> {
     });
   }
 }
+
+
+

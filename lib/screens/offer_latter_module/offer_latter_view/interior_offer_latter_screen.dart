@@ -2835,13 +2835,19 @@ This quote is applicable only for ${monthController.text} month from the commenc
                     Text("SCOPE DESCRIBED BY CLIENT",
                         style: CommonTextStyle().offerLetterTopicNameTextStyle),
                     PickHeightAndWidth.height10,
-                    CommonTextFieldWithFocus(
-                      controller: clientRequirementsController,
-                      labelText: "Client requirements",
-                      hintText: "Client requirements",
-                      maxLines: 2,
-                      keyboardType: TextInputType.name,
-                    ),
+                    // CommonTextFieldWithFocus(
+                    //   controller: clientRequirementsController,
+                    //   labelText: "Client requirements",
+                    //   hintText: "Client requirements",
+                    //   maxLines: 2,
+                    //   keyboardType: TextInputType.name,
+                    // ),
+                     buildMultilineField(
+                    controller: clientRequirementsController,
+                    labelText: "Client requirements",
+                    hintText: "Client requirements",
+                    maxLines: 4,
+                  ),
                     _images.isNotEmpty
                         ? SizedBox(
                             height: 400,

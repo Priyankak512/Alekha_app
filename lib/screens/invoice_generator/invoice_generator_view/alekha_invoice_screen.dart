@@ -17,6 +17,7 @@ import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart
 import 'package:flutter_native_contact_picker/model/contact.dart' as ncp;
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:alekha/widget/pdf_bullet_text.dart';
 import 'package:printing/printing.dart';
 import 'package:provider/provider.dart';
 import 'package:number_to_words/number_to_words.dart';
@@ -324,13 +325,17 @@ class _AlekhaArchitectsInvoiceScreenState
                                 ),
                                 pw.Padding(
                                   padding: const pw.EdgeInsets.all(4),
-                                  child: pw.Align(
-                                    alignment: pw.Alignment.centerLeft,
-                                    child: pw.Text(row[1],
-                                        style: isTotalRow
-                                            ? boldTextStyle
-                                            : defaultTextStyle),
-                                  ),
+                                  child: isTotalRow
+                                      ? pw.Align(
+                                          alignment: pw.Alignment.centerLeft,
+                                          child: pw.Text(row[1], style: boldTextStyle),
+                                        )
+                                      : buildPdfBulletText(
+                                          row[1],
+                                          style: defaultTextStyle,
+                                          boldStyle: boldTextStyle,
+                                          isBold: isTotalRow,
+                                        ),
                                 ),
                                 pw.Padding(
                                   padding: const pw.EdgeInsets.all(4),
@@ -378,8 +383,19 @@ class _AlekhaArchitectsInvoiceScreenState
                     ),
                     pw.SizedBox(height: 20),
                     if (noteController.text.trim().isNotEmpty)
-                      pw.Text("Note : ${noteController.text}",
-                          style: const pw.TextStyle(fontSize: 10)),
+                      pw.Row(
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: [
+                          pw.Text("Note : ",
+                              style: const pw.TextStyle(fontSize: 10)),
+                          pw.Expanded(
+                            child: buildPdfBulletText(
+                              noteController.text,
+                              style: const pw.TextStyle(fontSize: 10),
+                            ),
+                          ),
+                        ],
+                      ),
                     pw.Spacer(),
                     pw.Container(
                       padding: const pw.EdgeInsets.all(5),

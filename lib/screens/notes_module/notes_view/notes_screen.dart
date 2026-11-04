@@ -49,13 +49,19 @@ class _NotesScreenState extends State<NotesScreen> {
                 padding: const EdgeInsets.all(8.0),
                 child: Column(
                   children: [
-                    CommonTextFieldWithFocus(
-                      controller: notesController,
-                      labelText: "Notes",
-                      hintText: "Notes",
-                      maxLines: 10,
-                      keyboardType: TextInputType.name,
-                    ),
+                    // CommonTextFieldWithFocus(
+                    //   controller: notesController,
+                    //   labelText: "Notes",
+                    //   hintText: "Notes",
+                    //   maxLines: 10,
+                    //   keyboardType: TextInputType.name,
+                    // ),
+                     buildMultilineField(
+                    controller: notesController,
+                    labelText: 'Notes',
+                    hintText: 'Notes',
+                    maxLines: 4,
+                  ),
                   ],
                 ),
               ),

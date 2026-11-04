@@ -341,8 +341,8 @@ $regards
                         color: PickColors.successColor,
                         title: "share",
                         prefixIcon: PickImages.whatsAppIcon,
-                        onPressed: () {
-                          // _launchWhatsapp();
+                        onPressed: () async {
+                          await helper.shareViaWhatsApp(context);
                         },
                       ),
                     ),

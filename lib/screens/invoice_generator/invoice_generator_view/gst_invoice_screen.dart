@@ -17,6 +17,7 @@ import 'package:flutter_native_contact_picker/flutter_native_contact_picker.dart
 import 'package:flutter_native_contact_picker/model/contact.dart' as ncp;
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:alekha/widget/pdf_bullet_text.dart';
 import 'package:printing/printing.dart';
 import 'package:provider/provider.dart';
 import 'package:number_to_words/number_to_words.dart';
@@ -427,8 +428,19 @@ class _GstInvoiceGeneratorScreenState extends State<GstInvoiceGeneratorScreen> {
 
                     pw.SizedBox(height: 20),
                     if (noteController.text.trim().isNotEmpty)
-                      pw.Text("Note : ${noteController.text}",
-                          style: const pw.TextStyle(fontSize: 10)),
+                      pw.Row(
+                        crossAxisAlignment: pw.CrossAxisAlignment.start,
+                        children: [
+                          pw.Text("Note : ",
+                              style: const pw.TextStyle(fontSize: 10)),
+                          pw.Expanded(
+                            child: buildPdfBulletText(
+                              noteController.text,
+                              style: const pw.TextStyle(fontSize: 10),
+                            ),
+                          ),
+                        ],
+                      ),
                     pw.Spacer(),
 
                     // ── Signature + footer ──
@@ -561,11 +573,13 @@ class _GstInvoiceGeneratorScreenState extends State<GstInvoiceGeneratorScreen> {
     pw.TextStyle? style,
     pw.Alignment align = pw.Alignment.center,
   }) {
+    final defaultStyle = style ?? const pw.TextStyle(fontSize: 10);
     return pw.Padding(
       padding: const pw.EdgeInsets.all(4),
-      child: pw.Align(
-        alignment: align,
-        child: pw.Text(text, style: style ?? const pw.TextStyle(fontSize: 10)),
+      child: buildPdfBulletText(
+        text,
+        style: defaultStyle,
+        align: align,
       ),
     );
   }

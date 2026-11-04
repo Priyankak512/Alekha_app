@@ -20,6 +20,7 @@ import 'package:flutter/services.dart' show FilteringTextInputFormatter, LengthL
 import 'package:image_picker/image_picker.dart';
 import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
+import 'package:alekha/widget/pdf_bullet_text.dart';
 import 'package:printing/printing.dart';
 import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
@@ -240,10 +241,10 @@ class _CreatePdfFromDataState extends State<ArchitectureScreen> {
                 fontSize: 13, // Adjust font size for label
               ),
             ),
-            pw.Text(
-              value,
-              style: const pw.TextStyle(
-                fontSize: 13, // Adjust font size for value
+            pw.Expanded(
+              child: buildPdfBulletText(
+                value,
+                style: const pw.TextStyle(fontSize: 13),
               ),
             ),
           ],

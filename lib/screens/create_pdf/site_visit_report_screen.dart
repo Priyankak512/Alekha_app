@@ -71,7 +71,7 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
 
   Future<void> _getImage() async {
     final List<File> pickedImages =
-        await CommonMultipleImagePicker.pickMultipleImages();
+        await CommonMultipleImagePicker.pickMultipleImagesWithDialog(context);
 
     if (pickedImages.isNotEmpty) {
       setState(() {
@@ -1191,3 +1191,4 @@ class DateMaskFormatter extends TextInputFormatter {
 //     );
 //   }
 // }
+
