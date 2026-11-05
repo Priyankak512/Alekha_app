@@ -1,3 +1,4 @@
+import 'package:alekha/constant/toast_msg.dart';
 import 'package:alekha/constant/colors.dart';
 import 'package:alekha/constant/global_list.dart';
 import 'package:alekha/constant/hight_width_picker.dart';
@@ -362,10 +363,7 @@ $regards
 
                           Clipboard.setData(ClipboardData(text: message));
 
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text("Message copied to clipboard!")),
-                          );
+                          showToast(message: "Message copied to clipboard!", isPositive: true, context: context);
                         },
                       ),
                     )

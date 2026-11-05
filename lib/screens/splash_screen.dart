@@ -2,9 +2,11 @@ import 'dart:async';
 import 'package:alekha/constant/colors.dart';
 import 'package:alekha/constant/images_route.dart';
 import 'package:alekha/constant/navigation_route.dart';
-import 'package:alekha/constant/size_config.dart';
-import 'package:alekha/constant/text_style.dart';
+import 'package:alekha/constant/share_pref_keys.dart';
+import 'package:alekha/constant/share_preference.dart';
+import 'package:alekha/screens/auth_module/login_screen.dart';
 import 'package:alekha/screens/home/home_view/home_screen.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
 import 'package:flutter/material.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -22,16 +24,27 @@ class _SplashScreenState extends State<SplashScreen> {
   }
 
   Future<void> initializeData() async {
-    Timer(const Duration(seconds: 1),
-        () => changeScreenWithClearStack(context: context, widget: HomeScreen())
-        // Navigator.of(context).push(
-        //   MaterialPageRoute(
-        //     builder: (context) => const HomeScreen(),
-        //   ),
-        // ),
+    Timer(const Duration(seconds: 1), () async {
+      final session = Supabase.instance.client.auth.currentSession;
+      bool isLoggedIn = session != null || await Shared_Preferences.prefGetBool(
+        SharedP.isLoggedIn,
+        false,
+      );
+
+      if (!mounted) return;
+
+      if (isLoggedIn) {
+        changeScreenWithClearStack(
+          context: context,
+          widget: const HomeScreen(),
         );
-    // changeScreen(
-    //     context: context, widget: const CreatePdfFromData()));
+      } else {
+        changeScreenWithClearStack(
+          context: context,
+          widget: const LoginScreen(),
+        );
+      }
+    });
   }
 
   @override
@@ -59,7 +72,6 @@ class _SplashScreenState extends State<SplashScreen> {
               padding: const EdgeInsets.only(bottom: 20.0),
               child: Text(
                 "developed by Priyanka Kachhadiya",
-               
                 textAlign: TextAlign.center,
               ),
             ),

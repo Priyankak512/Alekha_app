@@ -1,3 +1,4 @@
+import 'package:alekha/constant/toast_msg.dart';
 import 'package:alekha/constant/colors.dart';
 import 'package:alekha/constant/hight_width_picker.dart';
 import 'package:alekha/constant/images_route.dart';
@@ -99,11 +100,7 @@ Widget build(BuildContext context) {
                             String message =
                                 "Hi,\n${nameController.text}\n\nArchitects | Interior Designers | Engineers now in your location. We are team of innovative and certified architects providing all Architectural services like, 3D-2D Floor Plans, 3D Elevations, Structural drawings & inspection, Renovation, Plumbing, Electrical, Flooring & Interior Designing services like, Carpentry, Electrification, False Ceiling, Decor with all necessary detail for Residential, Commercial & Institutional projects.\n\nYou can surely consult us for any of your upcoming Architectural, Interior & Renovation project by contacting us @\n\nAr. Ronak Surendra Jain\n93760 73577\nAr. Tushar Nannubhai Kachhadiya\n87588 23271\n\nHave a look on our Work Profile on Google by saving this contact & then clicking on this link.\n\nhttps://g.page/r/CW_ASWsGtudcEA0\n\nThanks & Regards\nalekha architects";
                             Clipboard.setData(ClipboardData(text: message));
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Message copied to clipboard!"),
-                              ),
-                            );
+                            showToast(message: "Message copied to clipboard!", isPositive: true, context: context);
                           },
                         ),
                       ),

@@ -1,3 +1,4 @@
+import 'package:alekha/constant/toast_msg.dart';
 import 'package:alekha/constant/colors.dart';
 import 'package:alekha/constant/date_formates.dart';
 import 'package:alekha/constant/global_list.dart';
@@ -13,6 +14,7 @@ import 'package:alekha/widget/get_date_function.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:alekha/screens/fees_module/fees_provider/fees_received_provider.dart';
 
 class FeesReceivedScreen extends StatefulWidget {
   const FeesReceivedScreen({super.key});
@@ -281,6 +283,18 @@ class _FeesReceivedScreenState extends State<FeesReceivedScreen> {
                         title: "Share",
                         suffixIcon: PickImages.whatsAppIcon,
                         onPressed: () async {
+                          // Record into FeesReceivedProvider only on Share
+                          Provider.of<FeesReceivedProvider>(context, listen: false).recordReceivedAction(
+                            clientName: clientNameController.text,
+                            projectNo: projectNoController.text,
+                            amountReceived: amountReceivedController.text,
+                            actionType: "shared",
+                            feesStage: feesController.text,
+                            invoiceNo: invoiceNoController.text,
+                            paymentMode: _paymentMode ?? "",
+                            feesSummary: feesSummeryController.text,
+                            regards: _selectedRegardsType ?? "",
+                          );
                           await helper.shareViaWhatsApp(context);
                         },
                       ),
@@ -290,52 +304,36 @@ class _FeesReceivedScreenState extends State<FeesReceivedScreen> {
                     ),
                     Expanded(
                       child: CommonMaterialButton(
-                          borderColor: PickColors.authSubTitleTextColor,
-                          title: "Copy",
-                          suffixIcon: PickImages.copyToClipboardIcon,
-                          style: CommonTextStyle().buttonTextStyle,
-                          color: PickColors.transparentColor,
-                          // onPressed: () {
-                          //   String message = "Hi,\n${clientNameController.text}\n\n"
-                          //       "alekha architects had received your fees payment of Rs. ${amountReceivedController.text} "
-                          //       "as fees stage ${feesController.text} for Project No. ${projectNoController.text} "
-                          //       "on ${dateMeetingController.text} through ${_paymentMode.toString()}.\n\n"
-                          //       "Fees Summary\n${feesSummeryController.text}\n\n"
-                          //       "Regards\n${_selectedRegardsType.toString()}\n"
-                          //       "alekha architects";
-
-                          //   Clipboard.setData(ClipboardData(text: message));
-
-                          //   ScaffoldMessenger.of(context).showSnackBar(
-                          //     const SnackBar(
-                          //       content: Text("Message copied to clipboard!"),
-                          //     ),
-                          //   );
-                          // },
-                          onPressed: () {
-                            String message =
-                                "Hi,\n${clientNameController.text}\n\n"
-                                "alekha architects had received your fees payment of Rs. ${amountReceivedController.text} "
-                                "as fees stage ${feesController.text} for Project No. ${projectNoController.text} "
-                                "on ${dateMeetingController.text} through ${_paymentMode.toString()}.\n\n";
-
-                            if (feesSummeryController.text.trim().isNotEmpty) {
-                              message +=
-                                  "Fees Summary\n${feesSummeryController.text}\n\n";
-                            }
-
-                            message +=
-                                "Regards\n${_selectedRegardsType.toString()}\n"
-                                "alekha architects";
-
-                            Clipboard.setData(ClipboardData(text: message));
-
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Message copied to clipboard!"),
-                              ),
-                            );
-                          }),
+                        borderColor: PickColors.authSubTitleTextColor,
+                        title: "Copy",
+                        suffixIcon: PickImages.copyToClipboardIcon,
+                        style: CommonTextStyle().buttonTextStyle,
+                        color: PickColors.transparentColor,
+                        onPressed: () {
+                          String message =
+                              "Hi,\n" + clientNameController.text + "\n\n" +
+                              "alekha architects had received your fees payment of Rs. " + amountReceivedController.text + " " +
+                              "as fees stage " + feesController.text + " for Project No. " + projectNoController.text + " " +
+                              "on " + dateMeetingController.text + " through " + _paymentMode.toString() + ".\n\n";
+                          if (feesSummeryController.text.trim().isNotEmpty) {
+                            message += "Fees Summary\n" + feesSummeryController.text + "\n\n";
+                          }
+                          message += "Regards\n" + _selectedRegardsType.toString() + "\nalekha architects";
+                          Provider.of<FeesReceivedProvider>(context, listen: false).recordReceivedAction(
+                            clientName: clientNameController.text,
+                            projectNo: projectNoController.text,
+                            amountReceived: amountReceivedController.text,
+                            actionType: "copied",
+                            feesStage: feesController.text,
+                            invoiceNo: invoiceNoController.text,
+                            paymentMode: _paymentMode ?? "",
+                            feesSummary: feesSummeryController.text,
+                            regards: _selectedRegardsType ?? "",
+                          );
+                          Clipboard.setData(ClipboardData(text: message));
+                          showToast(message: "Message copied to clipboard!", isPositive: true, context: context);
+                        },
+                      ),
                     )
                   ],
                 )

@@ -14,6 +14,9 @@ class PickHeightAndWidth {
   static const SizedBox height10 = SizedBox(
     height: 10,
   );
+   static const SizedBox height12 = SizedBox(
+    height: 12,
+  );
   static const SizedBox height15 = SizedBox(
     height: 15,
   );

@@ -194,6 +194,11 @@ class GlobalList {
       "icon": Icons.draw_outlined,
       "title": "Artoshophy",
     },
+    {
+      "id": 6,
+      "icon": Icons.logout_rounded,
+      "title": "Logout",
+    },
   ];
 
   static List<String> regardsName = [

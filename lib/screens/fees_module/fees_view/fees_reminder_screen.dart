@@ -1,3 +1,4 @@
+import 'package:alekha/constant/toast_msg.dart';
 import 'package:alekha/constant/colors.dart';
 import 'package:alekha/constant/date_formates.dart';
 import 'package:alekha/constant/global_list.dart';
@@ -14,6 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:provider/provider.dart';
+import 'package:alekha/screens/fees_module/fees_provider/fees_reminder_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class FeesReminderScreen extends StatefulWidget {
@@ -317,6 +319,18 @@ alekha architects
                         title: "Share",
                         suffixIcon: PickImages.whatsAppIcon,
                          onPressed: () async {
+                          // Record into FeesReminderProvider only on Share
+                          Provider.of<FeesReminderProvider>(context, listen: false).recordReminderAction(
+                            name: nameController.text,
+                            projectNo: projectController.text,
+                            amountPending: amountPendingController.text,
+                            actionType: "shared",
+                            projectCategory: _selectedProjectCategory ?? "",
+                            invoiceNo: invoiceNoController.text,
+                            feesStage: feesStageController.text,
+                            note: noteController.text,
+                            regards: _selectedRegardsType ?? "",
+                          );
                           await helper.shareViaWhatsApp(context);
                         },
                       ),
@@ -334,14 +348,22 @@ alekha architects
                         onPressed: () {
                           String message =
                               generateMessage(); // 👈 Generate the message string
+                          // Record into FeesReminderProvider only on Copy
+                          Provider.of<FeesReminderProvider>(context, listen: false).recordReminderAction(
+                            name: nameController.text,
+                            projectNo: projectController.text,
+                            amountPending: amountPendingController.text,
+                            actionType: "copied",
+                            projectCategory: _selectedProjectCategory ?? "",
+                            invoiceNo: invoiceNoController.text,
+                            feesStage: feesStageController.text,
+                            note: noteController.text,
+                            regards: _selectedRegardsType ?? "",
+                          );
                           Clipboard.setData(ClipboardData(
                               text: message)); // 👈 Copy to clipboard
 
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                              content: Text("Message copied to clipboard!"),
-                            ),
-                          );
+                          showToast(message: "Message copied to clipboard!", isPositive: true, context: context);
                         },
                       ),
                     )

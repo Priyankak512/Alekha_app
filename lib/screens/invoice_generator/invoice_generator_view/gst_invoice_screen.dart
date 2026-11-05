@@ -1,3 +1,4 @@
+import 'package:alekha/constant/toast_msg.dart';
 import 'package:alekha/constant/colors.dart';
 import 'package:alekha/constant/date_formates.dart';
 import 'package:alekha/constant/global_list.dart';
@@ -1037,11 +1038,7 @@ class _GstInvoiceGeneratorScreenState extends State<GstInvoiceGeneratorScreen> {
                             suffixIcon: PickImages.pdfIcon,
                             onPressed: () async {
                               await _createPdf();
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                    content:
-                                        Text('PDF generated successfully!')),
-                              );
+                              showToast(message: 'PDF generated successfully!', isPositive: true, context: context);
                             },
                           ),
                         ),

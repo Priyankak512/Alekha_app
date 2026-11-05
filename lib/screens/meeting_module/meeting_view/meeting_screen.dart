@@ -1,3 +1,4 @@
+import 'package:alekha/constant/toast_msg.dart';
 import 'package:alekha/constant/colors.dart';
 import 'package:alekha/constant/date_formates.dart';
 import 'package:alekha/constant/global_list.dart';
@@ -13,6 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:alekha/screens/meeting_module/meeting_provider/meeting_history_provider.dart';
 
 class MeetingScreen extends StatefulWidget {
   const MeetingScreen({super.key});
@@ -70,9 +72,7 @@ ${_selectedRegardsType ?? "-"}
     if (await canLaunchUrl(whatsappUrl)) {
       await launchUrl(whatsappUrl);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("WhatsApp not installed")),
-      );
+      showToast(message: "WhatsApp not installed", isPositive: false, context: context);
     }
   }
 
@@ -386,6 +386,20 @@ ${_selectedRegardsType ?? "-"}
                           title: "Share",
                           suffixIcon: PickImages.whatsAppIcon,
                         onPressed: () async {
+                            final clientNameVal = isAgencySelected
+                                ? (agencyNameController.text.isNotEmpty ? agencyNameController.text : "Agency")
+                                : (siteNameController.text.isNotEmpty ? siteNameController.text : "Client");
+
+                            await Provider.of<MeetingHistoryProvider>(context, listen: false).recordMeetingAction(
+                              clientOrAgency: isAgencySelected ? "Agency" : "Client",
+                              agencyName: agencyNameController.text,
+                              clientName: clientNameVal,
+                              projectNo: projectNumberController.text,
+                              meetingDate: dateMeetingController.text,
+                              meetingTime: "${timeMeetingController.text} ${_selectedTimeStatus ?? ''}".trim(),
+                              actionType: 'shared',
+                            );
+
                             await helper.shareViaWhatsApp(context);
                           },
                         ),
@@ -400,7 +414,21 @@ ${_selectedRegardsType ?? "-"}
                           suffixIcon: PickImages.persionMailIcon,
                           style: CommonTextStyle().buttonTextStyle,
                           color: PickColors.transparentColor,
-                          onPressed: () {
+                          onPressed: () async {
+                            final clientNameVal = isAgencySelected
+                                ? (agencyNameController.text.isNotEmpty ? agencyNameController.text : "Agency")
+                                : (siteNameController.text.isNotEmpty ? siteNameController.text : "Client");
+
+                            await Provider.of<MeetingHistoryProvider>(context, listen: false).recordMeetingAction(
+                              clientOrAgency: isAgencySelected ? "Agency" : "Client",
+                              agencyName: agencyNameController.text,
+                              clientName: clientNameVal,
+                              projectNo: projectNumberController.text,
+                              meetingDate: dateMeetingController.text,
+                              meetingTime: "${timeMeetingController.text} ${_selectedTimeStatus ?? ''}".trim(),
+                              actionType: 'copied',
+                            );
+
                             Clipboard.setData(
                               ClipboardData(text: getMeetingMessage()),
                             );
@@ -411,11 +439,7 @@ ${_selectedRegardsType ?? "-"}
                             //     text: message)); // Copy to clipboard
 
                             // Show a snackbar to confirm the text has been copied
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Message copied to clipboard!"),
-                              ),
-                            );
+                            showToast(message: "Message copied to clipboard!", isPositive: true, context: context);
                           },
                         ),
                       )

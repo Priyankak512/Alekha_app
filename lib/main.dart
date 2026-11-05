@@ -35,15 +35,38 @@ import 'package:alekha/constant/share_pref_keys.dart';
 import 'package:alekha/constant/share_preference.dart';
 import 'package:alekha/constant/size_config.dart';
 import 'package:alekha/services/general_helper.dart';
+import 'package:alekha/screens/fees_module/fees_provider/fees_reminder_provider.dart';
+import 'package:alekha/screens/fees_module/fees_provider/fees_received_provider.dart';
+import 'package:alekha/screens/invoice_generator/invoice_provider/invoice_history_provider.dart';
+import 'package:alekha/screens/create_pdf/site_visit_provider/site_visit_history_provider.dart';
+import 'package:alekha/screens/meeting_module/meeting_provider/meeting_history_provider.dart';
+import 'package:alekha/screens/selection_module/selection_provider/selection_history_provider.dart';
+import 'package:alekha/screens/offer_latter_module/offer_latter_provider/offer_letter_history_provider.dart';
+import 'package:alekha/screens/forms_module/form_provider/discussion_history_provider.dart';
 import 'package:alekha/screens/splash_screen.dart';
+import 'package:alekha/constant/supabase_config.dart';
+import 'package:supabase_flutter/supabase_flutter.dart';
+import 'package:bot_toast/bot_toast.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await Supabase.initialize(
+    url: SupabaseConfig.supabaseUrl,
+    anonKey: SupabaseConfig.supabaseAnonKey,
+  );
   runApp(MultiProvider(
     providers: [
       ChangeNotifierProvider(create: (_) => GeneralHelper()),
+      ChangeNotifierProvider(create: (_) => FeesReminderProvider()),
+      ChangeNotifierProvider(create: (_) => FeesReceivedProvider()),
+      ChangeNotifierProvider(create: (_) => InvoiceHistoryProvider()),
+      ChangeNotifierProvider(create: (_) => SiteVisitHistoryProvider()),
+      ChangeNotifierProvider(create: (_) => MeetingHistoryProvider()),
+      ChangeNotifierProvider(create: (_) => SelectionHistoryProvider()),
+      ChangeNotifierProvider(create: (_) => OfferLetterHistoryProvider()),
+      ChangeNotifierProvider(create: (_) => DiscussionHistoryProvider()),
     ],
     child: const MyApp(),
   ));
@@ -67,43 +90,8 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
     final helper = Provider.of<GeneralHelper>(context, listen: false);
     setThemeFunctionality(helper);
     setSwipeFunctionality(helper);
-
-    // Notification Setup
-    // await NotificationService.initPushNotification();
-
-    // Get Device Information
-    // await CurrentDeviceInformation.getDeviceInformation();
-
-    // await helper.loadTextScaleFactor();
   }
 
-  // setThemeFunctionality(GeneralHelper helper) async {
-  //   bool? themeDark =
-  //       await Shared_Preferences.prefGetBool(SharedP.selectedTheme, false);
-
-  //   await Shared_Preferences.prefGetString(SharedP.keyAuthInformation, "")
-  //       .then((value) async {
-  //     if (value == "") {
-  //       themeDark = false;
-  //     }
-  //   });
-
-  //   await helper.updateTheme(isDarkTheme: themeDark ?? false);
-  // }
-
-  // setSwipeFunctionality(GeneralHelper helper) async {
-  //   bool? normalStyle =
-  //       await Shared_Preferences.prefGetBool(SharedP.selectedSwipeStyle, false);
-
-  //   await Shared_Preferences.prefGetString(SharedP.keyAuthInformation, "")
-  //       .then((value) async {
-  //     if (value == "") {
-  //       normalStyle = false;
-  //     }
-  //   });
-
-  //   await helper.updateSwipeStyle(isNormalStyle: normalStyle ?? false);
-  // }
   setThemeFunctionality(GeneralHelper helper) async {
     bool? themeDark = await Shared_Preferences.prefGetBool(
         SharedP.selectedTheme, false); // Correct key usage
@@ -128,25 +116,17 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         normalStyle = false;
       }
     });
-
-    // await helper.updateSwipeStyle(isNormalStyle: normalStyle ?? false);
   }
 
   @override
   Widget build(BuildContext context) {
     SizeConfig().init(context);
     ContextProvider.setContext(context);
-    // return MaterialApp.router(
-    //   title: "Digital Bharat News",
-    //   theme: ThemeData(fontFamily: 'Gilroy'),
-    //   debugShowCheckedModeBanner: false,
-    //   builder: BotToastInit(),
-    //   routerDelegate: appRouter.delegate(),
-    //   routeInformationParser: appRouter.defaultRouteParser(),
-    // );
     return MaterialApp(
       title: 'Flutter Demo',
       debugShowCheckedModeBanner: false,
+      builder: BotToastInit(),
+      navigatorObservers: [BotToastNavigatorObserver()],
       theme: ThemeData(
         fontFamily: 'GOTHICB',
         colorScheme: ColorScheme.fromSeed(seedColor: PickColors.primaryColor),
@@ -165,8 +145,6 @@ class _MyAppState extends State<MyApp> with WidgetsBindingObserver {
         color: Colors.grey.withOpacity(0.5),
         child: Center(
           child: Container(
-            // height: 50,
-            // width: 50,
             color: Colors.red,
             padding: const EdgeInsets.all(8.0),
             child: const Text(

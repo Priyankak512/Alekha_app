@@ -1,3 +1,4 @@
+import 'package:alekha/constant/toast_msg.dart';
 import 'package:alekha/constant/colors.dart';
 import 'package:alekha/constant/global_list.dart';
 import 'package:alekha/constant/navigation_route.dart';
@@ -84,18 +85,12 @@ class _SocialScreenState extends State<SocialScreen> {
                                 mode: LaunchMode.externalApplication)) {
                               if (!await launchUrl(uri,
                                   mode: LaunchMode.inAppBrowserView)) {
-                                ScaffoldMessenger.of(context).showSnackBar(
-                                  const SnackBar(
-                                      content: Text('Could not open the link')),
-                                );
+                                showToast(message: 'Could not open the link', isPositive: false, context: context);
                               }
                             }
                           } catch (e) {
                             debugPrint('Error launching URL: $e');
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                  content: Text('Something went wrong!')),
-                            );
+                            showToast(message: 'Something went wrong!', isPositive: false, context: context);
                           }
                         }
                       },
@@ -125,17 +120,10 @@ class _SocialScreenState extends State<SocialScreen> {
                             "Hey, checkout our ${GlobalList.socialList[index]["title"].toString()} profile by clicking on this link:\n${GlobalList.socialList[index]["link"]}";
                         Clipboard.setData(ClipboardData(text: copiedText));
 
-                        ScaffoldMessenger.of(context).showSnackBar(
-                          const SnackBar(
-                            content: Text(
-                              'Link copied to clipboard!',
-                              style: TextStyle(
-                                  color: Colors.black), // <-- DARK TEXT
-                            ),
-                            backgroundColor:
-                                Colors.white, // <-- LIGHT BACKGROUND
-                            behavior: SnackBarBehavior.floating,
-                          ),
+                        showToast(
+                          message: 'Link copied to clipboard!',
+                          isPositive: true,
+                          context: context,
                         );
                       },
                       child: Container(

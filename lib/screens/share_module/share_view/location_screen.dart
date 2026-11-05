@@ -1,3 +1,4 @@
+import 'package:alekha/constant/toast_msg.dart';
 // // import 'package:alekha/constant/colors.dart';
 // // import 'package:alekha/constant/global_list.dart';
 // // import 'package:alekha/constant/hight_width_picker.dart';
@@ -536,11 +537,7 @@ class _LocationScreenState extends State<LocationScreen> {
                             String message =
                                 "Hi,\n${nameController.text}\n\nâlekha architects,\n\nShop no. 28-29, Hiranagar, nr. old vijay cinema, Bamroli road, Pandesara, Surat\n\nFor exact location please click on the link below:\nhttps://maps.app.goo.gl/yyvjEDHmwLHJmLor8\n\n\nRegards\n${_selectedRegardsType.toString()}\nâlekha architects";
                             Clipboard.setData(ClipboardData(text: message));
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Message copied to clipboard!"),
-                              ),
-                            );
+                            showToast(message: "Message copied to clipboard!", isPositive: true, context: context);
                           },
                         ),
                       )

@@ -1,3 +1,4 @@
+import 'package:alekha/constant/toast_msg.dart';
 import 'package:alekha/constant/colors.dart';
 import 'package:alekha/constant/images_route.dart';
 import 'package:alekha/constant/navigation_route.dart';
@@ -95,11 +96,7 @@ class _NotesScreenState extends State<NotesScreen> {
                             Clipboard.setData(
                                 ClipboardData(text: message)); // 👈 Copy to clipboard
           
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Message copied to clipboard!"),
-                              ),
-                            );
+                            showToast(message: "Message copied to clipboard!", isPositive: true, context: context);
                           },
                         ),
                       )

@@ -1,3 +1,4 @@
+import 'package:alekha/constant/toast_msg.dart';
 import 'package:alekha/constant/colors.dart';
 import 'package:alekha/constant/date_formates.dart';
 import 'package:alekha/constant/hight_width_picker.dart';
@@ -11,6 +12,7 @@ import 'package:alekha/widget/get_date_function.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:alekha/screens/offer_latter_module/offer_latter_provider/offer_letter_history_provider.dart';
 
 class BasicOfferLatter extends StatefulWidget {
   const BasicOfferLatter({super.key});
@@ -315,6 +317,13 @@ ${clientRequirementsController.text.isNotEmpty ? clientRequirementsController.te
                           title: "Share",
                           suffixIcon: PickImages.whatsAppIcon,
                           onPressed: () async {
+                            await Provider.of<OfferLetterHistoryProvider>(context, listen: false).recordOfferLetterAction(
+                              offerType: 'Basic',
+                              clientName: clientNameController.text,
+                              contactNo: contactNoController.text,
+                              location: locationController.text,
+                              actionType: 'shared',
+                            );
                             await helper.shareViaWhatsApp(context);
                           },
                         ),
@@ -329,7 +338,14 @@ ${clientRequirementsController.text.isNotEmpty ? clientRequirementsController.te
                           suffixIcon: PickImages.persionMailIcon,
                           style: CommonTextStyle().buttonTextStyle,
                           color: PickColors.transparentColor,
-                          onPressed: () {
+                          onPressed: () async {
+                            await Provider.of<OfferLetterHistoryProvider>(context, listen: false).recordOfferLetterAction(
+                              offerType: 'Basic',
+                              clientName: clientNameController.text,
+                              contactNo: contactNoController.text,
+                              location: locationController.text,
+                              actionType: 'copied',
+                            );
                             Clipboard.setData(
                               ClipboardData(text: getOfferMessage()),
                             );
@@ -338,11 +354,7 @@ ${clientRequirementsController.text.isNotEmpty ? clientRequirementsController.te
                                 text: message)); // Copy to clipboard
 
                             // Show a snackbar to confirm the text has been copied
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Message copied to clipboard!"),
-                              ),
-                            );
+                            showToast(message: "Message copied to clipboard!", isPositive: true, context: context);
                           },
                         ),
                       )

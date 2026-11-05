@@ -1,3 +1,4 @@
+import 'package:alekha/constant/toast_msg.dart';
 // // ignore_for_file: deprecated_member_use
 
 // import 'dart:math';
@@ -240,9 +241,7 @@ class _PythagorasScreenState extends State<PythagorasScreen> {
       setState(() {
         cValue = null;
       });
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("Please enter valid numbers for a and b")),
-      );
+      showToast(message: "Please enter valid numbers for a and b", isPositive: false, context: context);
     }
   }
 

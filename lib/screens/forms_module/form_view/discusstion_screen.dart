@@ -1,3 +1,4 @@
+import 'package:alekha/constant/toast_msg.dart';
 import 'package:alekha/constant/colors.dart';
 import 'package:alekha/constant/date_formates.dart';
 import 'package:alekha/constant/global_list.dart';
@@ -12,6 +13,7 @@ import 'package:alekha/widget/get_date_function.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:alekha/screens/forms_module/form_provider/discussion_history_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class DiscussionScreen extends StatefulWidget {
@@ -61,9 +63,7 @@ ${_selectedRegardsType ?? "-"}
     if (await canLaunchUrl(whatsappUrl)) {
       await launchUrl(whatsappUrl);
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text("WhatsApp not installed")),
-      );
+      showToast(message: "WhatsApp not installed", isPositive: false, context: context);
     }
   }
 
@@ -293,6 +293,14 @@ ${_selectedRegardsType ?? "-"}
                           title: "Share",
                           suffixIcon: PickImages.whatsAppIcon,
                            onPressed: () async {
+                            await Provider.of<DiscussionHistoryProvider>(context, listen: false).recordDiscussionAction(
+                              clientName: nameController.text,
+                              projectNo: projectNumberController.text,
+                              discussionDate: dateController.text,
+                              discussionTime: timeController.text,
+                              discussionFrom: _selectedFromType ?? "",
+                              actionType: 'shared',
+                            );
                             await helper.shareViaWhatsApp(context);
                           },
                         ),
@@ -307,7 +315,15 @@ ${_selectedRegardsType ?? "-"}
                           suffixIcon: PickImages.persionMailIcon,
                           style: CommonTextStyle().buttonTextStyle,
                           color: PickColors.transparentColor,
-                          onPressed: () {
+                          onPressed: () async {
+                            await Provider.of<DiscussionHistoryProvider>(context, listen: false).recordDiscussionAction(
+                              clientName: nameController.text,
+                              projectNo: projectNumberController.text,
+                              discussionDate: dateController.text,
+                              discussionTime: timeController.text,
+                              discussionFrom: _selectedFromType ?? "",
+                              actionType: 'copied',
+                            );
                             Clipboard.setData(
                               ClipboardData(text: getDiscussionMessage()),
                             );
@@ -318,11 +334,7 @@ ${_selectedRegardsType ?? "-"}
                             //     text: message)); // Copy to clipboard
 
                             // Show a snackbar to confirm the text has been copied
-                            ScaffoldMessenger.of(context).showSnackBar(
-                              const SnackBar(
-                                content: Text("Message copied to clipboard!"),
-                              ),
-                            );
+                            showToast(message: "Message copied to clipboard!", isPositive: true, context: context);
                           },
                         ),
                       )

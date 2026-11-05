@@ -1,3 +1,4 @@
+import 'package:alekha/constant/toast_msg.dart';
 import 'package:alekha/constant/colors.dart';
 import 'package:alekha/constant/date_formates.dart';
 import 'package:alekha/constant/global_list.dart';
@@ -1063,11 +1064,7 @@ class _ArtOShophyInvoiceScreenState extends State<ArtOShophyInvoiceScreen> {
 
                               // Show snackbar after successful PDF generation
                               // ignore: use_build_context_synchronously
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('PDF generated successfully!'),
-                                ),
-                              );
+                              showToast(message: 'PDF generated successfully!', isPositive: true, context: context);
                             },
                           ),
                         ),

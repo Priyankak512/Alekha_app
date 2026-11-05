@@ -1,16 +1,16 @@
+import 'package:alekha/constant/toast_msg.dart';
 import 'package:alekha/constant/colors.dart';
-import 'package:alekha/constant/global_list.dart';
 import 'package:alekha/constant/hight_width_picker.dart';
 import 'package:alekha/constant/images_route.dart';
 import 'package:alekha/constant/navigation_route.dart';
 import 'package:alekha/constant/text_style.dart';
 import 'package:alekha/services/general_helper.dart';
-import 'package:alekha/widget/common_dropdown.dart';
 import 'package:alekha/widget/common_material_button.dart';
 import 'package:alekha/widget/common_text_field.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
+import 'package:share_plus/share_plus.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class MailScreen extends StatefulWidget {
@@ -32,6 +32,73 @@ class _LocationScreenState extends State<MailScreen> {
       await launchUrl(_mapUrl, mode: LaunchMode.externalApplication);
     } else {
       throw 'Could not launch $_mapUrl';
+    }
+  }
+
+  Future<void> _shareViaMail() async {
+    String message = buildClipboardMessage(
+      nameController.text,
+      _selectedRegardsType.toString(),
+    );
+
+    // Pehle hi clipboard par copy kar dete hain taki user direct paste bhi kar sake
+    await Clipboard.setData(ClipboardData(text: message));
+
+    final String subject = Uri.encodeComponent('Regarding Product/Service Catalogue');
+    final String body = Uri.encodeComponent(message);
+
+    // "To" ko empty rakha hai taki alekhaarchitects@gmail.com "To" me na aaye.
+    // User apne Gmail app me "From" account alekhaarchitects@gmail.com select karke jisko bhejna hai use send kar sake.
+    final Uri emailLaunchUri = Uri.parse('mailto:?subject=$subject&body=$body');
+    final Uri simpleMailtoUri = Uri.parse('mailto:');
+
+    try {
+      // 1. Try launching the mail compose directly
+      bool launched = false;
+      try {
+        launched = await launchUrl(
+          emailLaunchUri,
+          mode: LaunchMode.externalApplication,
+        );
+      } catch (err) {
+        debugPrint("Direct launch failed: $err");
+      }
+
+      // 2. If direct launch failed, try simple mailto
+      if (!launched) {
+        try {
+          launched = await launchUrl(
+            simpleMailtoUri,
+            mode: LaunchMode.externalApplication,
+          );
+        } catch (err) {
+          debugPrint("Simple mailto failed: $err");
+        }
+      }
+
+      // 3. Fallback: Share dialog via Share.share
+      if (!launched) {
+        await Share.share(
+          message,
+          subject: 'Regarding Product/Service Catalogue',
+        );
+      } else {
+        if (mounted) {
+          showToast(
+            message: "Opening mail... Message copied to clipboard!",
+            isPositive: true,
+            context: context,
+          );
+        }
+      }
+    } catch (e) {
+      debugPrint("Error in _shareViaMail: $e");
+      try {
+        await Share.share(
+          message,
+          subject: 'Regarding Product/Service Catalogue',
+        );
+      } catch (_) {}
     }
   }
 
@@ -138,7 +205,7 @@ https://www.instagram.com/alekha_architects
             ),
             automaticallyImplyLeading: false,
             title: Text(
-              'Message',
+              'Mail',
               style: CommonTextStyle().appBarTextStyle,
             ),
           ),
@@ -186,11 +253,11 @@ https://www.instagram.com/alekha_architects
                   children: [
                     Expanded(
                       child: CommonMaterialButton(
-                        color: PickColors.successColor,
+                        color: PickColors.primaryColor,
                         title: "Share",
-                        prefixIcon: PickImages.whatsAppIcon,
+                        prefixIcon: PickImages.persionMailIcon,
                         onPressed: () async {
-                          await helper.shareViaWhatsApp(context);
+                          await _shareViaMail();
                         },
                       ),
                     ),
@@ -210,10 +277,7 @@ https://www.instagram.com/alekha_architects
 
                           Clipboard.setData(ClipboardData(text: message));
 
-                          ScaffoldMessenger.of(context).showSnackBar(
-                            const SnackBar(
-                                content: Text("Message copied to clipboard!")),
-                          );
+                          showToast(message: "Message copied to clipboard!", isPositive: true, context: context);
                         },
                       ),
                     )

@@ -1,3 +1,4 @@
+import 'package:alekha/constant/toast_msg.dart';
 // ignore_for_file: prefer_const_constructors
 
 import 'dart:io';
@@ -25,6 +26,7 @@ import 'package:flutter_native_contact_picker/model/contact.dart' as ncp;
 import 'package:pdf/pdf.dart';
 import 'package:printing/printing.dart';
 import 'package:provider/provider.dart';
+import 'package:alekha/screens/offer_latter_module/offer_latter_provider/offer_letter_history_provider.dart';
 import 'package:pdf/widgets.dart' as pw;
 
 class InteriorOfferLetterScreen extends StatefulWidget {
@@ -1178,6 +1180,16 @@ This quote is applicable only for ${monthController.text} month from the commenc
           'OFFER LETTER INTERIOR ${clientNameController.text.toUpperCase()} ${dateController.text.replaceAll('_', '/')} ',
       onLayout: (PdfPageFormat format) async => pdf.save(),
     );
+
+    if (mounted) {
+      await Provider.of<OfferLetterHistoryProvider>(context, listen: false).recordOfferLetterAction(
+        offerType: 'Interior',
+        clientName: clientNameController.text,
+        contactNo: contactNoController.text,
+        location: locationController.text,
+        actionType: 'exported_pdf',
+      );
+    }
   }
 
   /// Helper widget for image box with border + radius
@@ -1823,13 +1835,7 @@ This quote is applicable only for ${monthController.text} month from the commenc
                                 // If trying to check more than 15, block it
                                 if (val == true && selectedCount >= 12) {
                                   // Optional: show message
-                                  ScaffoldMessenger.of(context).showSnackBar(
-                                    const SnackBar(
-                                      content: Text(
-                                          'You can select a maximum of 12 items.'),
-                                      duration: Duration(seconds: 2),
-                                    ),
-                                  );
+                                  showToast(message: 'You can select a maximum of 12 items.', isPositive: true, context: context);
                                   return; // Don't proceed
                                 }
 

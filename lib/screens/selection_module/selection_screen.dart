@@ -1,3 +1,4 @@
+import 'package:alekha/constant/toast_msg.dart';
 import 'dart:io';
 import 'package:alekha/constant/colors.dart';
 import 'package:alekha/constant/date_formates.dart';
@@ -22,6 +23,7 @@ import 'package:pdf/pdf.dart';
 import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:provider/provider.dart';
+import 'package:alekha/screens/selection_module/selection_provider/selection_history_provider.dart';
 
 class SelectionScreen extends StatefulWidget {
   const SelectionScreen({super.key});
@@ -500,6 +502,16 @@ class _SelectionScreenState extends State<SelectionScreen> {
       name: pdfName,
       onLayout: (PdfPageFormat format) async => pdf.save(),
     );
+
+    if (mounted) {
+      await Provider.of<SelectionHistoryProvider>(context, listen: false).recordSelectionExport(
+        clientName: clientNameController.text,
+        projectNo: projectNumberController.text,
+        selectionDate: dateMeetingController.text,
+        selectionTime: selectionTimeController.text,
+        actionType: 'exported_pdf',
+      );
+    }
   }
 
   Future<void> _getImage() async {
@@ -546,9 +558,7 @@ class _SelectionScreenState extends State<SelectionScreen> {
   }
 
   void _showError(String msg) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text(msg)),
-    );
+    showToast(message: msg, isPositive: true, context: context);
   }
 
   @override

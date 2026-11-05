@@ -1,3 +1,4 @@
+import 'package:alekha/constant/toast_msg.dart';
 import 'package:alekha/constant/colors.dart';
 import 'package:alekha/constant/share_pref_keys.dart';
 import 'package:alekha/constant/share_preference.dart';
@@ -45,11 +46,7 @@ class GeneralHelper with ChangeNotifier {
 
     if (!launched) {
       // if (mounted) {
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(
-            content: Text('WhatsApp is not installed'),
-          ),
-        );
+        showToast(message: 'WhatsApp is not installed', isPositive: false, context: context);
       // }
     }
   }

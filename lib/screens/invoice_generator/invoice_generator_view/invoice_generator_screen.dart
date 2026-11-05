@@ -1,3 +1,4 @@
+import 'package:alekha/constant/toast_msg.dart';
 import 'package:alekha/constant/colors.dart';
 import 'package:alekha/constant/date_formates.dart';
 import 'package:alekha/constant/global_list.dart';
@@ -20,6 +21,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:alekha/widget/pdf_bullet_text.dart';
 import 'package:printing/printing.dart';
 import 'package:provider/provider.dart';
+import 'package:alekha/screens/invoice_generator/invoice_provider/invoice_history_provider.dart';
 import 'package:number_to_words/number_to_words.dart';
 
 class InvoiceGeneratorScreen extends StatefulWidget {
@@ -499,6 +501,18 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
           '${projectNoController.text} INVOICE ${dateController.text.replaceAll('_', '/')} ${clientNameController.text.toUpperCase()}',
       onLayout: (PdfPageFormat format) async => pdf.save(),
     );
+
+    if (mounted) {
+      await Provider.of<InvoiceHistoryProvider>(context, listen: false).recordInvoiceExport(
+        clientName: clientNameController.text,
+        invoiceNo: invoiceNoController.text,
+        projectNo: projectNoController.text,
+        contactNo: contactNoController.text,
+        paymentStatus: _selectedOption == 'Fees Paid' ? 'Fees Paid' : 'Fees Unpaid',
+        totalAmount: totalPrice.toStringAsFixed(2),
+        invoiceType: "Invoice",
+      );
+    }
   }
 
   double totalPrice = 0.0;
@@ -642,6 +656,7 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
                     ),
                     if (isExistingProject)
                       CommonTextFieldWithFocus(
+                        key: const ValueKey('invoice_project_no_field'),
                         controller: projectNoController,
                         labelText: "Project No.",
                         hintText: "Project No.",
@@ -682,6 +697,7 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
                         height: 20,
                       ),
                     CommonTextFieldWithFocus(
+                      key: const ValueKey('invoice_no_field'),
                       controller: invoiceNoController,
                       labelText: "Invoice No.",
                       hintText: "Invoice No.",
@@ -690,6 +706,7 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
                       height: 20,
                     ),
                     CommonTextFieldWithFocus(
+                      key: const ValueKey('invoice_ref_no_field'),
                       controller: invoiceReferenceNoController,
                       labelText: "Invoice Reference No.",
                       hintText: "Invoice Reference No.",
@@ -1017,13 +1034,10 @@ class _InvoiceGeneratorScreenState extends State<InvoiceGeneratorScreen> {
                             onPressed: () async {
                               await _createPdf();
 
+
                               // Show snackbar after successful PDF generation
                               // ignore: use_build_context_synchronously
-                              ScaffoldMessenger.of(context).showSnackBar(
-                                const SnackBar(
-                                  content: Text('PDF generated successfully!'),
-                                ),
-                              );
+                              showToast(message: 'PDF generated successfully!', isPositive: true, context: context);
                             },
                           ),
                         ),

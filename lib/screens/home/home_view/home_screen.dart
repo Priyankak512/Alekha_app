@@ -1,3 +1,4 @@
+import 'package:alekha/constant/toast_msg.dart';
 import 'package:alekha/constant/global_list.dart';
 import 'package:alekha/constant/size_config.dart';
 import 'package:alekha/drawer_screen.dart';
@@ -105,16 +106,12 @@ class _HomeScreenState extends State<HomeScreen> {
     try {
       if (!await launchUrl(uri, mode: LaunchMode.externalApplication)) {
         if (!await launchUrl(uri, mode: LaunchMode.inAppBrowserView)) {
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Could not open the link')),
-          );
+          showToast(message: 'Could not open the link', isPositive: false, context: context);
         }
       }
     } catch (e) {
       debugPrint('Error launching URL: $e');
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Something went wrong!')),
-      );
+      showToast(message: 'Something went wrong!', isPositive: false, context: context);
     }
   }
 }

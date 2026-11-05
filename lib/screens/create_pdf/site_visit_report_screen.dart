@@ -24,6 +24,7 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:printing/printing.dart';
 import 'package:provider/provider.dart';
 import 'package:url_launcher/url_launcher.dart';
+import 'package:alekha/screens/create_pdf/site_visit_provider/site_visit_history_provider.dart';
 
 class SiteVisitReportScreen extends StatefulWidget {
   const SiteVisitReportScreen({Key? key}) : super(key: key);
@@ -481,6 +482,14 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
         name:
             '${projectNumberController.text} SITE VISIT ${dateController.text.replaceAll('_', '/')} ${clientNameController.text.toUpperCase()}',
         onLayout: (PdfPageFormat format) async => pdf.save());
+
+    if (mounted) {
+      await Provider.of<SiteVisitHistoryProvider>(context, listen: false).recordSiteVisitExport(
+        clientName: clientNameController.text,
+        projectNo: projectNumberController.text,
+        actionType: 'exported_pdf',
+      );
+    }
   }
 
   /// Helper widget for image box with border + radius
@@ -559,10 +568,7 @@ class _CreatePdfFromDataState extends State<SiteVisitReportScreen> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  FormBuilderEditableDateFieldStyled(
-                    fieldKey: '',
-                    labelText: '',
-                  ),
+                
                   CommonTextFieldWithFocus(
                     controller: clientNameController,
                     labelText: "Client Name",
