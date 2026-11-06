@@ -140,16 +140,26 @@ class _NotificationHistoryScreenState extends State<NotificationHistoryScreen> {
     final reminderProvider = Provider.of<FeesReminderProvider>(context, listen: false);
     final receivedProvider = Provider.of<FeesReceivedProvider>(context, listen: false);
     final invoiceProvider = Provider.of<InvoiceHistoryProvider>(context, listen: false);
+    final siteVisitProvider = Provider.of<SiteVisitHistoryProvider>(context, listen: false);
+    final meetingProvider = Provider.of<MeetingHistoryProvider>(context, listen: false);
+    final selectionProvider = Provider.of<SelectionHistoryProvider>(context, listen: false);
+    final offerProvider = Provider.of<OfferLetterHistoryProvider>(context, listen: false);
+    final discussionProvider = Provider.of<DiscussionHistoryProvider>(context, listen: false);
 
-    debugPrint("🔄 [NotificationScreen] Refreshing notification data from Supabase...");
+    debugPrint("🔄 [NotificationScreen] Refreshing all notification data from Supabase for all users...");
 
     await Future.wait([
       reminderProvider.loadHistory(fromSupabase: true),
       receivedProvider.loadHistory(fromSupabase: true),
       invoiceProvider.loadHistory(fromSupabase: true),
+      siteVisitProvider.loadHistory(fromSupabase: true),
+      meetingProvider.loadHistory(fromSupabase: true),
+      selectionProvider.loadHistory(fromSupabase: true),
+      offerProvider.loadHistory(fromSupabase: true),
+      discussionProvider.loadHistory(fromSupabase: true),
     ]);
 
-    debugPrint("✅ [NotificationScreen] Refresh complete. Reminder items: ${reminderProvider.historyList.length}, Received items: ${receivedProvider.historyList.length}, Invoices: ${invoiceProvider.historyList.length}");
+    debugPrint("✅ [NotificationScreen] Refresh complete.");
 
     if (mounted) {
       setState(() {

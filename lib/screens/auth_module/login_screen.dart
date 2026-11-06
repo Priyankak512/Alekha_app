@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:alekha/constant/colors.dart';
 import 'package:alekha/constant/hight_width_picker.dart';
 import 'package:alekha/constant/images_route.dart';
@@ -10,6 +11,7 @@ import 'package:alekha/services/auth_service.dart';
 import 'package:alekha/widget/common_material_button.dart';
 import 'package:alekha/widget/common_text_field.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class LoginScreen extends StatefulWidget {
   const LoginScreen({super.key});
@@ -22,31 +24,45 @@ class _LoginScreenState extends State<LoginScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final TextEditingController _nameController = TextEditingController();
   final TextEditingController _emailController = TextEditingController();
-  final TextEditingController _passwordController = TextEditingController();
 
-  bool _isPasswordObscure = true;
+  // 6 separate controllers & focus nodes for OTP boxes
+  final List<TextEditingController> _otpControllers =
+      List.generate(6, (_) => TextEditingController());
+  final List<FocusNode> _otpFocusNodes =
+      List.generate(6, (_) => FocusNode());
+
   bool _isLoading = false;
-  bool _isSignUpMode = false;
+  bool _isOtpSent = false;
+  int _resendCountdown = 0;
+  Timer? _timer;
 
   @override
   void dispose() {
+    _timer?.cancel();
     _nameController.dispose();
     _emailController.dispose();
-    _passwordController.dispose();
+    for (var controller in _otpControllers) {
+      controller.dispose();
+    }
+    for (var node in _otpFocusNodes) {
+      node.dispose();
+    }
     super.dispose();
   }
 
-  void _clearInputFields() {
-    _nameController.clear();
-    _emailController.clear();
-    _passwordController.clear();
-    _formKey.currentState?.reset();
-  }
-
-  void _toggleAuthMode() {
+  void _startResendTimer() {
     setState(() {
-      _isSignUpMode = !_isSignUpMode;
-      _clearInputFields();
+      _resendCountdown = 60;
+    });
+    _timer?.cancel();
+    _timer = Timer.periodic(const Duration(seconds: 1), (timer) {
+      if (_resendCountdown > 0) {
+        setState(() {
+          _resendCountdown--;
+        });
+      } else {
+        timer.cancel();
+      }
     });
   }
 
@@ -58,7 +74,21 @@ class _LoginScreenState extends State<LoginScreen> {
     );
   }
 
-  Future<void> _handleAuthAction() async {
+  String _getEnteredOtp() {
+    return _otpControllers.map((c) => c.text.trim()).join();
+  }
+
+  void _clearOtpBoxes() {
+    for (var c in _otpControllers) {
+      c.clear();
+    }
+    if (_otpFocusNodes.isNotEmpty) {
+      _otpFocusNodes[0].requestFocus();
+    }
+  }
+
+  // Step 1: Send OTP to Email
+  Future<void> _handleSendOtp() async {
     FocusScope.of(context).unfocus();
 
     if (_formKey.currentState?.validate() ?? false) {
@@ -66,16 +96,13 @@ class _LoginScreenState extends State<LoginScreen> {
         _isLoading = true;
       });
 
-      final name = _nameController.text.trim();
       final email = _emailController.text.trim();
-      final password = _passwordController.text.trim();
+      final name = _nameController.text.trim();
 
-      AuthResult result;
-      if (_isSignUpMode) {
-        result = await AuthService.signUp(name: name, email: email, password: password);
-      } else {
-        result = await AuthService.signIn(email: email, password: password);
-      }
+      final result = await AuthService.sendEmailOtp(
+        email: email,
+        name: name.isNotEmpty ? name : null,
+      );
 
       if (!mounted) return;
 
@@ -89,21 +116,118 @@ class _LoginScreenState extends State<LoginScreen> {
       );
 
       if (result.isSuccess) {
-        if (!_isSignUpMode || result.user?.identities?.isNotEmpty == true) {
-          if (result.message.contains("logged in") || result.message.contains("successful")) {
-            changeScreenWithClearStack(
-              context: context,
-              widget: const HomeScreen(),
-            );
-          } else {
-            setState(() {
-              _isSignUpMode = false;
-              _clearInputFields();
-            });
-          }
-        }
+        setState(() {
+          _isOtpSent = true;
+        });
+        _clearOtpBoxes();
+        _startResendTimer();
       }
     }
+  }
+
+  // Step 2: Verify OTP
+  Future<void> _handleVerifyOtp() async {
+    FocusScope.of(context).unfocus();
+
+    final otp = _getEnteredOtp();
+    if (otp.length < 6) {
+      _showAppToast(message: "Please enter the complete 6-digit OTP", isSuccess: false);
+      return;
+    }
+
+    setState(() {
+      _isLoading = true;
+    });
+
+    final email = _emailController.text.trim();
+    final name = _nameController.text.trim();
+
+    final result = await AuthService.verifyEmailOtp(
+      email: email,
+      token: otp,
+      name: name.isNotEmpty ? name : null,
+    );
+
+    if (!mounted) return;
+
+    setState(() {
+      _isLoading = false;
+    });
+
+    _showAppToast(
+      message: result.message,
+      isSuccess: result.isSuccess,
+    );
+
+    if (result.isSuccess) {
+      changeScreenWithClearStack(
+        context: context,
+        widget: const HomeScreen(),
+      );
+    }
+  }
+
+  // Individual OTP Box Widget
+  Widget _buildOtpBox(int index) {
+    return SizedBox(
+      width: 46,
+      height: 52,
+      child: TextFormField(
+        controller: _otpControllers[index],
+        focusNode: _otpFocusNodes[index],
+        keyboardType: TextInputType.number,
+        textAlign: TextAlign.center,
+        style: const TextStyle(
+          fontSize: 20,
+          fontWeight: FontWeight.bold,
+          color: Colors.black87,
+        ),
+        inputFormatters: [
+          LengthLimitingTextInputFormatter(1),
+          FilteringTextInputFormatter.digitsOnly,
+        ],
+        decoration: InputDecoration(
+          counterText: "",
+          contentPadding: EdgeInsets.zero,
+          filled: true,
+          fillColor: _otpFocusNodes[index].hasFocus
+              ? PickColors.secondaryBGColor
+              : Colors.grey.shade50,
+          border: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: PickColors.textfieldBorderColor),
+          ),
+          enabledBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(
+              color: _otpControllers[index].text.isNotEmpty
+                  ? PickColors.primaryColor
+                  : PickColors.textfieldBorderColor,
+              width: _otpControllers[index].text.isNotEmpty ? 1.5 : 1.0,
+            ),
+          ),
+          focusedBorder: OutlineInputBorder(
+            borderRadius: BorderRadius.circular(10),
+            borderSide: BorderSide(color: PickColors.primaryColor, width: 2.0),
+          ),
+        ),
+        onChanged: (value) {
+          if (value.isNotEmpty) {
+            if (index < 5) {
+              _otpFocusNodes[index + 1].requestFocus();
+            } else {
+              _otpFocusNodes[index].unfocus();
+              _handleVerifyOtp(); // Auto trigger verification on 6th digit
+            }
+          } else {
+            if (index > 0) {
+              _otpFocusNodes[index - 1].requestFocus();
+            }
+          }
+          setState(() {});
+        },
+      ),
+    );
   }
 
   @override
@@ -123,7 +247,7 @@ class _LoginScreenState extends State<LoginScreen> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: [
-                  // App / Brand Logo
+                  // Brand Logo
                   Center(
                     child: Image.asset(
                       PickImages.alekhaArchitectsIcon,
@@ -135,7 +259,7 @@ class _LoginScreenState extends State<LoginScreen> {
 
                   // Title & Subtitle
                   Text(
-                    _isSignUpMode ? "Create Account" : "Welcome Back",
+                    _isOtpSent ? "Enter Verification Code" : "Welcome Back",
                     textAlign: TextAlign.center,
                     style: CommonTextStyle().mainHeadingTextStyle.copyWith(
                           fontSize: 26,
@@ -143,16 +267,16 @@ class _LoginScreenState extends State<LoginScreen> {
                   ),
                   PickHeightAndWidth.height10,
                   Text(
-                    _isSignUpMode
-                        ? "Register with your details to get started"
-                        : "Sign in to continue to your account",
+                    _isOtpSent
+                        ? "Enter the 6-digit code sent to\n${_emailController.text.trim()}"
+                        : "Enter your details to receive an OTP on your email",
                     textAlign: TextAlign.center,
                     style: CommonTextStyle().authSubTitleTextStyle,
                   ),
                   PickHeightAndWidth.height30,
 
-                  // Name Field (Only on Sign Up mode)
-                  if (_isSignUpMode) ...[
+                  if (!_isOtpSent) ...[
+                    // Full Name (Required)
                     CommonTextFieldWithBorder(
                       controller: _nameController,
                       hint: "Enter your full name",
@@ -170,7 +294,7 @@ class _LoginScreenState extends State<LoginScreen> {
                       ),
                       validator: (value) {
                         if (value == null || value.trim().isEmpty) {
-                          return "Please enter your name";
+                          return "Please enter your full name";
                         }
                         if (value.trim().length < 2) {
                           return "Name must be at least 2 characters";
@@ -179,113 +303,90 @@ class _LoginScreenState extends State<LoginScreen> {
                       },
                     ),
                     PickHeightAndWidth.height20,
-                  ],
 
-                  // Email Field
-                  CommonTextFieldWithBorder(
-                    controller: _emailController,
-                    hint: "Enter your email",
-                    labelText: "Email",
-                    isRequired: true,
-                    keyboardType: TextInputType.emailAddress,
-                    textInputAction: TextInputAction.next,
-                    prefix: const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 12.0),
-                      child: Icon(
-                        Icons.email_outlined,
-                        color: PickColors.primaryColor,
-                        size: 20,
-                      ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return "Please enter email";
-                      }
-                      final emailRegex = RegExp(
-                        r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
-                      );
-                      if (!emailRegex.hasMatch(value.trim())) {
-                        return "Please enter a valid email address";
-                      }
-                      return null;
-                    },
-                  ),
-                  PickHeightAndWidth.height20,
-
-                  // Password Field with Obscure toggle
-                  CommonTextFieldWithBorder(
-                    controller: _passwordController,
-                    hint: _isSignUpMode ? "Create password (min 6 chars)" : "Enter your password",
-                    labelText: "Password",
-                    isRequired: true,
-                    obscure: _isPasswordObscure,
-                    onSuffixTap: () {
-                      setState(() {
-                        _isPasswordObscure = !_isPasswordObscure;
-                      });
-                    },
-                    keyboardType: TextInputType.visiblePassword,
-                    textInputAction: TextInputAction.done,
-                    prefix: const Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 12.0),
-                      child: Icon(
-                        Icons.lock_outline,
-                        color: PickColors.primaryColor,
-                        size: 20,
-                      ),
-                    ),
-                    validator: (value) {
-                      if (value == null || value.trim().isEmpty) {
-                        return "Please enter password";
-                      }
-                      if (value.trim().length < 6) {
-                        return "Password must be at least 6 characters";
-                      }
-                      return null;
-                    },
-                    onFieldSubmitted: (value) {
-                      _handleAuthAction();
-                    },
-                  ),
-                  PickHeightAndWidth.height30,
-
-                  // Action Button (Login / Sign Up)
-                  _isLoading
-                      ? const Center(
-                          child: CircularProgressIndicator(),
-                        )
-                      : CommonMaterialButton(
-                          title: _isSignUpMode ? "Sign Up" : "Login",
-                          color: PickColors.buttonColor,
-                          verticalPadding: 16,
-                          borderRadius: 10,
-                          onPressed: _handleAuthAction,
+                    // Email Field
+                    CommonTextFieldWithBorder(
+                      controller: _emailController,
+                      hint: "Enter your email address",
+                      labelText: "Email",
+                      isRequired: true,
+                      keyboardType: TextInputType.emailAddress,
+                      textInputAction: TextInputAction.done,
+                      prefix: const Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 12.0),
+                        child: Icon(
+                          Icons.email_outlined,
+                          color: PickColors.primaryColor,
+                          size: 20,
                         ),
-                  PickHeightAndWidth.height20,
-
-                  // Switch between Login and Sign Up
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Text(
-                        _isSignUpMode
-                            ? "Already have an account? "
-                            : "Don't have an account? ",
-                        style: CommonTextStyle().authSubTitleTextStyle,
                       ),
-                      InkWell(
-                        onTap: _toggleAuthMode,
+                      validator: (value) {
+                        if (value == null || value.trim().isEmpty) {
+                          return "Please enter email";
+                        }
+                        final emailRegex = RegExp(
+                          r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$',
+                        );
+                        if (!emailRegex.hasMatch(value.trim())) {
+                          return "Please enter a valid email address";
+                        }
+                        return null;
+                      },
+                      onFieldSubmitted: (value) => _handleSendOtp(),
+                    ),
+                    PickHeightAndWidth.height30,
+
+                    // Send OTP Button
+                    _isLoading
+                        ? const Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : CommonMaterialButton(
+                            title: "Send OTP",
+                            color: PickColors.buttonColor,
+                            verticalPadding: 16,
+                            borderRadius: 10,
+                            onPressed: _handleSendOtp,
+                          ),
+                  ] else ...[
+                    // 6 separate stylish OTP Boxes
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: List.generate(6, (i) => _buildOtpBox(i)),
+                    ),
+                    PickHeightAndWidth.height30,
+
+                    // Verify & Login Button
+                    _isLoading
+                        ? const Center(
+                            child: CircularProgressIndicator(),
+                          )
+                        : CommonMaterialButton(
+                            title: "Verify & Login",
+                            color: PickColors.buttonColor,
+                            verticalPadding: 16,
+                            borderRadius: 10,
+                            onPressed: _handleVerifyOtp,
+                          ),
+                    PickHeightAndWidth.height20,
+
+                    // Resend OTP only (Change Email removed)
+                    Center(
+                      child: TextButton(
+                        onPressed: _resendCountdown > 0 ? null : _handleSendOtp,
                         child: Text(
-                          _isSignUpMode ? "Sign In" : "Sign Up",
-                          style: CommonTextStyle().inkWellTextStyle.copyWith(
-                                color: PickColors.blackColor,
-                                fontWeight: FontWeight.bold,
-                                decoration: TextDecoration.underline,
-                              ),
+                          _resendCountdown > 0
+                              ? "Resend OTP in ${_resendCountdown}s"
+                              : "Resend OTP",
+                          style: TextStyle(
+                            color: _resendCountdown > 0 ? Colors.grey : PickColors.primaryColor,
+                            fontWeight: FontWeight.bold,
+                            fontSize: 14,
+                          ),
                         ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ],
               ),
             ),

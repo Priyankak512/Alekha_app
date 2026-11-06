@@ -29,15 +29,14 @@ class _ManageDevicesScreenState extends State<ManageDevicesScreen> {
     });
 
     final currentEmail = await AuthService.getCurrentUserEmail();
-    final devicesList = await AuthService.getLoggedInDevices();
+    final currentName = await AuthService.getCurrentUserName();
 
-    // If current email is not in the list, ensure it's shown
-    if (currentEmail.isNotEmpty && !devicesList.any((d) => d['email'] == currentEmail)) {
-      devicesList.insert(0, {
-        'email': currentEmail,
-        'lastLogin': DateTime.now().toIso8601String(),
-      });
+    // Ensure the current user's device info is synced up to Supabase first
+    if (currentEmail.isNotEmpty) {
+      await AuthService.recordCurrentDeviceLogin(currentEmail, name: currentName);
     }
+
+    final devicesList = await AuthService.getLoggedInDevices();
 
     if (mounted) {
       setState(() {
@@ -95,6 +94,7 @@ class _ManageDevicesScreenState extends State<ManageDevicesScreen> {
                   itemBuilder: (context, index) {
                     final device = _devices[index];
                     final email = device['email'] as String? ?? "Unknown";
+                    final name = device['name'] as String? ?? "";
                     final lastLogin = device['lastLogin'] as String?;
                     final isCurrent = email.toLowerCase() == _currentEmail.toLowerCase();
 
@@ -143,11 +143,28 @@ class _ManageDevicesScreenState extends State<ManageDevicesScreen> {
                                 Row(
                                   children: [
                                     Expanded(
-                                      child: Text(
-                                        email,
-                                        style: CommonTextStyle().textFieldTitleTextStyle.copyWith(
-                                              fontWeight: isCurrent ? FontWeight.bold : FontWeight.w600,
+                                      child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          if (name.isNotEmpty) ...[
+                                            Text(
+                                              name,
+                                              style: CommonTextStyle().textFieldTitleTextStyle.copyWith(
+                                                    fontWeight: isCurrent ? FontWeight.bold : FontWeight.w600,
+                                                    fontSize: 14.5,
+                                                  ),
                                             ),
+                                            const SizedBox(height: 2),
+                                          ],
+                                          Text(
+                                            email,
+                                            style: TextStyle(
+                                              fontSize: 12.5,
+                                              color: PickColors.hintColor,
+                                              fontWeight: isCurrent ? FontWeight.w500 : FontWeight.normal,
+                                            ),
+                                          ),
+                                        ],
                                       ),
                                     ),
                                     if (isCurrent)

@@ -386,13 +386,15 @@ ${_selectedRegardsType ?? "-"}
                           title: "Share",
                           suffixIcon: PickImages.whatsAppIcon,
                         onPressed: () async {
-                            final clientNameVal = isAgencySelected
-                                ? (agencyNameController.text.isNotEmpty ? agencyNameController.text : "Agency")
-                                : (siteNameController.text.isNotEmpty ? siteNameController.text : "Client");
+                            final clientNameVal = siteNameController.text.isNotEmpty
+                                ? siteNameController.text
+                                : (isAgencySelected
+                                    ? (agencyNameController.text.isNotEmpty ? agencyNameController.text : "Client")
+                                    : "Client");
 
                             await Provider.of<MeetingHistoryProvider>(context, listen: false).recordMeetingAction(
                               clientOrAgency: isAgencySelected ? "Agency" : "Client",
-                              agencyName: agencyNameController.text,
+                              agencyName: isAgencySelected ? agencyNameController.text : "",
                               clientName: clientNameVal,
                               projectNo: projectNumberController.text,
                               meetingDate: dateMeetingController.text,
@@ -415,13 +417,15 @@ ${_selectedRegardsType ?? "-"}
                           style: CommonTextStyle().buttonTextStyle,
                           color: PickColors.transparentColor,
                           onPressed: () async {
-                            final clientNameVal = isAgencySelected
-                                ? (agencyNameController.text.isNotEmpty ? agencyNameController.text : "Agency")
-                                : (siteNameController.text.isNotEmpty ? siteNameController.text : "Client");
+                            final clientNameVal = siteNameController.text.isNotEmpty
+                                ? siteNameController.text
+                                : (isAgencySelected
+                                    ? (agencyNameController.text.isNotEmpty ? agencyNameController.text : "Client")
+                                    : "Client");
 
                             await Provider.of<MeetingHistoryProvider>(context, listen: false).recordMeetingAction(
                               clientOrAgency: isAgencySelected ? "Agency" : "Client",
-                              agencyName: agencyNameController.text,
+                              agencyName: isAgencySelected ? agencyNameController.text : "",
                               clientName: clientNameVal,
                               projectNo: projectNumberController.text,
                               meetingDate: dateMeetingController.text,
