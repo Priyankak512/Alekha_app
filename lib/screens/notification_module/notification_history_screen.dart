@@ -381,27 +381,64 @@ class _NotificationHistoryScreenState extends State<NotificationHistoryScreen> {
     // Sort newest first
     allItems.sort((a, b) => b.createdAt.compareTo(a.createdAt));
 
-    // Filter by search query (Client name, Project No, Invoice No, Sender name, or Amount)
+    // Filter by search query (Client name, Project No, Invoice No, Contact No, Invoice Type, Sender name, Amount, or Date)
     final filteredList = allItems.where((item) {
       if (_searchQuery.trim().isEmpty) return true;
       final q = _searchQuery.trim().toLowerCase();
       final name = item.clientName.toLowerCase();
       final project = item.projectNo.toLowerCase();
       final invoice = (item.invoiceNo ?? "").toLowerCase();
+      final contact = (item.contactNo ?? "").toLowerCase();
+      final invoiceType = (item.invoiceType ?? "").toLowerCase();
+      final paymentStatus = (item.paymentStatus ?? "").toLowerCase();
       final mode = (item.paymentMode ?? "").toLowerCase();
       final sender = (item.senderUserName ?? "").toLowerCase();
       final amount = item.amount.toLowerCase();
-      final typeStr = item.type == NotificationType.received
-          ? "received"
-          : (item.type == NotificationType.invoice ? "invoice" : "reminder");
+      final agency = (item.agencyName ?? "").toLowerCase();
+      final offer = (item.offerType ?? "").toLowerCase();
+      final dateFormatted = _formatDateTime(item.createdAt).toLowerCase();
+
+      String typeLabel = "";
+      switch (item.type) {
+        case NotificationType.invoice:
+          typeLabel = "invoice ${item.invoiceType ?? ''}".toLowerCase();
+          break;
+        case NotificationType.received:
+          typeLabel = "received";
+          break;
+        case NotificationType.reminder:
+          typeLabel = "reminder";
+          break;
+        case NotificationType.siteVisit:
+          typeLabel = "site visit";
+          break;
+        case NotificationType.meeting:
+          typeLabel = "meeting";
+          break;
+        case NotificationType.selection:
+          typeLabel = "selection";
+          break;
+        case NotificationType.offerLetter:
+          typeLabel = "offer letter ${item.offerType ?? ''}".toLowerCase();
+          break;
+        case NotificationType.discussion:
+          typeLabel = "discussion";
+          break;
+      }
 
       return name.contains(q) ||
           project.contains(q) ||
           invoice.contains(q) ||
+          contact.contains(q) ||
+          invoiceType.contains(q) ||
+          paymentStatus.contains(q) ||
           mode.contains(q) ||
           sender.contains(q) ||
           amount.contains(q) ||
-          typeStr.contains(q);
+          agency.contains(q) ||
+          offer.contains(q) ||
+          dateFormatted.contains(q) ||
+          typeLabel.contains(q);
     }).toList();
 
     // Paginated list based on _displayedCount
@@ -633,11 +670,41 @@ class _NotificationHistoryScreenState extends State<NotificationHistoryScreen> {
                                                                         width: 18,
                                                                       )
                                                                     : (isInvoice
-                                                                        ? SvgPicture.asset(
-                                                                            PickImages.invoiceIcon,
-                                                                            height: 18,
-                                                                            width: 18,
-                                                                          )
+                                                                        ? ((item.invoiceType != null && item.invoiceType!.toLowerCase().contains("gst"))
+                                                                            ? SvgPicture.asset(
+                                                                                PickImages.gstInvoiceIcon,
+                                                                                height: 18,
+                                                                                width: 18,
+                                                                              )
+                                                                            : ((item.invoiceType != null &&
+                                                                                    (item.invoiceType!.toLowerCase().contains("art") ||
+                                                                                        item.invoiceType!.toLowerCase().contains("shopy") ||
+                                                                                        item.invoiceType!.toLowerCase().contains("shophy")))
+                                                                                ? ClipRRect(
+                                                                                    borderRadius: BorderRadius.circular(4),
+                                                                                    child: Image.asset(
+                                                                                      PickImages.artOShophyLogoImage,
+                                                                                      height: 20,
+                                                                                      width: 20,
+                                                                                      fit: BoxFit.contain,
+                                                                                    ),
+                                                                                  )
+                                                                                : ((item.invoiceType != null &&
+                                                                                        item.invoiceType!.toLowerCase().contains("alekha"))
+                                                                                    ? ClipRRect(
+                                                                                        borderRadius: BorderRadius.circular(4),
+                                                                                        child: Image.asset(
+                                                                                          PickImages.alekhaLogo,
+                                                                                          height: 20,
+                                                                                          width: 20,
+                                                                                          fit: BoxFit.contain,
+                                                                                        ),
+                                                                                      )
+                                                                                    : SvgPicture.asset(
+                                                                                        PickImages.invoiceIcon,
+                                                                                        height: 18,
+                                                                                        width: 18,
+                                                                                      ))))
                                                                         : SvgPicture.asset(
                                                                             isReceived
                                                                                 ? PickImages.feeReceivedIcon
@@ -741,7 +808,7 @@ class _NotificationHistoryScreenState extends State<NotificationHistoryScreen> {
                                                                 : (isSiteVisit
                                                                     ? "Site Visit"
                                                                     : (isInvoice
-                                                                        ? "Invoice"
+                                                                        ? (item.invoiceType?.isNotEmpty == true ? item.invoiceType! : "Invoice")
                                                                         : (isReceived ? "Received" : "Reminder")))))),
                                                 style: TextStyle(
                                                   color: isOfferLetter
@@ -933,7 +1000,7 @@ class _NotificationHistoryScreenState extends State<NotificationHistoryScreen> {
                                                   label: isInvoice
                                                       ? "Total Amount"
                                                       : (isReceived ? "Amount Received" : "Amount Pending"),
-                                                  value: item.amount.isNotEmpty ? "â‚¹ ${item.amount}" : "-",
+                                                  value: item.amount.isNotEmpty ? (isInvoice ? item.amount : "Rs. ${item.amount}"): "-",
                                                   valueColor: isInvoice
                                                       ? Colors.purple.shade700
                                                       : (isReceived ? Colors.green.shade700 : Colors.red.shade700),

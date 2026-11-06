@@ -22,6 +22,7 @@ import 'package:alekha/widget/pdf_bullet_text.dart';
 import 'package:printing/printing.dart';
 import 'package:provider/provider.dart';
 import 'package:number_to_words/number_to_words.dart';
+import 'package:alekha/screens/invoice_generator/invoice_provider/invoice_history_provider.dart';
 
 class GstInvoiceGeneratorScreen extends StatefulWidget {
   const GstInvoiceGeneratorScreen({super.key});
@@ -566,6 +567,18 @@ class _GstInvoiceGeneratorScreenState extends State<GstInvoiceGeneratorScreen> {
           '${projectNoController.text} TAX INVOICE ${dateController.text.replaceAll('_', '/')} ${clientNameController.text.toUpperCase()}',
       onLayout: (PdfPageFormat format) async => pdf.save(),
     );
+
+    if (mounted) {
+      await Provider.of<InvoiceHistoryProvider>(context, listen: false).recordInvoiceExport(
+        clientName: clientNameController.text,
+        invoiceNo: invoiceNoController.text,
+        projectNo: projectNoController.text,
+        contactNo: contactNoController.text,
+        paymentStatus: _selectedOption == 'Fees Paid' ? 'Fees Paid' : (_selectedOption == 'Fees Unpaid' ? 'Fees Unpaid' : (_selectedOption ?? '')),
+        totalAmount: grandTotal.toStringAsFixed(2),
+        invoiceType: "GST Invoice",
+      );
+    }
   }
 
   /// Helper: returns a padded, centered cell

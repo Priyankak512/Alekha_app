@@ -21,6 +21,8 @@ import 'package:pdf/widgets.dart' as pw;
 import 'package:alekha/widget/pdf_bullet_text.dart';
 import 'package:printing/printing.dart';
 import 'package:provider/provider.dart';
+import 'package:alekha/screens/invoice_generator/invoice_provider/invoice_history_provider.dart';
+import 'package:provider/provider.dart';
 import 'package:number_to_words/number_to_words.dart';
 
 class AlekhaArchitectsInvoiceScreen extends StatefulWidget {
@@ -494,6 +496,18 @@ class _AlekhaArchitectsInvoiceScreenState
           '${projectNoController.text} INVOICE ${dateController.text.replaceAll('_', '/')} ${clientNameController.text.toUpperCase()} ALEKHA ARCHITECTS',
       onLayout: (PdfPageFormat format) async => pdf.save(),
     );
+
+    if (mounted) {
+      await Provider.of<InvoiceHistoryProvider>(context, listen: false).recordInvoiceExport(
+        clientName: clientNameController.text,
+        invoiceNo: invoiceNoController.text,
+        projectNo: projectNoController.text,
+        contactNo: contactNoController.text,
+        paymentStatus: _selectedOption == 'Fees Paid' ? 'Fees Paid' : (_selectedOption == 'Fees Unpaid' ? 'Fees Unpaid' : (_selectedOption ?? '')),
+        totalAmount: totalPrice.toStringAsFixed(2),
+        invoiceType: "Alekha Architects Invoice",
+      );
+    }
   }
 
   double totalPrice = 0.0;

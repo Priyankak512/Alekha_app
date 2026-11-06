@@ -37,41 +37,96 @@ class InvoiceHistoryProvider with ChangeNotifier {
 
       // 2. Agar Supabase se sync karna hai
       if (fromSupabase) {
+        final List<InvoiceHistoryModel> fetchedList = [];
+        final client = Supabase.instance.client;
+
+        // Fetch regular invoices from 'invoices' table
         try {
-          final client = Supabase.instance.client;
-          final response = await client
+          final resInvoices = await client
               .from('invoices')
               .select()
               .order('created_at', ascending: false);
 
-          if (response is List) {
-            final List<InvoiceHistoryModel> fetchedList = response.map<InvoiceHistoryModel>((data) {
+          if (resInvoices is List) {
+            fetchedList.addAll(resInvoices.map<InvoiceHistoryModel>((data) {
               final map = Map<String, dynamic>.from(data as Map);
               return InvoiceHistoryModel.fromJson(map);
-            }).toList();
-
-            // Merge local and remote: key by (invoiceNo + clientName + totalAmount) or createdAt prefix
-            final Map<String, InvoiceHistoryModel> mergedMap = {};
-            for (var item in fetchedList) {
-              // Match by date date-time minute or invoiceNo+client
-              final dateKey = item.createdAt.length >= 16 ? item.createdAt.substring(0, 16) : item.createdAt;
-              final key = "${item.invoiceNo}_${item.clientName}_${item.totalAmount}_$dateKey";
-              mergedMap[key] = item;
-            }
-            for (var item in _historyList) {
-              final dateKey = item.createdAt.length >= 16 ? item.createdAt.substring(0, 16) : item.createdAt;
-              final key = "${item.invoiceNo}_${item.clientName}_${item.totalAmount}_$dateKey";
-              mergedMap.putIfAbsent(key, () => item);
-            }
-
-            _historyList = mergedMap.values.toList();
-            _historyList.sort((a, b) => b.createdAt.compareTo(a.createdAt));
-
-            final encoded = jsonEncode(_historyList.map((e) => e.toJson()).toList());
-            await Shared_Preferences.prefSetString(keyInvoiceHistory, encoded);
+            }));
           }
         } catch (supabaseError) {
-          debugPrint("⚠️ Supabase fetch invoices error (table may not be created yet): $supabaseError");
+          debugPrint("⚠️ Supabase fetch 'invoices' error: $supabaseError");
+        }
+
+        // Fetch GST invoices from 'gst_invoices' table
+        try {
+          final resGst = await client
+              .from('gst_invoices')
+              .select()
+              .order('created_at', ascending: false);
+
+          if (resGst is List) {
+            fetchedList.addAll(resGst.map<InvoiceHistoryModel>((data) {
+              final map = Map<String, dynamic>.from(data as Map);
+              return InvoiceHistoryModel.fromJson(map);
+            }));
+          }
+        } catch (gstError) {
+          debugPrint("⚠️ Supabase fetch 'gst_invoices' error: $gstError");
+        }
+
+        // Fetch Art O Shopy invoices from 'art_o_shopy_invoices' table
+        try {
+          final resArt = await client
+              .from('art_o_shopy_invoices')
+              .select()
+              .order('created_at', ascending: false);
+
+          if (resArt is List) {
+            fetchedList.addAll(resArt.map<InvoiceHistoryModel>((data) {
+              final map = Map<String, dynamic>.from(data as Map);
+              return InvoiceHistoryModel.fromJson(map);
+            }));
+          }
+        } catch (artError) {
+          debugPrint("⚠️ Supabase fetch 'art_o_shopy_invoices' error: $artError");
+        }
+
+        // Fetch Alekha Architects invoices from 'alekha_architects_invoices' table
+        try {
+          final resAlekha = await client
+              .from('alekha_architects_invoices')
+              .select()
+              .order('created_at', ascending: false);
+
+          if (resAlekha is List) {
+            fetchedList.addAll(resAlekha.map<InvoiceHistoryModel>((data) {
+              final map = Map<String, dynamic>.from(data as Map);
+              return InvoiceHistoryModel.fromJson(map);
+            }));
+          }
+        } catch (alekhaError) {
+          debugPrint("⚠️ Supabase fetch 'alekha_architects_invoices' error: $alekhaError");
+        }
+
+        if (fetchedList.isNotEmpty) {
+          // Merge local and remote: key by (invoiceNo + clientName + totalAmount) or createdAt prefix
+          final Map<String, InvoiceHistoryModel> mergedMap = {};
+          for (var item in fetchedList) {
+            final dateKey = item.createdAt.length >= 16 ? item.createdAt.substring(0, 16) : item.createdAt;
+            final key = "${item.invoiceNo}_${item.clientName}_${item.totalAmount}_$dateKey";
+            mergedMap[key] = item;
+          }
+          for (var item in _historyList) {
+            final dateKey = item.createdAt.length >= 16 ? item.createdAt.substring(0, 16) : item.createdAt;
+            final key = "${item.invoiceNo}_${item.clientName}_${item.totalAmount}_$dateKey";
+            mergedMap.putIfAbsent(key, () => item);
+          }
+
+          _historyList = mergedMap.values.toList();
+          _historyList.sort((a, b) => b.createdAt.compareTo(a.createdAt));
+
+          final encoded = jsonEncode(_historyList.map((e) => e.toJson()).toList());
+          await Shared_Preferences.prefSetString(keyInvoiceHistory, encoded);
         }
       }
     } catch (e) {
@@ -145,6 +200,15 @@ class InvoiceHistoryProvider with ChangeNotifier {
     // 2. Persist to Supabase Database
     try {
       final client = Supabase.instance.client;
+      final String typeLower = newEntry.invoiceType.toLowerCase();
+      final String targetTable = typeLower.contains('gst')
+          ? 'gst_invoices'
+          : (typeLower.contains('art') || typeLower.contains('shopy') || typeLower.contains('shophy'))
+              ? 'art_o_shopy_invoices'
+              : (typeLower.contains('alekha'))
+                  ? 'alekha_architects_invoices'
+                  : 'invoices';
+
       final payload = {
         'client_name': newEntry.clientName,
         'invoice_no': newEntry.invoiceNo,
@@ -158,9 +222,9 @@ class InvoiceHistoryProvider with ChangeNotifier {
         'created_at': newEntry.createdAt,
       };
 
-      debugPrint("🚀 [InvoiceHistoryProvider] Inserting into Supabase 'invoices': $payload");
-      await client.from('invoices').insert(payload);
-      debugPrint("✅ [InvoiceHistoryProvider] Insert into 'invoices' successful");
+      debugPrint("🚀 [InvoiceHistoryProvider] Inserting into Supabase '$targetTable': $payload");
+      await client.from(targetTable).insert(payload);
+      debugPrint("✅ [InvoiceHistoryProvider] Insert into '$targetTable' successful");
     } catch (e) {
       debugPrint("❌ [InvoiceHistoryProvider] Supabase insert error: $e");
     }
@@ -180,8 +244,17 @@ class InvoiceHistoryProvider with ChangeNotifier {
 
     try {
       final client = Supabase.instance.client;
+      final String typeLower = item.invoiceType.toLowerCase();
+      final String targetTable = typeLower.contains('gst')
+          ? 'gst_invoices'
+          : (typeLower.contains('art') || typeLower.contains('shopy') || typeLower.contains('shophy'))
+              ? 'art_o_shopy_invoices'
+              : (typeLower.contains('alekha'))
+                  ? 'alekha_architects_invoices'
+                  : 'invoices';
+
       await client
-          .from('invoices')
+          .from(targetTable)
           .delete()
           .match({
             'invoice_no': item.invoiceNo,
@@ -189,7 +262,7 @@ class InvoiceHistoryProvider with ChangeNotifier {
             'created_at': item.createdAt,
           });
     } catch (e) {
-      log("Supabase delete invoices error: $e");
+      log("Supabase delete invoice error: $e");
     }
   }
 
